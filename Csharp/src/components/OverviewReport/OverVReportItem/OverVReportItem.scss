@@ -1,0 +1,23 @@
+
+    .item-overview-report{
+        display: flex;
+        padding: 25px 0;
+        .icon-item-overview-report{
+             margin-right: 10px;
+            font-size: 1.4rem;
+             
+            // background-color: rgb(163, 168, 175);
+            opacity: 0.3;
+        }
+        .span-item-overview-report{
+            .title{
+                font-size: 1rem;
+                color: #007bff;
+                font-weight: 500;
+            }
+            .price{
+               font-size: 1.2rem;
+               font-weight: 500;
+            }
+        }
+    }

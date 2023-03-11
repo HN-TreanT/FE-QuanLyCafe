@@ -1,0 +1,66 @@
+#top_bar{
+    display: flex;
+    width: 100%;
+    background-color: white;
+    box-shadow: 5px 3px 10px 0px #e7e2e2;
+     justify-content:right;
+     align-items: center;
+     font-size: 1.3rem;
+    .online{
+        color: var( --item-color-topbar);
+        height: 100%;
+        padding: 16px 17px;
+        span{
+            padding-right: 5px;
+        }
+        font-size: 1.1rem;
+        &:hover{
+            color: #007bff;
+            background-color: #e0e9f4;
+        }
+     }
+     .grab-food{
+        color: var( --item-color-topbar);
+        height: 100%;
+        padding: 16px 17px;
+        span{
+            padding-right: 5px;
+        }
+        font-size: 1.1rem;
+        &:hover{
+            color: #007bff;
+            background-color: #e0e9f4;
+        }
+     }
+    .info-user{
+        color: var( --item-color-topbar);
+        display: inline-block;
+        padding: 9px 28px;
+        cursor: pointer;
+        &:hover{
+            //color: ;
+            color: #007bff;
+            background-color: #e0e9f4;
+        }
+   
+    }
+    .notification{
+        color: var( --item-color-topbar);
+       margin-right: 20px;
+       padding: 9px;
+       display: inline-block;
+       cursor: pointer;
+       &:hover{
+        color: #007bff;
+        background-color: #e0e9f4;
+       }
+    }
+}
+
+.dropdown{
+    width: 200px;
+   
+    .ant-dropdown-menu-item{
+        color:  #182537;
+    }
+}

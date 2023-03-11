@@ -1,0 +1,65 @@
+.LoginPage{
+    height: 100vh;
+     background: url("../../assets/background.jpg");
+     background-size: cover;
+     display: flex;
+     align-items: center;
+  .spin{
+    //  justify-content: center
+  }
+  .FormLogin{
+     position: relative;
+     margin-left: 10vw;
+     width: 380px;
+     padding: 20px;
+     background-color: white;
+     border-radius: 8px;
+     .LoginTitle{
+        position: absolute;
+        background: linear-gradient(135deg, #1d1f22 0%,#4e5156 100%);
+        box-shadow: 0px 2px 6px rgba(42, 41, 41, 0.36);
+        border-radius: 8px;
+        text-align: center;
+        color: #ffffff;
+        font-size: 30px;
+        padding: 20px;
+        width: 340px;
+        top: -70px;
+      }
+      .CheckContainer{
+        color:  #7B809A;
+        .ForgetPassword{
+            margin-left:70px;
+            color: rgb(78, 133, 226);
+            cursor: pointer;
+            &:hover{
+                color:rgba(27, 81, 175, 0.899) ;
+            }
+        }
+      }
+      .ButtonContainer{
+        cursor: pointer;
+        margin: 20px 0;
+        button{    
+           height: auto;
+           width: 100%;
+           padding: 10px !important;   
+        }
+      }
+      .ErrorSignIn{
+        color: var(--red-color);
+         text-align: center;
+         margin-top: -14px;
+       
+      }
+      .linkSignUp{
+        display: flex;
+        justify-content: center;
+       
+      }
+  }
+}
+  
+.loading{
+    opacity: 0.6;
+}
