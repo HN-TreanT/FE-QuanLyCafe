@@ -14,8 +14,7 @@ import {
 } from "@ant-design/icons";
 import MenuItem from "antd/es/menu/MenuItem";
 import "./SideBar.scss";
-import logo from "../../assets/logo.svg";
-import logoj from "../../assets/logoj.jpg";
+import logo from "../../assets/logo3.jpg";
 import SubMenu from "antd/es/menu/SubMenu";
 
 const SideBar: React.FC = () => {
@@ -167,7 +166,7 @@ const SideBar: React.FC = () => {
       <div className="side_bar">
         <div className="side_bar_logo">
           {" "}
-          <Image src={logoj} width={210} height={50} preview={false} />
+          <Image src={logo} width={230} height={50} preview={false} />
         </div>
         <div className="side_bar_menu">
           <Menu

@@ -11,7 +11,7 @@
           overflow-y: scroll;
           height: calc(100vh - 50px);
           &::-webkit-scrollbar {
-             width: 10px; 
+             width: 5px; 
              height: 6px;    /* Chiều rộng vùng chứa scrollbar */
           }
           &::-webkit-scrollbar-track {

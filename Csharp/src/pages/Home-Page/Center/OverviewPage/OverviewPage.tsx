@@ -144,28 +144,28 @@ const OverviewPage: React.FC = () => {
 
       <div className="overview-report-other distance">
         <Row gutter={[12, 10]}>
-          <Col span={6}>
+          <Col xl={6} sm={12}>
             <OverviewReportOther
               title="Số khách hàng"
               count="0"
               color="rgb(244, 148, 35)"
             />
           </Col>
-          <Col span={6}>
+          <Col xl={6} sm={12}>
             <OverviewReportOther
               title="Số hóa đơn"
               count="0"
               color="rgb(41, 164, 182)"
             />
           </Col>
-          <Col span={6}>
+          <Col xl={6} sm={12}>
             <OverviewReportOther
               title="TB mặt hàng/hóa đơn"
               count="0"
               color="rgb(118, 64, 239)"
             />
           </Col>
-          <Col span={6}>
+          <Col xl={6} sm={12}>
             <OverviewReportOther
               title="TB doanh thu/hóa đơn"
               count="0"
