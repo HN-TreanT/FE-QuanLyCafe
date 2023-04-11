@@ -74,26 +74,6 @@ export const ReportOverviewSell: React.FC = () => {
         <Col span={6}>
           <div className="title-item">1000000</div>
         </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
       </Row>
     </div>
   );

@@ -2,6 +2,7 @@ const types = {
   UPDATE_LOGIN_INFO: "auth/update_login_info",
   USER_INFO: "auth/user_info",
   LOGIN: "auth/login",
+  LOGOUT: "auth/logout",
 };
 const action = {
   updateLoginInfo: (loginInfo: any) => {
@@ -19,6 +20,11 @@ const action = {
   login: () => {
     return {
       type: types.LOGIN,
+    };
+  },
+  logout: () => {
+    return {
+      type: types.LOGOUT,
     };
   },
 };

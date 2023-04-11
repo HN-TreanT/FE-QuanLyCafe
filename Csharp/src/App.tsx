@@ -12,6 +12,17 @@ import HomePage from "./pages/Home-Page/HomePage";
 import OverviewPage from "./pages/Home-Page/Center/OverviewPage/OverviewPage";
 import UserPage from "./pages/Home-Page/Center/user_page/UserPage";
 import RegisterPage from "./pages/register-page/Register";
+import OrderPage from "./pages/Order-page/OrderPage";
+import BillPage from "./pages/Home-Page/Center/bill-page/BillPage";
+import ProductList from "./pages/Home-Page/Center/product-list/ProductList";
+import CategoryPage from "./pages/Home-Page/Center/category-page/CategoryPage";
+import StaffPage from "./pages/Home-Page/Center/Staff-page/StaffPage";
+import CustomerPage from "./pages/Home-Page/Center/customer-page/CustomerPage";
+import TablePage from "./pages/Home-Page/Center/table-page/TablePage";
+import ListWarehouse from "./pages/Home-Page/Center/list-warehouse/ListWarehouse";
+import ImportWarehouse from "./pages/Home-Page/Center/import-warehouse/ImportWarehouse";
+import ExportWarehouse from "./pages/Home-Page/Center/export-warehouse/ExportWarehouse";
+import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/HistoryWarehouse";
 
 function App() {
   return (
@@ -51,7 +62,80 @@ function App() {
                           <AuthorizationComponent element={<UserPage />} />
                         }
                       />
+                      <Route
+                        path={RouterLinks.BILL_PAGE}
+                        element={
+                          <AuthorizationComponent element={<BillPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.PRODUCTS_PAGE}
+                        element={
+                          <AuthorizationComponent element={<ProductList />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.CATEGORY_PAGE}
+                        element={
+                          <AuthorizationComponent element={<CategoryPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.STAFF_PAGE}
+                        element={
+                          <AuthorizationComponent element={<StaffPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.CUTOMER_PAGE}
+                        element={
+                          <AuthorizationComponent element={<CustomerPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.TABLE_PAGE}
+                        element={
+                          <AuthorizationComponent element={<TablePage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.LIST_WAREHOUSE}
+                        element={
+                          <AuthorizationComponent element={<ListWarehouse />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.IMPORT_WAREHOUSE}
+                        element={
+                          <AuthorizationComponent
+                            element={<ImportWarehouse />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.EXPORT_WAREHOUSE}
+                        element={
+                          <AuthorizationComponent
+                            element={<ExportWarehouse />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.HISTORY_WAREHOUSE}
+                        element={
+                          <AuthorizationComponent
+                            element={<HistoryWarehouse />}
+                          />
+                        }
+                      />
                     </Route>
+
+                    <Route
+                      path={RouterLinks.ORDER_PAGE}
+                      element={
+                        <AuthorizationComponent element={<OrderPage />} />
+                      }
+                    ></Route>
                   </Routes>
                 </div>
               </div>

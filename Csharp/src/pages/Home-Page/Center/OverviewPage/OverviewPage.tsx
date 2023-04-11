@@ -15,36 +15,12 @@ import {
   ReportOverviewSell,
   OverviewReportBill,
 } from "../../../../components/OverviewReport";
-const reportsCompare = [
-  {
-    value: "NotCompare",
-    label: "Không so sánh",
-  },
-  {
-    value: "previous",
-    label: "Giai đoạn trước",
-  },
-  {
-    value: "lastweek",
-    label: "Cùng kỳ tuần trước",
-  },
-  {
-    value: "lastmonth",
-    label: "Cùng kỳ tháng trước",
-  },
-  {
-    value: "lastyear",
-    label: "cùng kỳ năm trước",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../../redux/useActions";
 const reports = [
   {
     value: "today",
     label: "Hôm nay",
-  },
-  {
-    value: "yesterday",
-    label: "Hôm qua",
   },
   {
     value: "thisweek",
@@ -58,19 +34,25 @@ const reports = [
     value: "thisyear",
     label: "Năm nay",
   },
-  {
-    value: "different_time",
-    label: "Khoảng thời gian khác",
-  },
 ];
 const iconReport = {
   padding: "6px 6px",
   backgroundColor: "rgb(163, 168, 175)",
 };
 const OverviewPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const actions = useAction();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const timeState = useSelector((state: any) => state.overview.timeState);
+  const overviewData = useSelector((state: any) => state.overview.overviewData);
+
   const handleValueChange = (value: any) => {
-    console.log(value);
+    let time;
+    if (value === "today") time = 1;
+    if (value === "thisweek") time = 7;
+    if (value === "thismonth") time = 30;
+    if (value === "thisyear") time = 365;
+    dispatch(actions.OverviewAction.timeState(time));
   };
   const handleClickModal = () => {
     setIsOpenModal(true);
@@ -90,20 +72,12 @@ const OverviewPage: React.FC = () => {
       </div>
 
       <div className="list_select_report distance ">
-        {/* <div className="item_select_report"></div>  */}
-
         <Space wrap>
           <Select
             defaultValue="today"
             style={{ width: "250px" }}
             onChange={handleValueChange}
             options={reports}
-          />
-          <Select
-            defaultValue="NotCompare"
-            style={{ width: "250px" }}
-            onChange={handleValueChange}
-            options={reportsCompare}
           />
         </Space>
         <div className="support" onClick={handleClickModal}>
@@ -132,12 +106,12 @@ const OverviewPage: React.FC = () => {
         />
         <OverVReportItem
           price="0"
-          title="Thuế phí"
+          title="Tiền nhập"
           icon={<ContainerFilled style={iconReport} />}
         />
         <OverVReportItem
           price="0"
-          title="Doanh thu gồm thuế"
+          title="Doanh thu"
           icon={<DollarCircleFilled style={iconReport} />}
         />
       </div>
@@ -180,7 +154,7 @@ const OverviewPage: React.FC = () => {
           <Col span={12}>
             <div id="report-bill">
               <div className="title_overview " style={{ marginBottom: "13px" }}>
-                <span>DOANH THU CHƯA HOÀN TẤT</span>
+                <span>KHUYẾN MÃI CÒN HẠN</span>
               </div>
               <OverviewReportBill />
             </div>
@@ -188,37 +162,12 @@ const OverviewPage: React.FC = () => {
           <Col span={12}>
             <div id="report-item-sell">
               <div className="title_overview distance">
-                <div>
-                  <Row>
-                    <Col span={18}>
-                      <span>MẶT HÀNG BÁN CHẠY</span>
-                    </Col>
-                    <Col span={6}>
-                      <div>
-                        <Select
-                          defaultValue={5}
-                          style={{ width: "150px" }}
-                          onChange={handleValueChange}
-                          options={[
-                            {
-                              value: 5,
-                              label: "Top 5 sản phầm",
-                            },
-                            {
-                              value: 10,
-                              label: "Top 10 sản phẩm",
-                            },
-                            {
-                              value: 15,
-                              label: "Top 15 sản phẩm",
-                            },
-                          ]}
-                        />
-                      </div>
-                    </Col>
-                    <ReportOverviewSell />
-                  </Row>
+                <div style={{ marginBottom: "14px" }}>
+                  <Col span={18}>
+                    <span>MẶT HÀNG BÁN CHẠY</span>
+                  </Col>
                 </div>
+                <ReportOverviewSell />
               </div>
             </div>
           </Col>

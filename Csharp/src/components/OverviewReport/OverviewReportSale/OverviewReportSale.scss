@@ -1,0 +1,27 @@
+// Định nghĩa keyframe bên trong rule selector
+.overview-report-bill {
+    @keyframes neon{
+        from {
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #dc2110, 0 0 70px #dc2110, 0 0 80px #dc2110, 0 0 100px #dc2110;
+          }
+          to {
+            color: #f61a06;
+            text-shadow: none;
+          }
+        // to {
+        //     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff0000, 0 0 70px #ff0000, 0 0 80px #ff0000, 0 0 100px #ff0000;
+        //   }
+      }
+    width: 100%;
+    height: 230px;
+    box-shadow: 0px 0px 10px #e7e2e2;
+    padding: 10px; 
+      
+    .effect {       
+        // color: #ff0000;
+        // animation: neon-red 1.5s ease-in-out infinite alternate;
+        color: #e9665a;
+        animation: neon 1s ease-in-out infinite alternate;
+    } 
+  }
+  
