@@ -45,9 +45,25 @@ const OverviewPage: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const timeState = useSelector((state: any) => state.overview.timeState);
   const overviewData = useSelector((state: any) => state.overview.overviewData);
+  const topSellProduct = useSelector(
+    (state: any) => state.product.productsTopSell
+  );
+  const promotionExpired = useSelector(
+    (state: any) => state.promotion.promotionExpired
+  );
+  console.log(promotionExpired);
+
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());
-  }, [actions.OverviewAction, dispatch, timeState]);
+    dispatch(actions.ProductActions.GetTopSellProduct());
+    dispatch(actions.PromotionAction.SetPromotionExpired());
+  }, [
+    actions.OverviewAction,
+    dispatch,
+    timeState,
+    actions.ProductActions,
+    actions.PromotionAction,
+  ]);
   const handleValueChange = (value: any) => {
     let time;
     if (value === "today") time = 1;
@@ -64,7 +80,6 @@ const OverviewPage: React.FC = () => {
   if (timeState === 7) timeSelected = "thisweek";
   if (timeState === 30) timeSelected = "thismonth";
   if (timeState === 365) timeSelected = "thisyear";
-  console.log(timeSelected);
   return (
     <div id="overview_page">
       <Modal
@@ -172,7 +187,7 @@ const OverviewPage: React.FC = () => {
               <div className="title_overview " style={{ marginBottom: "13px" }}>
                 <span>KHUYẾN MÃI CÒN HẠN</span>
               </div>
-              <OverviewReportBill />
+              <OverviewReportBill promotions={promotionExpired} />
             </div>
           </Col>
           <Col span={12}>
@@ -183,7 +198,7 @@ const OverviewPage: React.FC = () => {
                     <span>MẶT HÀNG BÁN CHẠY</span>
                   </Col>
                 </div>
-                <ReportOverviewSell />
+                <ReportOverviewSell data={topSellProduct} />
               </div>
             </div>
           </Col>

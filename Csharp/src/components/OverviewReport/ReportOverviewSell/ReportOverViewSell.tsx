@@ -1,8 +1,9 @@
 import "./ReportOverViewSell.scss";
 import React from "react";
 import { Row, Col } from "antd";
+import { ImageEmptyData } from "../../ImageEmptyData/ImageEmptyData";
 
-export const ReportOverviewSell: React.FC = () => {
+export const ReportOverviewSell: React.FC<any> = ({ data }) => {
   return (
     <div className="RQ-sell-content">
       <Row gutter={[0, 15]}>
@@ -25,55 +26,27 @@ export const ReportOverviewSell: React.FC = () => {
           ></div>
         </Col>
         {/* Danh sách sản phẩm bán chạy */}
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
-
-        <Col span={12}>
-          <div className="title-item">Mì tôm</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">15</div>
-        </Col>
-        <Col span={6}>
-          <div className="title-item">1000000</div>
-        </Col>
+        {Array.isArray(data) && data.length > 0 ? (
+          data.map((dt: any) => {
+            return (
+              <React.Fragment key={dt.IdProduct}>
+                <Col span={12}>
+                  <div className="title-item">{dt.Title}</div>
+                </Col>
+                <Col span={6}>
+                  <div className="title-item">{dt.TotalAmount}</div>
+                </Col>
+                <Col span={6}>
+                  <div className="title-item">{dt.Price}</div>
+                </Col>
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <Col span={24}>
+            <ImageEmptyData />
+          </Col>
+        )}
       </Row>
     </div>
   );

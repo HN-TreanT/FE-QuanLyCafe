@@ -1,9 +1,16 @@
 import "./OverviewReportSale.scss";
 import React from "react";
 import { GiftOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {} from "@fortawesome/fontawesome-svg-core";
+import {} from "@fortawesome/free-solid-svg-icons";
+import {} from "@fortawesome/free-regular-svg-icons";
 import { Row, Col } from "antd";
+import DataEmpty from "../../../assets/empty-data.jpg";
+import { Image } from "antd";
+import { ImageEmptyData } from "../../ImageEmptyData/ImageEmptyData";
 
-export const OverviewReportBill: React.FC = () => {
+export const OverviewReportBill: React.FC<any> = ({ promotions }) => {
   return (
     <div className="overview-report-bill">
       <Row gutter={[0, 15]}>
@@ -23,40 +30,29 @@ export const OverviewReportBill: React.FC = () => {
           ></div>
         </Col>
         {/* Danh sách các khuyến mãi còn hạn */}
-        <Col span={2}>
-          {" "}
-          <GiftOutlined style={{ fontSize: "1.1rem" }} />
-        </Col>
-        <Col span={16}>Mua 2 ly cafe được giảm giá 20%</Col>
-        <Col span={6}>23/01/2002</Col>
 
-        <Col span={2}>
-          {" "}
-          <GiftOutlined style={{ fontSize: "1.1rem" }} />
-        </Col>
-        <Col span={16}>Mua 2 ly cafe được giảm giá 20%</Col>
-        <Col span={6}>23/01/2002</Col>
-
-        <Col span={2}>
-          {" "}
-          <GiftOutlined style={{ fontSize: "1.1rem" }} />
-        </Col>
-        <Col span={16}>Mua 2 ly cafe được giảm giá 20%</Col>
-        <Col span={6}>23/01/2002</Col>
-
-        <Col span={2}>
-          {" "}
-          <GiftOutlined style={{ fontSize: "1.1rem" }} />
-        </Col>
-        <Col span={16}>Mua 2 ly cafe được giảm giá 20%</Col>
-        <Col span={6}>23/01/2002</Col>
-
-        <Col span={2}>
-          {" "}
-          <GiftOutlined style={{ fontSize: "1.1rem" }} />
-        </Col>
-        <Col span={16}>Mua 2 ly cafe được giảm giá 20%</Col>
-        <Col span={6}>23/01/2002</Col>
+        {Array.isArray(promotions) && promotions.length > 0 ? (
+          promotions.map((pro: any) => {
+            const date = new Date(pro?.TimeEnd);
+            const formattedDate = date.toLocaleDateString("vi-VN");
+            return (
+              <React.Fragment key={pro.IdPromotion}>
+                <Col span={2}>
+                  {" "}
+                  <GiftOutlined style={{ fontSize: "1.1rem" }} />
+                </Col>
+                <Col span={16}>{pro?.Name}</Col>
+                <Col span={6}>{formattedDate}</Col>
+              </React.Fragment>
+            );
+          })
+        ) : (
+          <Col span={24}>
+            <div className="empty-data">
+              <ImageEmptyData />
+            </div>
+          </Col>
+        )}
       </Row>
     </div>
   );

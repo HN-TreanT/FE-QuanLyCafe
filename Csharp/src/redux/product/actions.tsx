@@ -1,11 +1,17 @@
 const types = {
-  TOP_SELL_PRODUCT: "/product/top-sell-product",
+  GET_TOP_SELL_PRODUCT: "/product/get_top-sell-product",
+  GET_TOP_SELL_PRODUCT_SUCCESS: "/product/get_top_sell_product_success",
 };
 
 const action = {
-  topSellProduct: (products: any) => {
+  GetTopSellProduct: () => {
     return {
-      type: types.TOP_SELL_PRODUCT,
+      type: types.GET_TOP_SELL_PRODUCT,
+    };
+  },
+  GettopSellProductSuccess: (products: any) => {
+    return {
+      type: types.GET_TOP_SELL_PRODUCT_SUCCESS,
       payload: { products },
     };
   },
@@ -15,4 +21,4 @@ const actions = {
   action,
 };
 export default actions;
-export const OverviewAction = action;
+export const ProductActions = action;
