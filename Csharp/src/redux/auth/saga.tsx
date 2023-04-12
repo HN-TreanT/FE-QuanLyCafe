@@ -78,7 +78,7 @@ function* sage_logout() {
         position: "top-right",
         type: "success",
       });
-      //  localStorage.clear();
+      localStorage.clear();
     }
   } catch (err: any) {
     yield put(stateActions.action.loadingState(false));

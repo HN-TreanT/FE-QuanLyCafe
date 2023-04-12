@@ -6,4 +6,6 @@ const handleGetOverview = (time: Number) => {
     method: "GET",
   });
 };
-export const authService = {};
+export const overviewServices = {
+  handleGetOverview,
+};

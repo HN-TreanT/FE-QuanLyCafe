@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Select, Row, Col, Modal } from "antd";
 import {
   ExclamationCircleFilled,
@@ -45,7 +45,9 @@ const OverviewPage: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const timeState = useSelector((state: any) => state.overview.timeState);
   const overviewData = useSelector((state: any) => state.overview.overviewData);
-
+  useEffect(() => {
+    dispatch(actions.OverviewAction.loadData());
+  }, [actions.OverviewAction, dispatch, timeState]);
   const handleValueChange = (value: any) => {
     let time;
     if (value === "today") time = 1;
@@ -57,6 +59,12 @@ const OverviewPage: React.FC = () => {
   const handleClickModal = () => {
     setIsOpenModal(true);
   };
+  let timeSelected;
+  if (timeState === 1) timeSelected = "today";
+  if (timeState === 7) timeSelected = "thisweek";
+  if (timeState === 30) timeSelected = "thismonth";
+  if (timeState === 365) timeSelected = "thisyear";
+  console.log(timeSelected);
   return (
     <div id="overview_page">
       <Modal
@@ -74,7 +82,7 @@ const OverviewPage: React.FC = () => {
       <div className="list_select_report distance ">
         <Space wrap>
           <Select
-            defaultValue="today"
+            defaultValue={timeSelected ? timeSelected : "thismonth"}
             style={{ width: "250px" }}
             onChange={handleValueChange}
             options={reports}
@@ -90,7 +98,7 @@ const OverviewPage: React.FC = () => {
 
       <div className="list-overview-report distance">
         <OverVReportItem
-          price="0"
+          price={overviewData.MoneyProduct}
           title="Tiền hàng"
           icon={<WalletFilled style={iconReport} />}
         />
@@ -100,17 +108,17 @@ const OverviewPage: React.FC = () => {
           icon={<CloseCircleFilled style={iconReport} />}
         />
         <OverVReportItem
-          price="0"
+          price={overviewData.Sale}
           title="Giảm giá"
           icon={<GiftFilled style={iconReport} />}
         />
         <OverVReportItem
-          price="0"
+          price={overviewData.MoneyMaterial}
           title="Tiền nhập"
           icon={<ContainerFilled style={iconReport} />}
         />
         <OverVReportItem
-          price="0"
+          price={overviewData.Revenue}
           title="Doanh thu"
           icon={<DollarCircleFilled style={iconReport} />}
         />
@@ -121,28 +129,36 @@ const OverviewPage: React.FC = () => {
           <Col xl={6} sm={12}>
             <OverviewReportOther
               title="Số khách hàng"
-              count="0"
+              count={overviewData.CustomerNumber}
               color="rgb(244, 148, 35)"
             />
           </Col>
           <Col xl={6} sm={12}>
             <OverviewReportOther
               title="Số hóa đơn"
-              count="0"
+              count={overviewData.OrderNumber}
               color="rgb(41, 164, 182)"
             />
           </Col>
           <Col xl={6} sm={12}>
             <OverviewReportOther
               title="TB mặt hàng/hóa đơn"
-              count="0"
+              count={`${
+                overviewData.OrderNumber === 0
+                  ? "0"
+                  : overviewData.ProductNumber / overviewData.OrderNumber
+              }`}
               color="rgb(118, 64, 239)"
             />
           </Col>
           <Col xl={6} sm={12}>
             <OverviewReportOther
               title="TB doanh thu/hóa đơn"
-              count="0"
+              count={`${
+                overviewData.OrderNumber === 0
+                  ? "0"
+                  : overviewData.Revenue / overviewData.OrderNumber
+              }`}
               color="rgb(244, 98, 141)"
             />
           </Col>
