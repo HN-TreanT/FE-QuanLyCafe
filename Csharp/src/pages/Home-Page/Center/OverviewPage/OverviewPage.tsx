@@ -52,6 +52,7 @@ const OverviewPage: React.FC = () => {
     (state: any) => state.promotion.promotionExpired
   );
   console.log(promotionExpired);
+  console.log(overviewData);
 
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());

@@ -3,7 +3,7 @@ import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
 import { productServices } from "../../untils/networks/services/productService";
-
+import { authService } from "../../untils/networks/services/authService";
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
   notification({
@@ -29,6 +29,20 @@ function* saga_GetTopSellProduct() {
       (state: any) => state.overview.timeState
     );
     let time: any = _time;
+    //refresh token
+    // const accessToken = localStorage.getItem("token");
+    // const refreshToken = localStorage.getItem("refreshToken");
+    // let refreshModel = {
+    //   accessToken: accessToken,
+    //   refreshToken: refreshToken,
+    // };
+    // let _refresh: Promise<any> = yield authService.handleRefreshToken(
+    //   refreshModel
+    // );
+    // let refresh: any = _refresh;
+    // localStorage.setItem("token", refresh.AccessToken);
+    // localStorage.setItem("refreshToken", refresh.RefreshToken);
+    ///////
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield productServices.GetTop5Product(time);
     let response: any = _response;

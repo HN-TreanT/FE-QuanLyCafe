@@ -1,5 +1,14 @@
 import actions from "./actions";
 const initState = {
+  overviewData: {
+    CustomerNumber: "0",
+    OrderNumber: "0",
+    ProductNumber: "0",
+    Revenue: "0",
+    MoneyProduct: "0",
+    Sale: "0",
+    MoneyMaterial: "0",
+  },
   timeState: 1,
 };
 const OverviewReducer = (state: any = initState, action: any) => {

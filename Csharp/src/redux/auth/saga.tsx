@@ -16,6 +16,7 @@ function* saga_Login() {
 
     if (response.StatusCode === 1) {
       localStorage.setItem("token", response.Token);
+      localStorage.setItem("refreshToken", response.RefreshToken);
       yield put(actions.action.userInfo(response));
       yield put(actions.action.updateLoginInfo({}));
       yield put(stateActions.action.loadingState(false));
@@ -49,21 +50,19 @@ function* saga_Login() {
 }
 function* sage_logout() {
   try {
-    let _userInfo: Promise<any> = yield select(
-      (state: any) => state.auth.user_info
-    );
-    let userInfo: any = _userInfo;
-    // const token = localStorage.getItem("token");
-    // console.log(token);
+    const accessToken = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
     let refreshModel = {
-      accessToken: userInfo.Token,
-      refreshToken: userInfo.RefreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
     let _refresh: Promise<any> = yield authService.handleRefreshToken(
       refreshModel
     );
     let refresh: any = _refresh;
     localStorage.setItem("token", refresh.AccessToken);
+    localStorage.setItem("refreshToken", refresh.RefreshToken);
+    ///
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield authService.handleRevoke();
     let response: any = _response;

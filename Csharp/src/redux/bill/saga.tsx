@@ -4,6 +4,7 @@ import actions from "./actions";
 import stateActions from "../state/actions";
 import { billServices } from "../../untils/networks/services/billService";
 import { orderDetailServices } from "../../untils/networks/services/OrderDetailService";
+import { authService } from "../../untils/networks/services/authService";
 
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
@@ -31,6 +32,21 @@ function* saga_loadData() {
       (state: any) => state.bill.selectedStateBill
     );
     let selectedStatebill: any = _selectedStatebill;
+    //refresh token
+
+    const accessToken = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
+    let refreshModel = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
+    let _refresh: Promise<any> = yield authService.handleRefreshToken(
+      refreshModel
+    );
+    let refresh: any = _refresh;
+    localStorage.setItem("token", refresh.AccessToken);
+    localStorage.setItem("refreshToken", refresh.RefreshToken);
+    ///////
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield billServices.getOrder(
       selectedStatebill
