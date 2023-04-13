@@ -66,7 +66,6 @@ function* sage_logout() {
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield authService.handleRevoke();
     let response: any = _response;
-    console.log(response);
     if (response) {
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.userInfo({}));

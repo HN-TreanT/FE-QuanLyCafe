@@ -25,6 +25,7 @@ interface DataType {
   table: string;
   customer: string;
   money: Number;
+  phonenumber: string;
 }
 
 const BillPage: React.FC = () => {
@@ -45,7 +46,6 @@ const BillPage: React.FC = () => {
     orders.forEach((order) => {
       const date = new Date(order?.TimePay);
       const formattedDate = date.toLocaleDateString("vi-VN");
-      //console.log(order.TimePay);
       data.push({
         key: order?.IdOrder,
         timepay: order.TimePay ? formattedDate : "Chưa thanh toán",
@@ -53,6 +53,7 @@ const BillPage: React.FC = () => {
         table: order.IdTableNavigation?.Name,
         customer: order.IdCustomerNavigation?.Fullname,
         money: order?.payments,
+        phonenumber: order.IdCustomerNavigation?.PhoneNumber,
       });
     });
   }

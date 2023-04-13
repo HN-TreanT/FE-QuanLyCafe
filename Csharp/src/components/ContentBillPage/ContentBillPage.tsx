@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./ContentBillPage.scss";
-import { Input, Select, Table, Image, Button } from "antd";
+import { Input, Select, Table, Image, Button, Form, Space } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
 import billEmpty from "../../assets/empty-bill.svg";
 import { ImageEmptyData } from "../ImageEmptyData/ImageEmptyData";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { BillSupport } from "../../const";
+
 interface DataType {
   key: string;
   timepay: string;
@@ -41,17 +45,6 @@ const columns: ColumnsType<DataType> = [
     render: (text) => <div>{`${text} đ`}</div>,
   },
 ];
-const data: DataType[] = [];
-for (let i = 0; i < 15; i++) {
-  data.push({
-    key: `mfkef${i}`,
-    timepay: "32323",
-    Id: "fefef3",
-    customer: "43434",
-    table: "rrer3r",
-    money: 474545,
-  });
-}
 
 const ContentBillPage: React.FC<any> = ({ orders }) => {
   const dispatch = useDispatch();
@@ -59,9 +52,12 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
   const selectedStateBill = useSelector(
     (state: any) => state.bill.selectedStateBill
   );
-  console.log(orders);
+  const [data, setData] = useState(orders);
+  useEffect(() => {
+    setData(orders);
+  }, [orders]);
+  const [form] = Form.useForm();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -107,38 +103,68 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
   const handleRowClick = (record: DataType) => {
     console.log(record);
   };
-  const handleClickSearch = () => {
-    console.log("ok");
+
+  const handleValueFormChange = () => {
+    const a = BillSupport.SearchBill({
+      ...form.getFieldsValue(),
+      orders: orders,
+    });
+    if (form.getFieldsValue().searchValue) {
+      setData(a);
+    } else {
+      setData(orders);
+    }
   };
-  const handleChangeTypeSearch = (e: any) => {
-    console.log(e);
+  const hanldeClickDelete = () => {
+    console.log("delete ok");
   };
   return (
     <div className="container-bill">
-      {data.length ? (
+      {orders.length ? (
         <>
           <div className="search-bill-of-bill-page">
-            <Select
-              defaultValue="typeSearch"
-              style={{ width: 150 }}
-              onChange={handleChangeTypeSearch}
-              options={[
-                { value: "typeSearch", label: "Loại tìm kiếm" },
-                { value: "nameCustomer", label: "Tên khách hàng" },
-                { value: "phonenumber", label: "Số điện thoại" },
-                { value: "tableFood", label: "Bàn ăn" },
-              ]}
-            />
-            <Input></Input>
-            <Button type="primary" onClick={handleClickSearch}>
-              Search
-            </Button>
+            <Form
+              form={form}
+              layout="horizontal"
+              onValuesChange={handleValueFormChange}
+              className="form-css"
+            >
+              <Space.Compact>
+                <Form.Item
+                  initialValue={"nameCustomer"}
+                  name="selectedTypeSearch"
+                >
+                  <Select
+                    options={[
+                      { value: "nameCustomer", label: "Tên khách hàng" },
+                      { value: "phonenumber", label: "Số điện thoại" },
+                      { value: "tableFood", label: "Bàn ăn" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item name="searchValue" className="input-search-bill">
+                  <Input.Search placeholder="Nhập giá trị muốn tìm kiếm" />
+                </Form.Item>
+              </Space.Compact>
+              <Button
+                className="button-delete-bill"
+                danger
+                onClick={hanldeClickDelete}
+              >
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  beat
+                  className="icon-delete-bill"
+                />
+                Delete
+              </Button>
+            </Form>
           </div>
           <div className="list-bill-in-bill-page">
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={orders}
+              dataSource={data}
               pagination={{
                 pageSize: 5,
                 showSizeChanger: false,
