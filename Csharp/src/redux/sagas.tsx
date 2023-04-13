@@ -4,7 +4,8 @@ import authSaga from "./auth/saga";
 import stateSaga from "./state/saga";
 import overviewSaga from "./overview/saga";
 import productSaga from "./product/saga";
-import promotionSage from "./promotion/saga";
+import promotionSaga from "./promotion/saga";
+import billSaga from "./bill/saga";
 
 export default function* rootSaga() {
   yield all([
@@ -12,6 +13,7 @@ export default function* rootSaga() {
     stateSaga(),
     overviewSaga(),
     productSaga(),
-    promotionSage(),
+    promotionSaga(),
+    billSaga(),
   ]);
 }

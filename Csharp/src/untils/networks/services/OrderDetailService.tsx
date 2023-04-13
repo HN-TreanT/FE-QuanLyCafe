@@ -1,11 +1,11 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const handleGetOverview = (time: Number) => {
+const handleGetOrderByIdOrder = (IdOrder: any) => {
   return api.makeAuthRequest({
-    url: `/api/OrderDetails/getOverview/${time}`,
+    url: `/api/OrderDetails/getAllOrderByIdOrder/${IdOrder}`,
     method: "GET",
   });
 };
-export const overviewServices = {
-  handleGetOverview,
+export const orderDetailServices = {
+  handleGetOrderByIdOrder,
 };

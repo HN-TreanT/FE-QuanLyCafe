@@ -2,6 +2,7 @@ import "./ReportOverViewSell.scss";
 import React from "react";
 import { Row, Col } from "antd";
 import { ImageEmptyData } from "../../ImageEmptyData/ImageEmptyData";
+import DataEmpty from "../../../assets/empty-data.jpg";
 
 export const ReportOverviewSell: React.FC<any> = ({ data }) => {
   return (
@@ -44,7 +45,7 @@ export const ReportOverviewSell: React.FC<any> = ({ data }) => {
           })
         ) : (
           <Col span={24}>
-            <ImageEmptyData />
+            <ImageEmptyData imagePath={DataEmpty} width={110} height={110} />
           </Col>
         )}
       </Row>

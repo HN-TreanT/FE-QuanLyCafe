@@ -2,7 +2,7 @@ import { all, fork, put, select, takeEvery } from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
-import { overviewServices } from "../../untils/networks/services/OrderDetailService";
+import { overviewService } from "../../untils/networks/services/overviewServices";
 
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
@@ -31,9 +31,7 @@ function* saga_LoadData() {
     );
     let time: any = _time;
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield overviewServices.handleGetOverview(
-      time
-    );
+    let _response: Promise<any> = yield overviewService.handleGetOverview(time);
     let response: any = _response;
     if (response.Status) {
       yield put(actions.action.loadDataSuccess(response.Data));

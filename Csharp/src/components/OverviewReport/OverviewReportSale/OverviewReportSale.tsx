@@ -7,7 +7,6 @@ import {} from "@fortawesome/free-solid-svg-icons";
 import {} from "@fortawesome/free-regular-svg-icons";
 import { Row, Col } from "antd";
 import DataEmpty from "../../../assets/empty-data.jpg";
-import { Image } from "antd";
 import { ImageEmptyData } from "../../ImageEmptyData/ImageEmptyData";
 
 export const OverviewReportBill: React.FC<any> = ({ promotions }) => {
@@ -49,7 +48,7 @@ export const OverviewReportBill: React.FC<any> = ({ promotions }) => {
         ) : (
           <Col span={24}>
             <div className="empty-data">
-              <ImageEmptyData />
+              <ImageEmptyData imagePath={DataEmpty} width={110} height={110} />
             </div>
           </Col>
         )}
