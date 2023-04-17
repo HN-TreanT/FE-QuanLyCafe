@@ -51,9 +51,6 @@ const OverviewPage: React.FC = () => {
   const promotionExpired = useSelector(
     (state: any) => state.promotion.promotionExpired
   );
-  console.log(promotionExpired);
-  console.log(overviewData);
-
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());
     dispatch(actions.ProductActions.GetTopSellProduct());
@@ -162,7 +159,9 @@ const OverviewPage: React.FC = () => {
               count={`${
                 overviewData.OrderNumber === 0
                   ? "0"
-                  : overviewData.ProductNumber / overviewData.OrderNumber
+                  : (
+                      overviewData.ProductNumber / overviewData.OrderNumber
+                    ).toFixed(2)
               }`}
               color="rgb(118, 64, 239)"
             />
@@ -173,7 +172,7 @@ const OverviewPage: React.FC = () => {
               count={`${
                 overviewData.OrderNumber === 0
                   ? "0"
-                  : overviewData.Revenue / overviewData.OrderNumber
+                  : (overviewData.Revenue / overviewData.OrderNumber).toFixed(2)
               }`}
               color="rgb(244, 98, 141)"
             />

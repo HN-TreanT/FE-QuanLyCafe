@@ -23,6 +23,7 @@ import ListWarehouse from "./pages/Home-Page/Center/list-warehouse/ListWarehouse
 import ImportWarehouse from "./pages/Home-Page/Center/import-warehouse/ImportWarehouse";
 import ExportWarehouse from "./pages/Home-Page/Center/export-warehouse/ExportWarehouse";
 import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/HistoryWarehouse";
+import AddProductPage from "./pages/Home-Page/Center/AddProduct-page/AddProductPage";
 
 function App() {
   return (
@@ -125,6 +126,14 @@ function App() {
                         element={
                           <AuthorizationComponent
                             element={<HistoryWarehouse />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.ADD_PRODUCT_PAGE}
+                        element={
+                          <AuthorizationComponent
+                            element={<AddProductPage />}
                           />
                         }
                       />

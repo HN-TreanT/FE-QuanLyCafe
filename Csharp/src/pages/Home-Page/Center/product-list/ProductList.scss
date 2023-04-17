@@ -1,0 +1,48 @@
+.product-page{
+    .title-button-product-page{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title-product-page{
+            font-size: 1.8rem;
+            font-weight: 600;
+        
+        }
+        .button-add-product{
+            span{
+                padding-left: 5px;
+            }
+    
+        }
+    }
+   
+    .container-product-page{
+        width: 100%;
+        height: 600px;
+        background-color:white;
+        box-shadow: 0px 0px 10px #e7e2e2;
+  
+        .header-product-page{
+            .form-css{
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               padding:10px 10px 0 10px;
+               .type-search-product{
+                margin-right: 10px;
+               }
+               .input-search-product{
+                   width: 100%;
+               }   
+           }
+           
+        }
+        .content-product-page{
+            .icon-button-product{
+                margin-right: 5px;
+            }
+           
+        }
+    
+    }
+}

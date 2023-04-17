@@ -6,4 +6,11 @@ const getOrder = (data: any) => {
     method: "GET",
   });
 };
-export const billServices = { getOrder };
+
+const deleteOrder = (IdOrder: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/deleteOrder/${IdOrder}`,
+    method: "DELETE",
+  });
+};
+export const billServices = { getOrder, deleteOrder };

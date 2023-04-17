@@ -1,6 +1,6 @@
 import { all, fork, put, select, takeEvery } from "redux-saga/effects";
 import { notification } from "../../components/notification";
-import actions from "./actions";
+import actions, { BillActions } from "./actions";
 import stateActions from "../state/actions";
 import { billServices } from "../../untils/networks/services/billService";
 import { orderDetailServices } from "../../untils/networks/services/OrderDetailService";
@@ -58,7 +58,7 @@ function* saga_loadData() {
         let _orderDetails: Promise<any> =
           orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
         let orderDetails: any = await _orderDetails;
-        let payments = orderDetails.Data.reduce(function (
+        let payments = orderDetails.Data?.reduce(function (
           total: Number,
           currentValue: any
         ) {
@@ -77,8 +77,41 @@ function* saga_loadData() {
     yield handleErr(ex);
   }
 }
+
+function* saga_Deletebill() {
+  try {
+    let _selectedRowKeys: Promise<any> = yield select(
+      (state: any) => state.bill.selectedRowKeys
+    );
+    let selectedRowKeys: any = _selectedRowKeys;
+    console.log("Check selectedRowKey-->", selectedRowKeys);
+    //refresh token
+    const accessToken = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
+    let refreshModel = {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
+    let _refresh: Promise<any> = yield authService.handleRefreshToken(
+      refreshModel
+    );
+    let refresh: any = _refresh;
+    localStorage.setItem("token", refresh.AccessToken);
+    localStorage.setItem("refreshToken", refresh.RefreshToken);
+    ///////
+    yield put(stateActions.action.loadingState(true));
+    for (var Id of selectedRowKeys) {
+      let _response: Promise<any> = yield billServices.deleteOrder(Id);
+    }
+    yield put(actions.action.loadData());
+    yield put(stateActions.action.loadingState(false));
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 function* listen() {
   yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
+  yield takeEvery(actions.types.DELETE_BILL, saga_Deletebill);
 }
 
 export default function* mainSaga() {

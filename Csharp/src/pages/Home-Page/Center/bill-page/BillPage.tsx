@@ -4,6 +4,8 @@ import "./BillPage.scss";
 import ContentBillPage from "../../../../components/ContentBillPage/ContentBillPage";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
+import Spinn from "../../../../components/Spinning/Spinning";
+
 const items: MenuProps["items"] = [
   {
     label: "Tất cả hóa đơn",
@@ -35,6 +37,7 @@ const BillPage: React.FC = () => {
   const selectedStateBill = useSelector(
     (state: any) => state.bill.selectedStateBill
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
   const orders = useSelector((state: any) => state.bill.billData);
   useEffect(() => {
     dispatch(actions.BillActions.loadData());
@@ -59,6 +62,7 @@ const BillPage: React.FC = () => {
   }
   return (
     <div className="bill-page">
+      {loading ? <Spinn /> : " "}
       <Row gutter={[0, 35]}>
         <Col span={24}>
           <div className="title-bill-page">Hóa Đơn</div>

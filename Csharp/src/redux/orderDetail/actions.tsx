@@ -1,5 +1,9 @@
-const types = {};
-const action = {};
+const types = {
+  //GET_ORDERDT_BY_IDORDER: "/orderDeatal/getOrderDtByIdOrder",
+};
+const action = {
+  getOrderDtByIdOrder: () => {},
+};
 
 const actions = {
   types,
@@ -7,4 +11,4 @@ const actions = {
 };
 
 export default actions;
-export const OrderDetailService = action;
+export const OrderDetailActions = action;

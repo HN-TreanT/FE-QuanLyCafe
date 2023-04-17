@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./ContentBillPage.scss";
-import { Input, Select, Table, Image, Button, Form, Space } from "antd";
+import {
+  Input,
+  Select,
+  Table,
+  Image,
+  Button,
+  Form,
+  Space,
+  Modal,
+  Row,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
 import billEmpty from "../../assets/empty-bill.svg";
@@ -10,6 +20,9 @@ import useAction from "../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { BillSupport } from "../../const";
+import { orderDetailServices } from "../../untils/networks/services/OrderDetailService";
+import ItemOrderDetail from "../ItemDetailOrder/ItemDetailOrder";
+import removeAccents from "../../const/RemoveAccent";
 
 interface DataType {
   key: string;
@@ -49,18 +62,20 @@ const columns: ColumnsType<DataType> = [
 const ContentBillPage: React.FC<any> = ({ orders }) => {
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedStateBill = useSelector(
-    (state: any) => state.bill.selectedStateBill
+  const selectedRowKeys = useSelector(
+    (state: any) => state.bill.selectedRowKeys
   );
+
   const [data, setData] = useState(orders);
+  const [rowClickKey, setRowClickKey] = useState("");
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [orderDts, setOrderDts] = useState([]);
   useEffect(() => {
     setData(orders);
   }, [orders]);
   const [form] = Form.useForm();
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
+    dispatch(actions.BillActions.selectedRowKeys(newSelectedRowKeys));
   };
 
   const rowSelection: TableRowSelection<DataType> = {
@@ -81,7 +96,7 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
             }
             return true;
           });
-          setSelectedRowKeys(newSelectedRowKeys);
+          dispatch(actions.BillActions.selectedRowKeys(newSelectedRowKeys));
         },
       },
       {
@@ -95,13 +110,20 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
             }
             return false;
           });
-          setSelectedRowKeys(newSelectedRowKeys);
+          dispatch(actions.BillActions.selectedRowKeys(newSelectedRowKeys));
         },
       },
     ],
   };
-  const handleRowClick = (record: DataType) => {
-    console.log(record);
+  const handleRowClick = async (record: DataType) => {
+    setRowClickKey(record.key);
+    setIsOpenModal(true);
+    const OrderDetails = await orderDetailServices.handleGetOrderByIdOrder(
+      record.key
+    );
+    if (OrderDetails.Status) {
+      setOrderDts(OrderDetails.Data);
+    }
   };
 
   const handleValueFormChange = () => {
@@ -116,12 +138,36 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
     }
   };
   const hanldeClickDelete = () => {
-    console.log("delete ok");
+    dispatch(actions.BillActions.deleteBill());
   };
   return (
     <div className="container-bill">
       {orders.length ? (
         <>
+          <Modal
+            title={`${rowClickKey}#Chi tiết hóa đơn`}
+            footer={null}
+            open={isOpenModal}
+            onCancel={() => setIsOpenModal(false)}
+          >
+            <Row>
+              <ItemOrderDetail
+                NameProduct="Tên món"
+                Amount="Số lượng"
+                Price="Giá thành"
+              />
+              {orderDts.map((orderDetail: any) => {
+                return (
+                  <ItemOrderDetail
+                    key={orderDetail?.IdOrderDetail}
+                    NameProduct={orderDetail.IdProductNavigation?.Title}
+                    Amount={`x${orderDetail?.Amout}`}
+                    Price={`${orderDetail?.Price}`}
+                  />
+                );
+              })}
+            </Row>
+          </Modal>
           <div className="search-bill-of-bill-page">
             <Form
               form={form}

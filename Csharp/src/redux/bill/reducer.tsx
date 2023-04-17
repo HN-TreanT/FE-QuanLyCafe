@@ -2,6 +2,7 @@ import actions from "./actions";
 
 const initAuth = {
   selectedStateBill: "getAllOrder",
+  selectedRowKeys: [],
 };
 const BillReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {
@@ -22,6 +23,15 @@ const BillReducer = (state: any = initAuth, action: any) => {
         ...{
           selectedStateBill: action.payload.selected,
         },
+      };
+    case actions.types.DELETE_BILL:
+      return {
+        ...state,
+      };
+    case actions.types.SELECTED_ROW_KEYS:
+      return {
+        ...state,
+        selectedRowKeys: action.payload.selectedRowKeys,
       };
     default:
       return state;
