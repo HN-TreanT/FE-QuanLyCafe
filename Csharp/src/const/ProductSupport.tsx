@@ -9,7 +9,6 @@ const SearchProduct = (search: SearchValue) => {
   const { selectedTypeSearch, searchValue, products } = search;
   let filterOrders: any[] = [];
   if (selectedTypeSearch === "nameProduct") {
-    console.log(selectedTypeSearch, searchValue, products);
     filterOrders = products.filter((product: any) => {
       const CustomerName = removeAccents(
         product.productName
@@ -19,8 +18,10 @@ const SearchProduct = (search: SearchValue) => {
     });
   }
   if (selectedTypeSearch === "category") {
-    filterOrders = products.filter((order: any) => {
-      return order.phonenumber === searchValue;
+    filterOrders = products.filter((product: any) => {
+      const nameCategory = removeAccents(product.category).toLocaleLowerCase();
+      const searchValueConvert = removeAccents(searchValue).toLocaleLowerCase();
+      return nameCategory.includes(searchValueConvert);
     });
   }
   return filterOrders;

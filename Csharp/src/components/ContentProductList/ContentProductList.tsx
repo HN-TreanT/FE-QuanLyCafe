@@ -17,6 +17,10 @@ import useAction from "../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
+import { useNavigate } from "react-router-dom";
+import { RouterLinks } from "../../const";
+import { productServices } from "../../untils/networks/services/productService";
+import { notification } from "../notification";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả mặt hàng",
@@ -32,6 +36,7 @@ interface DataType {
   price: Number;
 }
 const ContenProductList: React.FC<any> = ({ value }) => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const columns: ColumnsType<DataType> = [
     {
@@ -99,8 +104,31 @@ const ContenProductList: React.FC<any> = ({ value }) => {
   //click row table
   const handleRowClick = (record: any) => {};
   //chỉnh sửa
-  const handleClickEdit = (Id: any) => {
-    console.log("edit", Id);
+  const handleClickEdit = async (Id: any) => {
+    const dbProduct = await productServices.GetProductById(Id);
+    dispatch(actions.MaterialActions.loadData());
+    if (dbProduct.Status) {
+      dispatch(
+        actions.MaterialActions.selectedMaterial(
+          Array.isArray(dbProduct.Data.UseMaterials) &&
+            dbProduct.Data.UseMaterials.map((item: any) => {
+              return {
+                ...item.IdMaterialNavigation,
+                Amount: item.Amount,
+              };
+            })
+        )
+      );
+      dispatch(actions.ProductActions.setInfoProduct(dbProduct.Data));
+      navigate(RouterLinks.UPDATE_PRODUCT_PAGE);
+    } else {
+      notification({
+        message: "get product by id fail",
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
+    }
   };
   //xóa
   const handleClickDelete = async (key: any) => {
@@ -157,7 +185,7 @@ const ContenProductList: React.FC<any> = ({ value }) => {
                     <Select
                       options={[
                         { value: "nameProduct", label: "Tên mặt hàng" },
-                        { value: "category", label: "Mặt hàng" },
+                        { value: "category", label: "Danh mục" },
                       ]}
                     />
                   </Form.Item>

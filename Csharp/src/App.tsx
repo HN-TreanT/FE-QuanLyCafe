@@ -23,7 +23,8 @@ import ListWarehouse from "./pages/Home-Page/Center/list-warehouse/ListWarehouse
 import ImportWarehouse from "./pages/Home-Page/Center/import-warehouse/ImportWarehouse";
 import ExportWarehouse from "./pages/Home-Page/Center/export-warehouse/ExportWarehouse";
 import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/HistoryWarehouse";
-import AddProductPage from "./pages/Home-Page/Center/AddProduct-page/AddProductPage";
+import AddProductPage from "./pages/Home-Page/Center/product-list/AddProduct-page/AddProductPage";
+import UpdateProductPage from "./pages/Home-Page/Center/product-list/UpdateProduct-page/UpdateProductPage";
 
 function App() {
   return (
@@ -134,6 +135,14 @@ function App() {
                         element={
                           <AuthorizationComponent
                             element={<AddProductPage />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.UPDATE_PRODUCT_PAGE}
+                        element={
+                          <AuthorizationComponent
+                            element={<UpdateProductPage />}
                           />
                         }
                       />

@@ -135,11 +135,19 @@ function* saga_deleteProduct() {
     yield handleErr(err);
   }
 }
+
+function* saga_updateProduct() {
+  try {
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 function* listen() {
   yield takeEvery(actions.types.GET_TOP_SELL_PRODUCT, saga_GetTopSellProduct);
   yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
   yield takeEvery(actions.types.ADD_PRODUCT, saga_AddProduct);
   yield takeEvery(actions.types.DELETE_PRODUCT, saga_deleteProduct);
+  yield takeEvery(actions.types.UPDATE_PRODUCT, saga_updateProduct);
 }
 
 export default function* mainSaga() {

@@ -6,6 +6,7 @@ const types = {
   ADD_PRODUCT: "/product/add-product",
   SET_INFO_PRODUCT: "/product/set-info-product",
   DELETE_PRODUCT: "/product/delete-product",
+  UPDATE_PRODUCT: "/product/update-produce",
 };
 
 const action = {
@@ -46,6 +47,11 @@ const action = {
     return {
       type: types.DELETE_PRODUCT,
       payload: { productId },
+    };
+  },
+  updateProduct: () => {
+    return {
+      type: types.UPDATE_PRODUCT,
     };
   },
 };

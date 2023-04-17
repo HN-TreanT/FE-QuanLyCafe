@@ -25,9 +25,16 @@ const DeleteProduct = (IdProduct: any) => {
     method: "DELETE",
   });
 };
+const GetProductById = (Id: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Product/getProductById/${Id}`,
+    method: "GET",
+  });
+};
 export const productServices = {
   GetTop5Product,
   GetAllProduct,
   CreateProduct,
   DeleteProduct,
+  GetProductById,
 };

@@ -24,4 +24,5 @@ export const RouterLinks = {
   HISTORY_WAREHOUSE: "/home/warehouse/history",
   INFO_ACCOUNT_PAGE: "/home/info-account",
   ADD_PRODUCT_PAGE: "/home/add-product-page",
+  UPDATE_PRODUCT_PAGE: "/home/update-product-page",
 };

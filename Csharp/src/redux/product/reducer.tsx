@@ -2,6 +2,7 @@ import actions from "./actions";
 const initState = {
   productsTopSell: [],
   products: [],
+  Id: "",
 };
 const ProductReducer = (state: any = initState, action: any) => {
   switch (action.type) {
@@ -40,6 +41,10 @@ const ProductReducer = (state: any = initState, action: any) => {
         ...{
           productId: action.payload.productId,
         },
+      };
+    case actions.types.UPDATE_PRODUCT:
+      return {
+        ...state,
       };
     default:
       return state;

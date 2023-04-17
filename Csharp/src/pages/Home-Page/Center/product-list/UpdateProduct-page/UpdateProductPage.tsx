@@ -1,3 +1,4 @@
+import "./UpdateProductPage.scss";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
@@ -12,20 +13,20 @@ import {
   InputNumber,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import useAction from "../../../../redux/useActions";
+import useAction from "../../../../../redux/useActions";
 import { PlusOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
-import "./AddProductPage.scss";
-import ModalAddMaterial from "../../../../components/ModalAddMaterial/ModalAddMaterial";
-import { RouterLinks } from "../../../../const";
+import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
+import { RouterLinks, serverConfig } from "../../../../../const";
 
-const AddProductPage: React.FC = () => {
+const UpdateProductPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const infoProduct = useSelector((state: any) => state.product.infoProduct);
   let category: any[] = [];
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
@@ -63,12 +64,6 @@ const AddProductPage: React.FC = () => {
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
   };
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
 
   /////////////////////////////////////////
   const handleChange = () => {
@@ -93,6 +88,7 @@ const AddProductPage: React.FC = () => {
           };
         })
       : [];
+    // setData(data);
     dispatch(actions.MaterialActions.infoUseMaterial(data));
     dispatch(actions.ProductActions.setInfoProduct(formData));
   };
@@ -106,7 +102,7 @@ const AddProductPage: React.FC = () => {
   const handleClickOkAddMaterial = () => {
     setIsOpenModal(false);
   };
-  const handleAddProduct = () => {
+  const handleUpdateProduct = () => {
     dispatch(actions.ProductActions.addProduct());
     navigate(RouterLinks.PRODUCTS_PAGE);
   };
@@ -114,7 +110,7 @@ const AddProductPage: React.FC = () => {
     navigate(RouterLinks.PRODUCTS_PAGE);
   };
   return (
-    <div className="add-product-page">
+    <div className="update-product-page">
       <Modal
         title="Thêm mới nguyên liệu"
         open={isOpenModal}
@@ -127,7 +123,7 @@ const AddProductPage: React.FC = () => {
       <Form form={form} onChange={handleChange} layout="vertical">
         <Row gutter={[20, 10]}>
           <Col span={24}>
-            <div className="tittle-add-product-page">Thêm mới mặt hàng</div>
+            <div className="tittle-add-product-page"> Chỉnh sửa mặt hàng</div>
           </Col>
           <Col span={16}>
             <div className="info-product">
@@ -159,12 +155,16 @@ const AddProductPage: React.FC = () => {
                         >
                           {file ? (
                             <img
-                              src={fileUrl ? fileUrl : ""}
+                              src={fileUrl ? fileUrl : ``}
                               alt="avatar"
                               style={{ width: "100%" }}
                             />
                           ) : (
-                            uploadButton
+                            <img
+                              src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
+                              alt="avatar"
+                              style={{ width: "100%" }}
+                            />
                           )}
                         </Upload>
                       </ImgCrop>
@@ -181,12 +181,17 @@ const AddProductPage: React.FC = () => {
                         ]}
                         name="Title"
                         label="Tên mặt hàng"
+                        initialValue={infoProduct?.Title}
                       >
                         <Input placeholder="Nhập tên mặt hàng"></Input>
                       </Form.Item>
                     </Col>
                     <Col span={24}>
-                      <Form.Item name="Description" label="Mô tả về mặt hàng">
+                      <Form.Item
+                        name="Description"
+                        label="Mô tả về mặt hàng"
+                        initialValue={infoProduct?.Description}
+                      >
                         <Input placeholder="Nhập mô tả"></Input>
                       </Form.Item>
                     </Col>
@@ -201,6 +206,7 @@ const AddProductPage: React.FC = () => {
                         },
                       ]}
                       label=" Loại mặt hàng"
+                      initialValue={[`${infoProduct?.IdCategory}`]}
                     >
                       <Select options={category} />
                     </Form.Item>
@@ -216,6 +222,7 @@ const AddProductPage: React.FC = () => {
                         },
                       ]}
                       label="Giá bán"
+                      initialValue={infoProduct?.Price}
                     >
                       <Input placeholder="Nhập giá bán"></Input>
                     </Form.Item>
@@ -230,6 +237,7 @@ const AddProductPage: React.FC = () => {
                         },
                       ]}
                       label="Đơn vị"
+                      initialValue={infoProduct?.Unit}
                     >
                       <Input placeholder="Nhập đơn vị"></Input>
                     </Form.Item>
@@ -244,8 +252,8 @@ const AddProductPage: React.FC = () => {
                     >
                       Hủy
                     </Button>
-                    <Button type="primary" onClick={handleAddProduct}>
-                      Thêm mặt hàng
+                    <Button type="primary" onClick={handleUpdateProduct}>
+                      Cập nhật
                     </Button>
                   </Col>
                 </Row>
@@ -276,6 +284,7 @@ const AddProductPage: React.FC = () => {
                           <Col span={12}>
                             <Form.Item
                               name={`amount${selectedMaterial.IdMaterial}`}
+                              initialValue={selectedMaterial.Amount}
                             >
                               <InputNumber />
                             </Form.Item>
@@ -323,4 +332,4 @@ const AddProductPage: React.FC = () => {
     </div>
   );
 };
-export default AddProductPage;
+export default UpdateProductPage;
