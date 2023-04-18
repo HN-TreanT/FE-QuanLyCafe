@@ -25,6 +25,7 @@ import ExportWarehouse from "./pages/Home-Page/Center/export-warehouse/ExportWar
 import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/HistoryWarehouse";
 import AddProductPage from "./pages/Home-Page/Center/product-list/AddProduct-page/AddProductPage";
 import UpdateProductPage from "./pages/Home-Page/Center/product-list/UpdateProduct-page/UpdateProductPage";
+import DetailCategory from "./pages/Home-Page/Center/category-page/DetailCategory/DetaileCategory";
 
 function App() {
   return (
@@ -143,6 +144,14 @@ function App() {
                         element={
                           <AuthorizationComponent
                             element={<UpdateProductPage />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.DETAIL_CATEGORY}
+                        element={
+                          <AuthorizationComponent
+                            element={<DetailCategory />}
                           />
                         }
                       />

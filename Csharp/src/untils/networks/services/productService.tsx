@@ -31,10 +31,18 @@ const GetProductById = (Id: any) => {
     method: "GET",
   });
 };
+const updateProduct = (IdProduct: string, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Product/updateProduct/${IdProduct}`,
+    method: "PUT",
+    data,
+  });
+};
 export const productServices = {
   GetTop5Product,
   GetAllProduct,
   CreateProduct,
   DeleteProduct,
   GetProductById,
+  updateProduct,
 };

@@ -1,6 +1,7 @@
 const types = {
   LOAD_DATA: "/category/load-data",
   LOAD_DATA_SUCCES: "/category/load-data-success",
+  CATEGORY_SELECTED: "/category/category-selected",
 };
 const action = {
   loadData: () => {
@@ -12,6 +13,12 @@ const action = {
     return {
       type: types.LOAD_DATA_SUCCES,
       payload: { categories },
+    };
+  },
+  categorySelected: (category: any) => {
+    return {
+      type: types.CATEGORY_SELECTED,
+      payload: { category },
     };
   },
 };

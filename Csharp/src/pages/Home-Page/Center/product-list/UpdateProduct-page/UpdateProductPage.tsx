@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
@@ -43,9 +43,9 @@ const UpdateProductPage: React.FC = () => {
   });
 
   //xử lý file ///////////////
-
-  const [file, setFile] = useState<any>();
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileUrl, setFileUrl] = useState(
+    `${serverConfig.server}/public/${infoProduct?.Thumbnail}`
+  );
   const handleUpload = (uploadFile: any): boolean => {
     setFileUrl(URL.createObjectURL(uploadFile));
     return false;
@@ -67,12 +67,10 @@ const UpdateProductPage: React.FC = () => {
 
   /////////////////////////////////////////
   const handleChange = () => {
-    //console.log(file);
-    //console.log(form.getFieldsValue());
     let data: any[] = [];
     let formData = new FormData();
     console.log(form.getFieldsValue());
-    formData.append("file", file);
+    formData.append("file", form.getFieldsValue().file?.file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);
     formData.append("Unit", form.getFieldsValue().Unit);
@@ -88,12 +86,8 @@ const UpdateProductPage: React.FC = () => {
           };
         })
       : [];
-    // setData(data);
     dispatch(actions.MaterialActions.infoUseMaterial(data));
     dispatch(actions.ProductActions.setInfoProduct(formData));
-  };
-  const handleChangeFile = (e: any) => {
-    setFile(e.file);
   };
   const handleClickAddMaterial = (e: any) => {
     dispatch(actions.MaterialActions.loadData());
@@ -103,12 +97,14 @@ const UpdateProductPage: React.FC = () => {
     setIsOpenModal(false);
   };
   const handleUpdateProduct = () => {
-    dispatch(actions.ProductActions.addProduct());
+    dispatch(actions.ProductActions.updateProduct());
     navigate(RouterLinks.PRODUCTS_PAGE);
   };
   const handleCancleProduct = () => {
     navigate(RouterLinks.PRODUCTS_PAGE);
+    dispatch(actions.StateAction.selectedMenuItem("products"));
   };
+
   return (
     <div className="update-product-page">
       <Modal
@@ -120,10 +116,17 @@ const UpdateProductPage: React.FC = () => {
       >
         <ModalAddMaterial visible={isOpenModal} />
       </Modal>
-      <Form form={form} onChange={handleChange} layout="vertical">
+      <Form form={form} onValuesChange={handleChange} layout="vertical">
+        <span
+          onClick={handleCancleProduct}
+          style={{ cursor: "pointer", color: "#666" }}
+        >
+          <ArrowLeftOutlined style={{ padding: "3px" }} />
+          <span>Quay lại danh sách mặt hàng</span>
+        </span>
         <Row gutter={[20, 10]}>
           <Col span={24}>
-            <div className="tittle-add-product-page"> Chỉnh sửa mặt hàng</div>
+            <div className="tittle-add-product-page"> Chi tiết mặt hàng</div>
           </Col>
           <Col span={16}>
             <div className="info-product">
@@ -133,42 +136,41 @@ const UpdateProductPage: React.FC = () => {
                     <div className="title-info-product">Thông tin chung</div>
                   </Col>
                   <Col span={6}>
-                    <Form.Item
-                      label="Ảnh mặt hàng"
-                      name="file"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Ảnh mặt hàng không  được bỏ trống",
-                        },
-                      ]}
-                    >
-                      <ImgCrop rotationSlider>
+                    <ImgCrop rotationSlider>
+                      <Form.Item
+                        label="Ảnh mặt hàng"
+                        name="file"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Ảnh mặt hàng không  được bỏ trống",
+                          },
+                        ]}
+                      >
                         <Upload
-                          name="file"
-                          onChange={handleChangeFile}
                           listType="picture-card"
                           className="avatar-uploader"
                           showUploadList={false}
                           beforeUpload={handleUpload}
                           onPreview={handlePreview}
                         >
-                          {file ? (
+                          {fileUrl ? (
                             <img
-                              src={fileUrl ? fileUrl : ``}
+                              src={fileUrl}
                               alt="avatar"
                               style={{ width: "100%" }}
                             />
                           ) : (
-                            <img
-                              src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
-                              alt="avatar"
-                              style={{ width: "100%" }}
-                            />
+                            ""
+                            // <img
+                            //   src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
+                            //   alt="avatar"
+                            //   style={{ width: "100%" }}
+                            // />
                           )}
                         </Upload>
-                      </ImgCrop>
-                    </Form.Item>
+                      </Form.Item>
+                    </ImgCrop>
                   </Col>
                   <Col span={18}>
                     <Col span={24}>
@@ -242,16 +244,9 @@ const UpdateProductPage: React.FC = () => {
                       <Input placeholder="Nhập đơn vị"></Input>
                     </Form.Item>
                   </Col>
-                  <Col span={16}></Col>
+                  <Col span={19}></Col>
 
-                  <Col span={8}>
-                    <Button
-                      onClick={handleCancleProduct}
-                      danger
-                      style={{ marginRight: "10px" }}
-                    >
-                      Hủy
-                    </Button>
+                  <Col span={5}>
                     <Button type="primary" onClick={handleUpdateProduct}>
                       Cập nhật
                     </Button>

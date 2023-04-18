@@ -119,6 +119,9 @@ const ContenProductList: React.FC<any> = ({ value }) => {
             })
         )
       );
+      dispatch(
+        actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct)
+      );
       dispatch(actions.ProductActions.setInfoProduct(dbProduct.Data));
       navigate(RouterLinks.UPDATE_PRODUCT_PAGE);
     } else {

@@ -7,6 +7,7 @@ const types = {
   SET_INFO_PRODUCT: "/product/set-info-product",
   DELETE_PRODUCT: "/product/delete-product",
   UPDATE_PRODUCT: "/product/update-produce",
+  SELECTD_PRODUCT_ID: "/product/selected-product-id",
 };
 
 const action = {
@@ -52,6 +53,12 @@ const action = {
   updateProduct: () => {
     return {
       type: types.UPDATE_PRODUCT,
+    };
+  },
+  setSelectedProductId: (Id: any) => {
+    return {
+      type: types.SELECTD_PRODUCT_ID,
+      payload: { Id },
     };
   },
 };

@@ -1,0 +1,47 @@
+.category-page{
+    .title-button-category-page{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title-category-page{
+            font-size: 1.8rem;
+            font-weight: 600;
+        
+        }
+        .button-add-category{
+            span{
+                padding-left: 5px;
+            }
+    
+        }
+    }
+    .container-category-page{
+        width: 100%;
+        height: 500px;
+        background-color:white;
+        box-shadow: 0px 0px 10px #e7e2e2;
+  
+        .header-category-page{
+            .form-css{
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               padding:10px 10px 0 10px;
+               .type-search-category{
+                margin-right: 10px;
+               }
+               .input-search-category{
+                   width: 100%;
+               }   
+           }
+           
+        }
+        .content-category-page{
+            .icon-button-category{
+                margin-right: 5px;
+            }
+           
+        }
+    
+    }
+}

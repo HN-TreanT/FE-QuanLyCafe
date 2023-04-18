@@ -4,7 +4,7 @@ import { Row, Col, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./ProductList.scss";
-import Spinn from "../../../../components/Spinning/Spinning";
+import Spin from "../../../../components/Spinning/Spinning";
 import useAction from "../../../../redux/useActions";
 import { RouterLinks, serverConfig } from "../../../../const";
 import { useNavigate } from "react-router-dom";
@@ -31,12 +31,13 @@ const ProductList: React.FC = () => {
     };
   });
   const handleClickButtonAddProduct = () => {
+    dispatch(actions.MaterialActions.selectedMaterial([]));
     dispatch(actions.MaterialActions.loadData());
     navigate(RouterLinks.ADD_PRODUCT_PAGE);
   };
   return (
     <div className="product-page">
-      {loading ? <Spinn /> : " "}
+      {loading ? <Spin /> : " "}
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-product-page">

@@ -87,6 +87,7 @@ function* saga_AddProduct() {
       (state: any) => state.material.infoUseMaterials
     );
     let infoUseMaterial: any = _infoUseMaterial;
+    yield put(stateActions.action.loadingState(true));
     let _newProduct: Promise<any> = yield productServices.CreateProduct(
       infoProduct
     );
@@ -106,6 +107,7 @@ function* saga_AddProduct() {
       if (!res.Status) {
         yield handleFail("add material fail");
       }
+      yield put(stateActions.action.loadingState(false));
       yield put(actions.action.loadData());
       yield put(MaterialActions.selectedMaterial([]));
     } else {
@@ -138,6 +140,50 @@ function* saga_deleteProduct() {
 
 function* saga_updateProduct() {
   try {
+    let _productId: Promise<any> = yield select(
+      (state: any) => state.product.Id_product
+    );
+    let productId: any = _productId;
+    yield put(stateActions.action.loadingState(true));
+    let _infoUpdateProduct: Promise<any> = yield select(
+      (state: any) => state.product.infoProduct
+    );
+    let infoUpdateProduct: any = _infoUpdateProduct;
+    let _infoMaterials: Promise<any> = yield select(
+      (state: any) => state.material.infoUseMaterials
+    );
+    let infoMaterials: any = _infoMaterials;
+    let _responseUpdateProduct: Promise<any> =
+      yield productServices.updateProduct(productId, infoUpdateProduct);
+    let responseUpdateProduct: any = _responseUpdateProduct;
+    let _responseDeleteUM: Promise<any> =
+      yield materialService.deleteAllUseMaterialByIdProduct(productId);
+    let reponseDeleteUM: any = _responseDeleteUM;
+    let data: any[] = [];
+    data = infoMaterials.map((info: any) => {
+      return {
+        ...info,
+        IdProduct: productId,
+      };
+    });
+    let _resCreateUM: Promise<any> =
+      yield materialService.createManyUseMaterial(data);
+    let resCreatUM: any = _resCreateUM;
+    if (
+      reponseDeleteUM.Status &&
+      responseUpdateProduct.Status &&
+      resCreatUM.Status
+    ) {
+      yield put(stateActions.action.loadingState(false));
+      notification({
+        message: "thay đổi thành công",
+        title: "Thông báo",
+        position: "top-right",
+        type: "success",
+      });
+    } else {
+      yield handleFail("Thay đổi thất bại");
+    }
   } catch (err: any) {
     yield handleErr(err);
   }

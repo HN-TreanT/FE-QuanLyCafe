@@ -16,6 +16,13 @@ const CategoryReducer = (state: any = initAuth, action: any) => {
           categories: action.payload.categories,
         },
       };
+    case actions.types.CATEGORY_SELECTED:
+      return {
+        ...state,
+        ...{
+          categorySelected: action.payload.category,
+        },
+      };
     default:
       return state;
   }

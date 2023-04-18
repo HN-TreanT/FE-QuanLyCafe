@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   Row,
@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import "./AddProductPage.scss";
@@ -49,6 +49,7 @@ const AddProductPage: React.FC = () => {
     setFileUrl(URL.createObjectURL(uploadFile));
     return false;
   };
+  const loading = useSelector((state: any) => state.state.loadingState);
   const handlePreview = async (file: UploadFile) => {
     let src = file.url as string;
     if (!src) {
@@ -77,6 +78,7 @@ const AddProductPage: React.FC = () => {
     let data: any[] = [];
     let formData = new FormData();
     console.log(form.getFieldsValue());
+    // formData.append("file", file);
     formData.append("file", file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);
@@ -124,7 +126,14 @@ const AddProductPage: React.FC = () => {
       >
         <ModalAddMaterial visible={isOpenModal} />
       </Modal>
-      <Form form={form} onChange={handleChange} layout="vertical">
+      <Form form={form} onValuesChange={handleChange} layout="vertical">
+        <span
+          onClick={handleCancleProduct}
+          style={{ cursor: "pointer", color: "#666" }}
+        >
+          <ArrowLeftOutlined style={{ padding: "3px" }} />
+          <span>Quay lại danh sách mặt hàng</span>
+        </span>
         <Row gutter={[20, 10]}>
           <Col span={24}>
             <div className="tittle-add-product-page">Thêm mới mặt hàng</div>
@@ -157,7 +166,7 @@ const AddProductPage: React.FC = () => {
                           beforeUpload={handleUpload}
                           onPreview={handlePreview}
                         >
-                          {file ? (
+                          {fileUrl ? (
                             <img
                               src={fileUrl ? fileUrl : ""}
                               alt="avatar"
@@ -234,16 +243,16 @@ const AddProductPage: React.FC = () => {
                       <Input placeholder="Nhập đơn vị"></Input>
                     </Form.Item>
                   </Col>
-                  <Col span={16}></Col>
+                  <Col span={18}></Col>
 
-                  <Col span={8}>
-                    <Button
+                  <Col span={6}>
+                    {/* <Button
                       onClick={handleCancleProduct}
                       danger
                       style={{ marginRight: "10px" }}
                     >
                       Hủy
-                    </Button>
+                    </Button> */}
                     <Button type="primary" onClick={handleAddProduct}>
                       Thêm mặt hàng
                     </Button>

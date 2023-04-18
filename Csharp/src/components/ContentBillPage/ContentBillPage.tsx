@@ -67,6 +67,7 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
   );
 
   const [data, setData] = useState(orders);
+
   const [rowClickKey, setRowClickKey] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [orderDts, setOrderDts] = useState([]);

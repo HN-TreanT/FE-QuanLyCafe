@@ -13,7 +13,14 @@ const createManyUseMaterial = (data: any) => {
     data,
   });
 };
+const deleteAllUseMaterialByIdProduct = (Id: string) => {
+  return api.makeAuthRequest({
+    url: `/api/UseMaterial/deleteManyUseMaterialByIdProduct/${Id}`,
+    method: "DELETE",
+  });
+};
 export const materialService = {
   getAllMaterial,
   createManyUseMaterial,
+  deleteAllUseMaterialByIdProduct,
 };

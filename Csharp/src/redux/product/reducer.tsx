@@ -46,6 +46,13 @@ const ProductReducer = (state: any = initState, action: any) => {
       return {
         ...state,
       };
+    case actions.types.SELECTD_PRODUCT_ID:
+      return {
+        ...state,
+        ...{
+          Id_product: action.payload.Id,
+        },
+      };
     default:
       return state;
   }
