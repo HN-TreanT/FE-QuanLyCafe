@@ -39,7 +39,7 @@ const uploadAvartarImage = (data: any) => {
     data,
   });
 };
-export const promotionServices = {
+export const staffService = {
   getAllStaff,
   getStaffById,
   updateStaff,

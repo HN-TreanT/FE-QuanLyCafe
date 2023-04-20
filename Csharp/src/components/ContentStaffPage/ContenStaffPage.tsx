@@ -134,9 +134,9 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
             <Table
               style={{ marginLeft: "20px" }}
               columns={columns}
-              dataSource={data}
+              dataSource={valueStaffs}
               pagination={{
-                pageSize: 4,
+                pageSize: 5,
                 showSizeChanger: false,
                 hideOnSinglePage: true,
               }}

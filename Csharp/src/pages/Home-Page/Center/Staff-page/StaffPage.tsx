@@ -13,9 +13,25 @@ const StaffPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
+  const selectedStateStaff = useSelector(
+    (state: any) => state.staff.selectedStateStaff
+  );
   useEffect(() => {
     dispatch(actions.StaffActions.loadData());
-  }, [dispatch, actions.StaffActions]);
+  }, [dispatch, actions.StaffActions, selectedStateStaff]);
+  const staffs = useSelector((state: any) => state.staff.staffs);
+  const valueStaffs = staffs.map((staff: any) => {
+    return {
+      key: staff?.IdStaff,
+      email: staff?.Email,
+      nameStaff: staff?.Fullname,
+      state: "Đang làm việc",
+      address: staff?.Address,
+      phoneNumber: staff?.PhoneNumber,
+      createdAt: `${staff?.CreatedAt}`,
+    };
+  });
+  console.log("check staff", staffs);
   const loading = useSelector((state: any) => state.state.loadingState);
   const handleClickButtonAddStaff = () => {};
   return (
@@ -35,7 +51,7 @@ const StaffPage: React.FC = () => {
             </Button>
           </div>
         </Col>
-        <ContentStaffPage />
+        <ContentStaffPage value={valueStaffs} />
       </Row>
     </div>
   );
