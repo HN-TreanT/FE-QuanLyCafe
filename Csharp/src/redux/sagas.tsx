@@ -9,6 +9,7 @@ import billSaga from "./bill/saga";
 import orderDetailSaga from "./orderDetail/saga";
 import materialSaga from "./material/saga";
 import categorySaga from "./category/saga";
+import staffSaga from "./staff/saga";
 export default function* rootSaga() {
   yield all([
     authSaga(),
@@ -20,5 +21,6 @@ export default function* rootSaga() {
     orderDetailSaga(),
     materialSaga(),
     categorySaga(),
+    staffSaga(),
   ]);
 }

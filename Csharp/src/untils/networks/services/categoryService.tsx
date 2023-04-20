@@ -28,7 +28,7 @@ const updateCategory = (Id: string, data: any) => {
 };
 const deleteCategory = (Id: string) => {
   return api.makeAuthRequest({
-    url: `/api/Category/deleteCategory${Id}`,
+    url: `/api/Category/deleteCategory/${Id}`,
     method: "DELETE",
   });
 };

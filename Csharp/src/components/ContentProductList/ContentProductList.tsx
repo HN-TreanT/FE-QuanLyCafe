@@ -23,7 +23,7 @@ import { productServices } from "../../untils/networks/services/productService";
 import { notification } from "../notification";
 const items: MenuProps["items"] = [
   {
-    label: "Tất cả mặt hàng",
+    label: "Tất cả nhân viên",
     key: "listProduct",
   },
 ];

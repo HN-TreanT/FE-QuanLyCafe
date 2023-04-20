@@ -1,9 +1,9 @@
-import { Col, Row, Table, Form, Menu, Input, MenuProps } from "antd";
+import { Col, Row, Table, Form, Menu, Input, MenuProps, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../../const";
@@ -106,7 +106,12 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
                     <Input
                       onChange={handleSearchValueChange}
                       placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                      prefix={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                      prefix={
+                        <FontAwesomeIcon
+                          icon={faMagnifyingGlass}
+                          className="icon-search"
+                        />
+                      }
                     />
                   </Form.Item>
                 </Form>

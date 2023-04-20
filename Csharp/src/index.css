@@ -12,6 +12,9 @@ body {
   background-color:white;
   
 }
+.icon-search{
+  color: rgba(0, 0, 0, 0.295);
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

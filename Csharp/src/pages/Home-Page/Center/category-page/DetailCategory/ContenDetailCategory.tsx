@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Col, Row, Input, Table, Image } from "antd";
+import { Col, Row, Input, Table, Image, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import removeAccents from "../../../../../const/RemoveAccent";
 import { productServices } from "../../../../../untils/networks/services/productService";
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../../const";
 import { notification } from "../../../../../components/notification";
+import { categoryService } from "../../../../../untils/networks/services/categoryService";
 interface DataType {
   key: any;
   image: string;
@@ -22,6 +23,10 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
   const actions = useAction();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categorySelected = useSelector(
+    (state: any) => state.category.categorySelected
+  );
+  console.log(categorySelected);
   const columns: ColumnsType<DataType> = [
     {
       title: "",
@@ -99,20 +104,54 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
       });
     }
   };
+  const handleDeleteCategory = async () => {
+    try {
+      const response = await categoryService.deleteCategory(
+        categorySelected?.IdCategory
+      );
+      if (response.Status) {
+        dispatch(actions.CategoryActions.loadData());
+        navigate(RouterLinks.CATEGORY_PAGE);
+      } else {
+        notification({
+          message: "delete category fail",
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <Col span={24}>
       <div className="container-detail-category-page">
         <div className="content-detail-category-page">
           <div className="header-detail-category-page">
             <Row gutter={[15, 15]}>
-              <Col span={24}>
+              <Col span={21}>
                 <span className="title">Danh sách mặt hàng</span>
+              </Col>
+              <Col span={3}>
+                <Button danger onClick={handleDeleteCategory}>
+                  <FontAwesomeIcon
+                    style={{ marginRight: "5px" }}
+                    icon={faTrash}
+                  />
+                  Xóa danh mục
+                </Button>
               </Col>
               <Col span={24}>
                 <Input
                   onChange={handleSearchValueChange}
                   placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                  prefix={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                  prefix={
+                    <FontAwesomeIcon
+                      icon={faMagnifyingGlass}
+                      className="icon-search"
+                    />
+                  }
                 />
               </Col>
               <Col span={24}>

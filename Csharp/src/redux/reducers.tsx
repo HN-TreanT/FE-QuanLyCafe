@@ -7,6 +7,7 @@ import BillReducer from "./bill/reducer";
 import OrderDetailReducer from "./orderDetail/reducer";
 import MaterialReducer from "./material/reducer";
 import CategoryReducer from "./category/reducer";
+import StaffReducer from "./staff/reducer";
 const rootReducer = {
   auth: AuthReducer,
   state: StateReducer,
@@ -17,6 +18,7 @@ const rootReducer = {
   orderDetail: OrderDetailReducer,
   material: MaterialReducer,
   category: CategoryReducer,
+  staff: StaffReducer,
 };
 
 export default rootReducer;

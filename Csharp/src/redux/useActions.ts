@@ -7,9 +7,10 @@ import { BillActions } from "./bill/actions";
 import { OrderDetailActions } from "./orderDetail/actions";
 import { MaterialActions } from "./material/actions";
 import { CategoryActions } from "./category/actions";
+import { StaffActions } from "./staff/actions";
 
 const useAction = ()=>{
-    const actions = {AuthActions,StateAction,OverviewAction,ProductActions,PromotionAction,BillActions,OrderDetailActions,MaterialActions,CategoryActions};
+    const actions = {AuthActions,StateAction,OverviewAction,ProductActions,PromotionAction,BillActions,OrderDetailActions,MaterialActions,CategoryActions,StaffActions};
   return actions
 }
 export default useAction;
