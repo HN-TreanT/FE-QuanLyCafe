@@ -26,25 +26,6 @@ function* handleErr(err: any) {
 
 function* saga_loadData() {
   try {
-    //refresh token
-    const accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    let refreshModel = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    };
-    yield put(stateActions.action.loadingState(true));
-    let _refresh: Promise<any> = yield authService.handleRefreshToken(
-      refreshModel
-    );
-    let refresh: any = _refresh;
-    if (!refresh) {
-      yield put(stateActions.action.loadingState(false));
-      yield handleFail("refresh token fail");
-    }
-    localStorage.setItem("token", refresh.AccessToken);
-    localStorage.setItem("refreshToken", refresh.RefreshToken);
-    //refresh token
     let _selectedStaffState: Promise<any> = yield select(
       (state: any) => state.staff.selectedStateStaff
     );
@@ -66,8 +47,65 @@ function* saga_loadData() {
   }
 }
 
+function* saga_createStaff() {
+  try {
+    let _infoStaffCreate: Promise<any> = yield select(
+      (state: any) => state.staff.infoStaffCreate
+    );
+    let infoStaffCreate: any = _infoStaffCreate;
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield staffService.createStaff(
+      infoStaffCreate
+    );
+    let response: any = _response;
+    if (response.Status) {
+      yield put(actions.action.loadData());
+      yield put(stateActions.action.loadingState(false));
+      yield put(actions.action.setInfoStaffCreate({}));
+    } else {
+      yield handleFail("create staff fail");
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
+function* saga_updateStaff() {
+  try {
+    let _detailStaff: Promise<any> = yield select(
+      (state: any) => state.staff.detailStaff
+    );
+    let detailStaff: any = _detailStaff;
+    let _updateInfoStaff: Promise<any> = yield select(
+      (state: any) => state.staff.infoStaffCreate
+    );
+    let updateInfoStaff: any = _updateInfoStaff;
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield staffService.updateStaff(
+      detailStaff.IdStaff,
+      updateInfoStaff
+    );
+    let reponse: any = _response;
+    if (reponse.Data) {
+      yield put(stateActions.action.loadingState(false));
+      yield put(actions.action.loadData());
+      notification({
+        message: "Update success",
+        title: "Thông báo",
+        position: "top-right",
+        type: "success",
+      });
+    } else {
+      handleFail("update staff fail");
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
+
 function* listen() {
   yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
+  yield takeEvery(actions.types.CREATE_STAFF, saga_createStaff);
+  yield takeEvery(actions.types.UPDATE_STAFF, saga_updateStaff);
 }
 
 export default function* mainSaga() {

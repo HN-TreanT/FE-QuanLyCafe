@@ -26,6 +26,8 @@ import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/History
 import AddProductPage from "./pages/Home-Page/Center/product-list/AddProduct-page/AddProductPage";
 import UpdateProductPage from "./pages/Home-Page/Center/product-list/UpdateProduct-page/UpdateProductPage";
 import DetailCategory from "./pages/Home-Page/Center/category-page/DetailCategory/DetaileCategory";
+import AddStaffPage from "./pages/Home-Page/Center/Staff-page/AddStaffPage/AddStaffPage";
+import DetailStaffPage from "./pages/Home-Page/Center/Staff-page/DetailStaffPage/DetailStaffPage";
 
 function App() {
   return (
@@ -152,6 +154,20 @@ function App() {
                         element={
                           <AuthorizationComponent
                             element={<DetailCategory />}
+                          />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.ADD_STAFF_PAGE}
+                        element={
+                          <AuthorizationComponent element={<AddStaffPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.DETAIL_STAFF_PAGE}
+                        element={
+                          <AuthorizationComponent
+                            element={<DetailStaffPage />}
                           />
                         }
                       />

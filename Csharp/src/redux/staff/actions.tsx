@@ -1,7 +1,11 @@
 const types = {
   LOAD_DATA: "/staff/load-data",
   LOAD_DATA_SUCCESS: "/staff/load-data-sucess",
-  SELECTED_STATE_STAFF: "/staff/selected-state-staff",
+  SELECTED_STAFF: "/staff/selected-staff",
+  SET_INFO_STAFF_CREATE: "/staff/set-info-staff-create",
+  CREATE_STAFF: "/staff/create-staff",
+  DETAIL_STAFF: "/staff/detail-staff",
+  UPDATE_STAFF: "/staff/update-staff",
 };
 
 const action = {
@@ -16,10 +20,32 @@ const action = {
       payload: { staffs },
     };
   },
-  seletedStateStaff: (state: any) => {
+  seletedStaff: (state: any) => {
     return {
-      type: types.SELECTED_STATE_STAFF,
+      type: types.SELECTED_STAFF,
       payload: { state },
+    };
+  },
+  setInfoStaffCreate: (data: any) => {
+    return {
+      type: types.SET_INFO_STAFF_CREATE,
+      payload: { data },
+    };
+  },
+  createStaff: () => {
+    return {
+      type: types.CREATE_STAFF,
+    };
+  },
+  setDetailStaff: (data: any) => {
+    return {
+      type: types.DETAIL_STAFF,
+      payload: { data },
+    };
+  },
+  handleUpdateStaff: () => {
+    return {
+      type: types.UPDATE_STAFF,
     };
   },
 };

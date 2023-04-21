@@ -11,7 +11,6 @@ import {
   Image,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { ProductSupport } from "../../const/ProductSupport";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,40 +19,27 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
 import { productServices } from "../../untils/networks/services/productService";
+
+import { StaffSupport } from "../../const/StaffSupport";
+import { staffService } from "../../untils/networks/services/staffService";
+import Spinn from "../Spinning/Spinning";
 import { notification } from "../notification";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả nhân viên",
     key: "allStaff",
   },
-  {
-    label: "Đang làm việc",
-    key: "staffWorking",
-  },
 ];
 interface DataType {
   email: string;
   nameStaff: string;
-  state: string;
+  workShift: string;
   address: string;
   phoneNumber: string;
   createdAt: string;
 }
-let data: any[] = [];
-for (var i = 0; i < 15; i++) {
-  data.push({
-    key: `${i}`,
-    email: "hntreant@23012",
-    nameStaff: `Hoang Nam ${i}`,
-    state: "Đang làm việc",
-    address: "Hà Nội",
-    phoneNumber: "972842",
-    createdAt: "23/01/2002",
-  });
-}
 const ContentStaffPage: React.FC<any> = ({ value }) => {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
   const columns: ColumnsType<DataType> = [
     {
       title: "Email",
@@ -65,8 +51,8 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
       dataIndex: "nameStaff",
     },
     {
-      title: "Trạng thái",
-      dataIndex: "state",
+      title: "Ca làm",
+      dataIndex: "workShift",
       render: (text) => <div style={{ color: "#0088ff" }}>{text}</div>,
     },
     {
@@ -87,19 +73,49 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
   const [valueStaffs, setValueStaffs] = useState(value);
   useEffect(() => {
     setValueStaffs(value);
   }, [value]);
   //click row table
-  const handleRowClick = (record: any) => {};
-  //tìm kiếm
-  const handleSearchValueChange = (e: any) => {};
-  const handleSelectedStaffState = (e: any) => {
-    dispatch(actions.StaffActions.seletedStateStaff(e.key));
+  const handleRowClick = async (record: any) => {
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      const response = await staffService.getStaffById(record.key);
+      if (response.Status) {
+        //  dispatch(actions.StaffActions.seletedStaff(record.key));
+        dispatch(actions.StaffActions.setDetailStaff(response.Data));
+        navigate(RouterLinks.DETAIL_STAFF_PAGE);
+        dispatch(actions.StateAction.loadingState(false));
+      } else {
+        notification({
+          message: "Not found staff",
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+      }
+    } catch (err: any) {
+      console.log(err);
+    }
   };
+  //tìm kiếm
+  const handleSearchValueChange = (e: any) => {
+    const filterStaffs = StaffSupport.SearchStaff({
+      searchValue: e.target.value,
+      staffs: value,
+    });
+    if (e.target.value) {
+      setValueStaffs(filterStaffs);
+    } else {
+      setValueStaffs(value);
+    }
+  };
+
   return (
     <>
+      {loading ? <Spinn /> : " "}
       <Col span={24}>
         <div className="container-staff-page">
           <div className="header-staff-page">
@@ -107,7 +123,6 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
               <Col span={24}>
                 <Menu
                   defaultSelectedKeys={["allStaff"]}
-                  onClick={handleSelectedStaffState}
                   selectedKeys={selectedStateStaff}
                   mode="horizontal"
                   items={items}

@@ -1,0 +1,18 @@
+.item-overview-report {
+  display: flex;
+  padding: 25px 0;
+}
+.item-overview-report .icon-item-overview-report {
+  margin-right: 10px;
+  font-size: 1.4rem;
+  opacity: 0.3;
+}
+.item-overview-report .span-item-overview-report .title {
+  font-size: 1rem;
+  color: #007bff;
+  font-weight: 500;
+}
+.item-overview-report .span-item-overview-report .price {
+  font-size: 1.2rem;
+  font-weight: 500;
+}/*# sourceMappingURL=OverVReportItem.css.map */

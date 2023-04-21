@@ -26,22 +26,6 @@ function* handleErr(err: any) {
 
 function* saga_setPromotionExpired() {
   try {
-    //refresh token
-    // let _userInfo: Promise<any> = yield select(
-    //   (state: any) => state.auth.user_info
-    // );
-
-    // let userInfo: any = _userInfo;
-    // let refreshModel = {
-    //   accessToken: userInfo.Token,
-    //   refreshToken: userInfo.RefreshToken,
-    // };
-    // let _refresh: Promise<any> = yield authService.handleRefreshToken(
-    //   refreshModel
-    // );
-    // let refresh: any = _refresh;
-    // localStorage.setItem("token", refresh.AccessToken);
-    ///////
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield promotionServices.GetPromotionExpired();
     let response: any = _response;

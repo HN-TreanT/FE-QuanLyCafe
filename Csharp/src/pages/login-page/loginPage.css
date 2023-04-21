@@ -1,0 +1,60 @@
+.LoginPage {
+  height: 100vh;
+  background: url("../../assets/background.jpg");
+  background-size: cover;
+  display: flex;
+  align-items: center;
+}
+.LoginPage .FormLogin {
+  position: relative;
+  margin-left: 10vw;
+  width: 380px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+}
+.LoginPage .FormLogin .LoginTitle {
+  position: absolute;
+  background: linear-gradient(135deg, #1d1f22 0%, #4e5156 100%);
+  box-shadow: 0px 2px 6px rgba(42, 41, 41, 0.36);
+  border-radius: 8px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 30px;
+  padding: 20px;
+  width: 340px;
+  top: -70px;
+}
+.LoginPage .FormLogin .CheckContainer {
+  color: #7B809A;
+}
+.LoginPage .FormLogin .CheckContainer .ForgetPassword {
+  margin-left: 70px;
+  color: rgb(78, 133, 226);
+  cursor: pointer;
+}
+.LoginPage .FormLogin .CheckContainer .ForgetPassword:hover {
+  color: rgba(27, 81, 175, 0.899);
+}
+.LoginPage .FormLogin .ButtonContainer {
+  cursor: pointer;
+  margin: 20px 0;
+}
+.LoginPage .FormLogin .ButtonContainer button {
+  height: auto;
+  width: 100%;
+  padding: 10px !important;
+}
+.LoginPage .FormLogin .ErrorSignIn {
+  color: var(--red-color);
+  text-align: center;
+  margin-top: -14px;
+}
+.LoginPage .FormLogin .linkSignUp {
+  display: flex;
+  justify-content: center;
+}
+
+.loading {
+  opacity: 0.6;
+}/*# sourceMappingURL=loginPage.css.map */

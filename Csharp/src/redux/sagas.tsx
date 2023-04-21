@@ -10,6 +10,7 @@ import orderDetailSaga from "./orderDetail/saga";
 import materialSaga from "./material/saga";
 import categorySaga from "./category/saga";
 import staffSaga from "./staff/saga";
+import workShiftSaga from "./workshift/saga";
 export default function* rootSaga() {
   yield all([
     authSaga(),
@@ -22,5 +23,6 @@ export default function* rootSaga() {
     materialSaga(),
     categorySaga(),
     staffSaga(),
+    workShiftSaga(),
   ]);
 }

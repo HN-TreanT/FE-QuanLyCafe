@@ -1,0 +1,24 @@
+.detail-category-page .title-button-detail-category-page {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.detail-category-page .title-button-detail-category-page .title-detail-category-page {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+.detail-category-page .title-button-detail-category-page .button-add-detail-category span {
+  padding-left: 5px;
+}
+.detail-category-page .container-detail-category-page {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px #e7e2e2;
+}
+.detail-category-page .container-detail-category-page .content-detail-category-page {
+  padding: 10px;
+}
+.detail-category-page .container-detail-category-page .content-detail-category-page .header-detail-category-page .title {
+  font-size: 1rem;
+  font-weight: 400;
+}/*# sourceMappingURL=DetailCategoryPage.css.map */

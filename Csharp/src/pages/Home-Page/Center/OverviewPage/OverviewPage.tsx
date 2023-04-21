@@ -17,6 +17,7 @@ import {
 } from "../../../../components/OverviewReport";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
+import axios from "axios";
 const reports = [
   {
     value: "today",
@@ -78,6 +79,18 @@ const OverviewPage: React.FC = () => {
   if (timeState === 7) timeSelected = "thisweek";
   if (timeState === 30) timeSelected = "thismonth";
   if (timeState === 365) timeSelected = "thisyear";
+  const handleClik = async () => {
+    const accessToken = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshRes = await axios.post(
+      "https://localhost:7066/api/Token/Refresh",
+      {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      }
+    );
+    console.log(refreshRes.data.AccessToken);
+  };
   return (
     <div id="overview_page">
       <Modal
@@ -89,7 +102,7 @@ const OverviewPage: React.FC = () => {
         }}
       ></Modal>
       <div className="title_overview distance">
-        <span>TỔNG QUAN KINH DOANH</span>
+        <span onClick={handleClik}>TỔNG QUAN KINH DOANH</span>
       </div>
 
       <div className="list_select_report distance ">

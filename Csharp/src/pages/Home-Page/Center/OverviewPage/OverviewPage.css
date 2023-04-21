@@ -1,0 +1,25 @@
+#overview_page .title_overview {
+  font-size: 15px;
+  font-weight: 550;
+}
+#overview_page .list_select_report {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#overview_page .list_select_report .support {
+  cursor: pointer;
+  color: #747C87;
+}
+#overview_page .list-overview-report {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0px 0px 10px #e7e2e2;
+  justify-content: space-around;
+  border-radius: 5px;
+}
+
+.distance {
+  margin: 0 0 20px 0;
+}/*# sourceMappingURL=OverviewPage.css.map */

@@ -1,0 +1,11 @@
+.item-order-detail {
+  display: flex;
+  padding: 5px;
+  align-items: center;
+}
+.item-order-detail .name-item-order-dt {
+  margin-right: 170px;
+}
+.item-order-detail .amount-item-order-dt {
+  margin-right: 50px;
+}/*# sourceMappingURL=ItemDetailOrder.css.map */

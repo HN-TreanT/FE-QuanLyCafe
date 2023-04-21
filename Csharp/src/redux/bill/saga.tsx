@@ -32,21 +32,7 @@ function* saga_loadData() {
       (state: any) => state.bill.selectedStateBill
     );
     let selectedStatebill: any = _selectedStatebill;
-    //refresh token
 
-    const accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    let refreshModel = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    };
-    let _refresh: Promise<any> = yield authService.handleRefreshToken(
-      refreshModel
-    );
-    let refresh: any = _refresh;
-    localStorage.setItem("token", refresh.AccessToken);
-    localStorage.setItem("refreshToken", refresh.RefreshToken);
-    ///////
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield billServices.getOrder(
       selectedStatebill
@@ -84,21 +70,6 @@ function* saga_Deletebill() {
       (state: any) => state.bill.selectedRowKeys
     );
     let selectedRowKeys: any = _selectedRowKeys;
-    console.log("Check selectedRowKey-->", selectedRowKeys);
-    //refresh token
-    const accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    let refreshModel = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    };
-    let _refresh: Promise<any> = yield authService.handleRefreshToken(
-      refreshModel
-    );
-    let refresh: any = _refresh;
-    localStorage.setItem("token", refresh.AccessToken);
-    localStorage.setItem("refreshToken", refresh.RefreshToken);
-    ///////
     yield put(stateActions.action.loadingState(true));
     for (var Id of selectedRowKeys) {
       let _response: Promise<any> = yield billServices.deleteOrder(Id);

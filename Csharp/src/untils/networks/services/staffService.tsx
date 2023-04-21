@@ -14,7 +14,7 @@ const getStaffById = (Id: any) => {
 };
 const updateStaff = (Id: any, data: any) => {
   return api.makeAuthRequest({
-    url: `/api/staff/getStaff/${Id}`,
+    url: `/api/staff/UpdateInfoStaff/${Id}`,
     method: "PUT",
     data,
   });

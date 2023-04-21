@@ -26,4 +26,6 @@ export const RouterLinks = {
   ADD_PRODUCT_PAGE: "/home/add-product-page",
   UPDATE_PRODUCT_PAGE: "/home/update-product-page",
   DETAIL_CATEGORY: "/home/category/detail-category",
+  ADD_STAFF_PAGE: "/home/staff/add-staff-page",
+  DETAIL_STAFF_PAGE: "/home/staff/detial-staff-page",
 };

@@ -9,6 +9,7 @@ import "./loginPage.scss";
 import { useState } from "react";
 import Spin from "../../components/Spinning/Spinning";
 import React from "react";
+import axios from "axios";
 const LoginPage: React.FC = () => {
   const [form] = Form.useForm();
   const [checked, setChecked] = useState(false);
@@ -43,7 +44,6 @@ const LoginPage: React.FC = () => {
   if (isLogin) {
     return <Navigate to={RouterLinks.HOME_PAGE} />;
   }
-
   return (
     <div>
       {loading ? <Spin /> : " "}

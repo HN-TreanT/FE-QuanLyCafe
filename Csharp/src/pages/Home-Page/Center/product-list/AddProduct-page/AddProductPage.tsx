@@ -79,6 +79,7 @@ const AddProductPage: React.FC = () => {
     let formData = new FormData();
     console.log(form.getFieldsValue());
     // formData.append("file", file);
+    console.log(file);
     formData.append("file", file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);

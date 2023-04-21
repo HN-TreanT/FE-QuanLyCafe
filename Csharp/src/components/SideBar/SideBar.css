@@ -1,0 +1,37 @@
+@charset "UTF-8";
+.side_bar {
+  display: flex;
+  flex-direction: column;
+  background-color: #182537;
+  height: 100vh;
+}
+.side_bar .side_bar_logo {
+  padding: 5px 12px;
+  border-bottom: 1px solid #2d4563;
+}
+.side_bar .side_bar_menu {
+  overflow-y: scroll;
+}
+.side_bar .side_bar_menu::-webkit-scrollbar {
+  display: none; /* Chiều rộng vùng chứa scrollbar */
+}
+.side_bar .side_bar_menu::-webkit-scrollbar-track {
+  background: #ccc; /* Màu nền ngoài của thanh scrollbar */
+}
+.side_bar .side_bar_menu::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: transparent;
+}
+.side_bar .side_bar_menu::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.142); /* Hiệu ứng di chuột đổi màu*/
+}
+.side_bar .side_bar-setting {
+  width: 100%;
+  justify-content: center;
+  font-size: 1rem;
+  color: white;
+  padding-left: 27px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  border-top: 1px solid #2d4563;
+}/*# sourceMappingURL=SideBar.css.map */

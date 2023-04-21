@@ -8,6 +8,7 @@ import OrderDetailReducer from "./orderDetail/reducer";
 import MaterialReducer from "./material/reducer";
 import CategoryReducer from "./category/reducer";
 import StaffReducer from "./staff/reducer";
+import WorkshiftReducer from "./workshift/reducer";
 const rootReducer = {
   auth: AuthReducer,
   state: StateReducer,
@@ -19,6 +20,7 @@ const rootReducer = {
   material: MaterialReducer,
   category: CategoryReducer,
   staff: StaffReducer,
+  workshift: WorkshiftReducer,
 };
 
 export default rootReducer;

@@ -1,0 +1,23 @@
+.container-bill {
+  margin: 10px;
+}
+.container-bill .search-bill-of-bill-page {
+  margin: 7px;
+  display: flex;
+}
+.container-bill .bill-page-empty-data {
+  margin-top: 10%;
+}
+.container-bill .form-css {
+  display: flex;
+}
+.container-bill .form-css .input-search-bill {
+  width: 58rem;
+}
+.container-bill .button-delete-bill {
+  margin-left: 20px;
+  color: red;
+}
+.container-bill .button-delete-bill .icon-delete-bill {
+  padding-right: 7px;
+}/*# sourceMappingURL=ContentBillPage.css.map */

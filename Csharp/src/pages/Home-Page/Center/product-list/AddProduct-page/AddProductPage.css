@@ -1,0 +1,42 @@
+@charset "UTF-8";
+.add-product-page .tittle-add-product-page {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+.add-product-page .info-product {
+  width: 100%;
+  height: 400px;
+  background-color: white;
+  box-shadow: 0px 0px 10px #e7e2e2;
+}
+.add-product-page .info-product .content-info-poduct {
+  padding: 10px;
+}
+.add-product-page .info-product .content-info-poduct .title-info-product {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.add-product-page .add-info {
+  width: 100%;
+  height: 400px;
+  overflow-y: auto;
+  background-color: white;
+  box-shadow: 0px 0px 10px #e7e2e2;
+  /* thêm kiểu dáng thanh cuộn cho lớp .add-info */
+}
+.add-product-page .add-info .content-add-info-product {
+  padding: 10px;
+}
+.add-product-page .add-info .content-add-info-product .title-add-info {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.add-product-page .add-info::-webkit-scrollbar {
+  width: 6px;
+}
+.add-product-page .add-info::-webkit-scrollbar-thumb {
+  background-color: #f4efef;
+}
+.add-product-page .add-info::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}/*# sourceMappingURL=AddProductPage.css.map */

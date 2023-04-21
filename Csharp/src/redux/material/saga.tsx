@@ -26,23 +26,6 @@ function* handleErr(err: any) {
 }
 function* saga_loadData() {
   try {
-    const accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    let refreshModel = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    };
-    yield put(stateActions.action.loadingState(true));
-    let _refresh: Promise<any> = yield authService.handleRefreshToken(
-      refreshModel
-    );
-    let refresh: any = _refresh;
-    if (!refresh) {
-      yield put(stateActions.action.loadingState(false));
-      yield handleFail("refresh token fail");
-    }
-    localStorage.setItem("token", refresh.AccessToken);
-    localStorage.setItem("refreshToken", refresh.RefreshToken);
     let _response: Promise<any> = yield materialService.getAllMaterial();
     let response: any = _response;
     if (response.Status) {
