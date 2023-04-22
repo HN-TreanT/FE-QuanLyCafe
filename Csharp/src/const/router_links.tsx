@@ -15,6 +15,7 @@ export const RouterLinks = {
   PRODUCTS_PAGE: "/home/products",
   CATEGORY_PAGE: "/home/categry",
   STAFF_PAGE: "/home/staff",
+  WORKSHIFT_PAGE: "/home/workshift",
   TABLE_PAGE: "/home/table-food",
   CUTOMER_PAGE: "/home/customer",
   LOYALTY_CARD_PAGE: "/home/loyalty-card",

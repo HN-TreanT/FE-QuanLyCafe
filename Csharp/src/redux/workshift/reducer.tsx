@@ -15,6 +15,13 @@ const WorkshiftReducer = (state: any = initState, action: any) => {
           workshifts: action.payload.data,
         },
       };
+    case actions.types.DETAIL_WORKSHIFT:
+      return {
+        ...state,
+        ...{
+          detailWorkShift: action.payload.data,
+        },
+      };
     default:
       return state;
   }

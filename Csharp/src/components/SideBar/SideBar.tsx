@@ -11,6 +11,7 @@ import {
   ShopOutlined,
   SettingOutlined,
   TableOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import "./SideBar.scss";
 import logo from "../../assets/logo3.jpg";
@@ -26,47 +27,6 @@ const menuItems = [
       <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
   },
-  // {
-  //   key: "report",
-  //   label: "Báo cáo",
-  //   icon: (
-  //     <LineChartOutlined
-  //       style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
-  //     />
-  //   ),
-  //   children: [
-  //     {
-  //       key: "reports-revenue",
-  //       label: "Báo cáo doanh thu",
-  //       url: RouterLinks.REPORT_REVENUE_PAGE,
-  //     },
-  //     {
-  //       key: "reports-products",
-  //       label: "Báo cáo mặt hàng",
-  //       url: RouterLinks.REPORT_PRODUCTS_PAGE,
-  //     },
-  //     {
-  //       key: "reports-inventory",
-  //       label: "Báo cáo kho hàng",
-  //       url: RouterLinks.REPORT_INVENTORY_PAGE,
-  //     },
-  //     {
-  //       key: "reports-finance",
-  //       label: "Báo cáo tài chính",
-  //       url: RouterLinks.REPORT_FINANCE_PAGE,
-  //     },
-  //     {
-  //       key: "reports-discounts",
-  //       label: "Báo cáo khuyến mại",
-  //       url: RouterLinks.REPORT_DISCOUNTS_PAGE,
-  //     },
-  //     {
-  //       key: "reports-staffs",
-  //       label: "Báo cáo nhân viên",
-  //       url: RouterLinks.REPORTS_STAFF,
-  //     },
-  //   ],
-  // },
   {
     key: "bill",
     label: "Hóa đơn",
@@ -102,6 +62,16 @@ const menuItems = [
     url: RouterLinks.STAFF_PAGE,
     icon: (
       <UsergroupAddOutlined
+        style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+      />
+    ),
+  },
+  {
+    key: "workshift",
+    label: "Ca làm",
+    url: RouterLinks.WORKSHIFT_PAGE,
+    icon: (
+      <ClockCircleOutlined
         style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
       />
     ),

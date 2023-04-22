@@ -67,6 +67,7 @@ const CategoryPage: React.FC = () => {
       <Modal
         title="Thêm danh mục"
         open={isOpenModel}
+        onCancel={() => setIsOpenModel(false)}
         footer={[
           <Button key="back" onClick={() => setIsOpenModel(false)}>
             Hủy

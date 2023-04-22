@@ -2,6 +2,8 @@ import actions from "./actions";
 
 const initAuth = {
   categories: [],
+  categorySelected: {},
+  IdProductSelected: "",
 };
 const CategoryReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {
@@ -23,6 +25,7 @@ const CategoryReducer = (state: any = initAuth, action: any) => {
           categorySelected: action.payload.category,
         },
       };
+
     default:
       return state;
   }

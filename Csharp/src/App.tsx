@@ -28,6 +28,7 @@ import UpdateProductPage from "./pages/Home-Page/Center/product-list/UpdateProdu
 import DetailCategory from "./pages/Home-Page/Center/category-page/DetailCategory/DetaileCategory";
 import AddStaffPage from "./pages/Home-Page/Center/Staff-page/AddStaffPage/AddStaffPage";
 import DetailStaffPage from "./pages/Home-Page/Center/Staff-page/DetailStaffPage/DetailStaffPage";
+import WorkShiftPage from "./pages/Home-Page/Center/workshift-page/WorkShiftPage";
 
 function App() {
   return (
@@ -169,6 +170,12 @@ function App() {
                           <AuthorizationComponent
                             element={<DetailStaffPage />}
                           />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.WORKSHIFT_PAGE}
+                        element={
+                          <AuthorizationComponent element={<WorkShiftPage />} />
                         }
                       />
                     </Route>

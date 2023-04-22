@@ -1,15 +1,16 @@
 import { Col, Row, Table, Form, Menu, Input, MenuProps, Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../../const";
 import { CategorySupport } from "../../../../../const/CategorySupport";
 import { categoryService } from "../../../../../untils/networks/services/categoryService";
 import { notification } from "../../../../../components/notification";
+import "./ContenCategoryPage.scss";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả danh mục",
@@ -34,6 +35,19 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
     {
       title: "Số lượng mặt hàng",
       dataIndex: "count",
+    },
+    {
+      title: "",
+      dataIndex: "deleteCategory",
+      render: (text: any, record: DataType) => (
+        <div
+          onClick={(e) => handleDeleteCategory(e, record)}
+          className="table-delete"
+          style={{ cursor: "pointer" }}
+        >
+          X
+        </div>
+      ),
     },
   ];
   const [valueCategories, setValueCategories] = useState(value);
@@ -61,7 +75,7 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
         navigate(RouterLinks.DETAIL_CATEGORY);
       } else {
         notification({
-          message: "Not found category",
+          message: "Not found ca  tegory",
           title: "Thông báo",
           position: "top-right",
           type: "danger",
@@ -69,6 +83,28 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
       }
     } catch (err: any) {
       console.log(err.Message);
+    }
+  };
+  const handleDeleteCategory = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    record: any
+  ) => {
+    e.stopPropagation();
+    try {
+      const response = await categoryService.deleteCategory(record.key);
+      if (response.Status) {
+        dispatch(actions.CategoryActions.loadData());
+        navigate(RouterLinks.CATEGORY_PAGE);
+      } else {
+        notification({
+          message: "delete category fail",
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
   return (
