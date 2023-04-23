@@ -31,10 +31,12 @@ function* saga_loadData() {
     );
     let selectedStaffState: any = _selectedStaffState;
     if (selectedStaffState === "allStaff") {
+      yield put(stateActions.action.loadingState(true));
       let _response: Promise<any> = yield staffService.getAllStaff();
       let response: any = _response;
       if (response.Status) {
         yield put(actions.action.loadDataSuccess(response.Data));
+        yield put(stateActions.action.loadingState(false));
       } else {
         yield handleFail("get staff error");
       }

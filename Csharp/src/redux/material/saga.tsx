@@ -26,6 +26,7 @@ function* handleErr(err: any) {
 }
 function* saga_loadData() {
   try {
+    yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield materialService.getAllMaterial();
     let response: any = _response;
     if (response.Status) {

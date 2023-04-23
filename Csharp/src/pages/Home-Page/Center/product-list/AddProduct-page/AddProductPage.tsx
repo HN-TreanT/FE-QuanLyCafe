@@ -19,6 +19,7 @@ import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import "./AddProductPage.scss";
 import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks } from "../../../../../const";
+import Spinn from "../../../../../components/Spinning/Spinning";
 
 const AddProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -118,6 +119,7 @@ const AddProductPage: React.FC = () => {
   };
   return (
     <div className="add-product-page">
+      {loading ? <Spinn /> : ""}
       <Modal
         title="Thêm mới nguyên liệu"
         open={isOpenModal}

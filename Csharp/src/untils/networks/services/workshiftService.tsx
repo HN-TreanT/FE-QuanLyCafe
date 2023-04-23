@@ -9,13 +9,13 @@ const getAllWorkshift = () => {
 
 const getWorkshiftDetail = (Id: any) => {
   return api.makeAuthRequest({
-    url: `/api/GetWorkShiftDetail/${Id}`,
+    url: `/api/WorkShift/GetWorkShiftDetail/${Id}`,
     method: "GET",
   });
 };
 const deleteWorkShift = (Id: any) => {
   return api.makeAuthRequest({
-    url: `/api/DeleteWS/${Id}`,
+    url: `/api/WorkShift/DeleteWS/${Id}`,
     method: "DELETE",
   });
 };
@@ -26,9 +26,17 @@ const createWorkShift = (data: any) => {
     data: data,
   });
 };
+const updateWorkShift = (Id: Number, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/WorkShift/UpdateWorkShift/${Id}`,
+    method: "PUT",
+    data,
+  });
+};
 export const workshiftService = {
   getAllWorkshift,
   getWorkshiftDetail,
   deleteWorkShift,
   createWorkShift,
+  updateWorkShift,
 };

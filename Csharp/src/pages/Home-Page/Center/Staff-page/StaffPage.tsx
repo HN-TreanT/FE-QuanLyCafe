@@ -16,6 +16,7 @@ const StaffPage: React.FC = () => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
   useEffect(() => {
     dispatch(actions.StaffActions.loadData());
   }, [dispatch, actions.StaffActions, selectedStateStaff]);
@@ -35,7 +36,7 @@ const StaffPage: React.FC = () => {
       createdAt: `${formattedDate}`,
     };
   });
-  const loading = useSelector((state: any) => state.state.loadingState);
+
   const handleClickButtonAddStaff = () => {
     // dispatch(actions.WorkshiftActions.loadData());
     navigate(RouterLinks.ADD_STAFF_PAGE);

@@ -8,6 +8,7 @@ import ContentCategoryPage from "./ContentCategoryPage/ContenCategoryPage";
 import useAction from "../../../../redux/useActions";
 import { categoryService } from "../../../../untils/networks/services/categoryService";
 import { notification } from "../../../../components/notification";
+import Spinn from "../../../../components/Spinning/Spinning";
 
 const CategoryPage: React.FC = () => {
   const actions = useAction();
@@ -15,6 +16,7 @@ const CategoryPage: React.FC = () => {
   const [isOpenModel, setIsOpenModel] = useState(false);
   const [valueAddCategory, setValueAddCategory] = useState("");
   const categories = useSelector((state: any) => state.category.categories);
+  const loading = useSelector((state: any) => state.state.loadingState);
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
   }, [dispatch, actions.CategoryActions]);
@@ -64,6 +66,7 @@ const CategoryPage: React.FC = () => {
   };
   return (
     <div className="category-page">
+      {loading ? <Spinn /> : ""}
       <Modal
         title="Thêm danh mục"
         open={isOpenModel}

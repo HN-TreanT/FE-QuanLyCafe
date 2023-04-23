@@ -24,9 +24,10 @@ const DetailStaffPage: React.FC = () => {
   useEffect(() => {
     dispatch(actions.WorkshiftActions.loadData());
   }, [dispatch, actions.WorkshiftActions]);
-  console.log("detail staff--", detailStaff);
-  console.log("workshift", workshifts);
-
+  console.log(window.location.pathname);
+  if (window.location.pathname.includes(RouterLinks.STAFF_PAGE)) {
+    dispatch(actions.StateAction.selectedMenuItem("staff"));
+  }
   const handleChange = () => {
     console.log(form.getFieldsValue());
     dispatch(actions.StaffActions.setInfoStaffCreate(form.getFieldsValue()));

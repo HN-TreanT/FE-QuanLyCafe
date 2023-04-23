@@ -8,6 +8,7 @@ import ContentDetailCategory from "./ContenDetailCategory";
 import "./DetailCategoryPage.scss";
 import { serverConfig } from "../../../../../const";
 import { Col, Row } from "antd";
+import Spinn from "../../../../../components/Spinning/Spinning";
 const DetailCategory: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const DetailCategory: React.FC = () => {
   const categorySelected = useSelector(
     (state: any) => state.category.categorySelected
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
   let i = 0;
   const products = categorySelected?.Products.map((product: any) => {
     i = i + 1;
@@ -32,6 +34,7 @@ const DetailCategory: React.FC = () => {
   };
   return (
     <div className="detail-category-page">
+      {loading ? <Spinn /> : ""}
       <span onClick={handleBack} style={{ cursor: "pointer", color: "#666" }}>
         <ArrowLeftOutlined style={{ padding: "3px" }} />
         <span>Danh mục</span>

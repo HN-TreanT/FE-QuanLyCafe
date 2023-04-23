@@ -18,11 +18,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
-import { productServices } from "../../untils/networks/services/productService";
 
 import { StaffSupport } from "../../const/StaffSupport";
 import { staffService } from "../../untils/networks/services/staffService";
-import Spinn from "../Spinning/Spinning";
 import { notification } from "../notification";
 const items: MenuProps["items"] = [
   {
@@ -73,7 +71,6 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
-  const loading = useSelector((state: any) => state.state.loadingState);
   const [valueStaffs, setValueStaffs] = useState(value);
   useEffect(() => {
     setValueStaffs(value);
@@ -115,7 +112,6 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
 
   return (
     <>
-      {loading ? <Spinn /> : " "}
       <Col span={24}>
         <div className="container-staff-page">
           <div className="header-staff-page">

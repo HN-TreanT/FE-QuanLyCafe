@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Col,
   Row,
@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 import useAction from "../../../../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { notification } from "../../../../../components/notification";
+import { workshiftService } from "../../../../../untils/networks/services/workshiftService";
+import { RouterLinks } from "../../../../../const";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả ca làm",
@@ -29,7 +32,7 @@ interface DataType {
   count: Number;
 }
 const ContentWorkShift: React.FC<any> = ({ value }) => {
-  console.log(value);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
@@ -66,17 +69,63 @@ const ContentWorkShift: React.FC<any> = ({ value }) => {
     },
   ];
   const [valueWorkShift, setValueWorkShift] = useState(value);
-  const handleRowClick = (record: any) => {
-    console.log(record.key);
+  useEffect(() => {
+    setValueWorkShift(value);
+  }, [value]);
+  const handleRowClick = async (record: any) => {
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      let response = await workshiftService.getWorkshiftDetail(record.key);
+      if (response.Status) {
+        dispatch(actions.StateAction.loadingState(false));
+        dispatch(actions.WorkshiftActions.setDetailWorkShift(response.Data));
+        navigate(RouterLinks.DETAIL_WORK_SHIFT);
+      } else {
+        dispatch(actions.StateAction.loadingState(false));
+      }
+    } catch (err: any) {
+      console.log(err);
+      dispatch(actions.StateAction.loadingState(false));
+    }
   };
   const handleValueFormChange = () => {};
   const handleSearchValueChange = () => {};
-  const handleDeleteWorkshift = (
+  const handleDeleteWorkshift = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     record: any
   ) => {
     e.stopPropagation();
     console.log(record.key);
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      let response = await workshiftService.deleteWorkShift(record.key);
+      if (response.Status) {
+        dispatch(actions.WorkshiftActions.loadData());
+        dispatch(actions.StateAction.loadingState(false));
+        notification({
+          message: "Delete success",
+          title: "Thông báo",
+          position: "top-right",
+          type: "success",
+        });
+      } else {
+        notification({
+          message: response.Message,
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+        dispatch(actions.StateAction.loadingState(false));
+      }
+    } catch (err: any) {
+      notification({
+        message: "server fail",
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
+      dispatch(actions.StateAction.loadingState(false));
+    }
   };
   return (
     <>

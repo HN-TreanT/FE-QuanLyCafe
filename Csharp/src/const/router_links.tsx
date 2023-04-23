@@ -29,4 +29,5 @@ export const RouterLinks = {
   DETAIL_CATEGORY: "/home/category/detail-category",
   ADD_STAFF_PAGE: "/home/staff/add-staff-page",
   DETAIL_STAFF_PAGE: "/home/staff/detial-staff-page",
+  DETAIL_WORK_SHIFT: "/home/workshift/detail-workshift",
 };

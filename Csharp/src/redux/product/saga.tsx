@@ -47,6 +47,7 @@ function* saga_GetTopSellProduct() {
 
 function* saga_loadData() {
   try {
+    yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield productServices.GetAllProduct();
     let response: any = _response;
     if (response.Status) {

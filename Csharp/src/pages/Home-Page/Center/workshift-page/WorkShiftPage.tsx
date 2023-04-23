@@ -8,31 +8,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { notification } from "../../../../components/notification";
 import { workshiftService } from "../../../../untils/networks/services/workshiftService";
+import Spinn from "../../../../components/Spinning/Spinning";
 const WorkShiftPage: React.FC = () => {
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
   const workshifts = useSelector((state: any) => state.workshift.workshifts);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const loading = useSelector((state: any) => state.state.loadingState);
   useEffect(() => {
     dispatch(actions.WorkshiftActions.loadData());
   }, [dispatch, actions.WorkshiftActions]);
   const hadleAddWorkShift = async () => {
-    console.log(form.getFieldsValue());
-    form.resetFields();
-    setIsOpenModal(false);
     try {
+      let dateArrivalTime = new Date(form.getFieldsValue().ArrivalTime);
+      let dateTimeOn = new Date(form.getFieldsValue().timeOn);
       dispatch(actions.StateAction.loadingState(true));
       let response = await workshiftService.createWorkShift({
         IdWorkShift: parseInt(form.getFieldsValue().IdWorkShift, 10),
-        ArrivalTime: form.getFieldsValue().ArrivalTime,
-        timOn: form.getFieldsValue().timeOn,
+        ArrivalTime: dateArrivalTime.toLocaleTimeString("vi-VN", {
+          hour12: false,
+        }),
+        timeOn: dateTimeOn.toLocaleTimeString("vi-VN", { hour12: false }),
       });
       if (response.Status) {
         dispatch(actions.WorkshiftActions.loadData());
         dispatch(actions.StateAction.loadingState(false));
         notification({
-          message: "create work shift fail ",
+          message: "create work success ",
           title: "Thông báo",
           position: "top-right",
           type: "success",
@@ -41,7 +44,7 @@ const WorkShiftPage: React.FC = () => {
         setIsOpenModal(false);
       } else {
         notification({
-          message: "create work shift fail ",
+          message: response.Message,
           title: "Thông báo",
           position: "top-right",
           type: "danger",
@@ -65,11 +68,10 @@ const WorkShiftPage: React.FC = () => {
   const handleClickAddButton = () => {
     setIsOpenModal(true);
   };
-  const handleValueChange = () => {
-    console.log("check ", form.getFieldsValue());
-  };
+  const handleValueChange = () => {};
   return (
     <div className="workshift-page">
+      {loading ? <Spinn /> : ""}
       <Modal
         title="Thêm ca làm"
         open={isOpenModal}

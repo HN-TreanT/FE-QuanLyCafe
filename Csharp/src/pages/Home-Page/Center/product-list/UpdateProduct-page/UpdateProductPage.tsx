@@ -19,6 +19,7 @@ import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks, serverConfig } from "../../../../../const";
+import Spinn from "../../../../../components/Spinning/Spinning";
 
 const UpdateProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const UpdateProductPage: React.FC = () => {
   const [form] = Form.useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const infoProduct = useSelector((state: any) => state.product.infoProduct);
+  const loading = useSelector((state: any) => state.state.loadingState);
   let category: any[] = [];
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
@@ -107,6 +109,7 @@ const UpdateProductPage: React.FC = () => {
 
   return (
     <div className="update-product-page">
+      {loading ? <Spinn /> : ""}
       <Modal
         title="Thêm mới nguyên liệu"
         open={isOpenModal}

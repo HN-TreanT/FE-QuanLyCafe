@@ -29,6 +29,7 @@ import DetailCategory from "./pages/Home-Page/Center/category-page/DetailCategor
 import AddStaffPage from "./pages/Home-Page/Center/Staff-page/AddStaffPage/AddStaffPage";
 import DetailStaffPage from "./pages/Home-Page/Center/Staff-page/DetailStaffPage/DetailStaffPage";
 import WorkShiftPage from "./pages/Home-Page/Center/workshift-page/WorkShiftPage";
+import DetailWorkShift from "./pages/Home-Page/Center/workshift-page/DetailWorkShift/DetailWorkShift";
 
 function App() {
   return (
@@ -176,6 +177,14 @@ function App() {
                         path={RouterLinks.WORKSHIFT_PAGE}
                         element={
                           <AuthorizationComponent element={<WorkShiftPage />} />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.DETAIL_WORK_SHIFT}
+                        element={
+                          <AuthorizationComponent
+                            element={<DetailWorkShift />}
+                          />
                         }
                       />
                     </Route>
