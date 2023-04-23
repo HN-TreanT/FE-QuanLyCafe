@@ -96,6 +96,7 @@ const ContenProductList: React.FC<any> = ({ value }) => {
     },
   ];
   const dispatch = useDispatch();
+  const loading = useSelector((state: any) => state.state.loadingState);
   const actions = useAction();
   const [valueProducts, setValueProducts] = useState(value);
   useEffect(() => {
@@ -207,6 +208,7 @@ const ContenProductList: React.FC<any> = ({ value }) => {
           </div>
           <div className="content-product-page">
             <Table
+              loading={loading}
               style={{ marginLeft: "20px" }}
               columns={columns}
               dataSource={valueProducts}

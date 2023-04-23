@@ -15,6 +15,39 @@
     
         }
     }
+    .container-customer-page{
+        width: 100%;
+        min-height: 400px;
+        background-color:white;
+        box-shadow: 0px 0px 10px #e7e2e2;
+  
+        .header-customer-page{
+            .form-css{
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               padding:10px 10px 0 10px;
+               .type-search-customer{
+                margin-right: 10px;
+               }
+               .input-search-customer{
+                   width: 100%;
+               }   
+           }
+           
+        }
+        .content-customer-page{
+            padding-right: 20px;
+            .icon-button-customer{
+                margin-right: 5px;
+            }
+           
+        }
+    
+    }
    
     
+}
+.table-delete:hover{
+    color: red;
 }

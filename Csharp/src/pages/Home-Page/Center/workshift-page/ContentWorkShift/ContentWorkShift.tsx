@@ -36,6 +36,7 @@ const ContentWorkShift: React.FC<any> = ({ value }) => {
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
+  const loading = useSelector((state: any) => state.state.loadingState);
   const columns: ColumnsType<DataType> = [
     {
       title: "Ca làm",
@@ -176,6 +177,7 @@ const ContentWorkShift: React.FC<any> = ({ value }) => {
           </div>
           <div className="content-workshift-page">
             <Table
+              loading={loading}
               style={{ marginLeft: "20px" }}
               columns={columns}
               dataSource={valueWorkShift}

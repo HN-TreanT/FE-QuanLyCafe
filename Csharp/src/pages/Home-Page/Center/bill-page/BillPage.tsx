@@ -37,7 +37,6 @@ const BillPage: React.FC = () => {
   const selectedStateBill = useSelector(
     (state: any) => state.bill.selectedStateBill
   );
-  const loading = useSelector((state: any) => state.state.loadingState);
   const orders = useSelector((state: any) => state.bill.billData);
   useEffect(() => {
     dispatch(actions.BillActions.loadData());
@@ -62,7 +61,6 @@ const BillPage: React.FC = () => {
   }
   return (
     <div className="bill-page">
-      {loading ? <Spinn /> : " "}
       <Row gutter={[0, 35]}>
         <Col span={24}>
           <div className="title-bill-page">Hóa Đơn</div>

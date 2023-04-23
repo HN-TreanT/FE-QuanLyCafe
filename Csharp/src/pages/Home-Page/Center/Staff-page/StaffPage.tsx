@@ -16,7 +16,6 @@ const StaffPage: React.FC = () => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
-  const loading = useSelector((state: any) => state.state.loadingState);
   useEffect(() => {
     dispatch(actions.StaffActions.loadData());
   }, [dispatch, actions.StaffActions, selectedStateStaff]);
@@ -43,7 +42,6 @@ const StaffPage: React.FC = () => {
   };
   return (
     <div className="staff-page">
-      {loading ? <Spin /> : " "}
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-staff-page">

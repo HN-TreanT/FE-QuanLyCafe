@@ -15,7 +15,6 @@ const WorkShiftPage: React.FC = () => {
   const [form] = Form.useForm();
   const workshifts = useSelector((state: any) => state.workshift.workshifts);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const loading = useSelector((state: any) => state.state.loadingState);
   useEffect(() => {
     dispatch(actions.WorkshiftActions.loadData());
   }, [dispatch, actions.WorkshiftActions]);
@@ -71,7 +70,6 @@ const WorkShiftPage: React.FC = () => {
   const handleValueChange = () => {};
   return (
     <div className="workshift-page">
-      {loading ? <Spinn /> : ""}
       <Modal
         title="Thêm ca làm"
         open={isOpenModal}

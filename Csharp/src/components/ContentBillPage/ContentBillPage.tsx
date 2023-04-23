@@ -65,6 +65,7 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
   const selectedRowKeys = useSelector(
     (state: any) => state.bill.selectedRowKeys
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
 
   const [data, setData] = useState(orders);
 
@@ -209,6 +210,7 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
           </div>
           <div className="list-bill-in-bill-page">
             <Table
+              loading={loading}
               rowSelection={rowSelection}
               columns={columns}
               dataSource={data}

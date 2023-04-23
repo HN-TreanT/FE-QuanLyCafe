@@ -17,7 +17,6 @@ const ProductList: React.FC = () => {
   useEffect(() => {
     dispatch(actions.ProductActions.loadData());
   }, [actions.ProductActions, dispatch]);
-  const loading = useSelector((state: any) => state.state.loadingState);
   const products = useSelector((state: any) => state.product.products);
   const valueProducts = products.map((product: any) => {
     const pathImg = `${serverConfig.server}/public/${product.Thumbnail}`;
@@ -37,7 +36,6 @@ const ProductList: React.FC = () => {
   };
   return (
     <div className="product-page">
-      {loading ? <Spin /> : " "}
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-product-page">

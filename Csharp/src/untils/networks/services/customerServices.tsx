@@ -1,8 +1,14 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getAllCustomer = (page: Number) => {
+const getAllCustomer = (page: Number, name: string) => {
+  let url;
+  if (name) {
+    url = `/api/Customer/getAllCustomer?page=1&name=${name}`;
+  } else {
+    url = `/api/Customer/getAllCustomer?page=${page}`;
+  }
   return api.makeAuthRequest({
-    url: `/api/Customer/getAllCustomer?page=${page}`,
+    url: url,
     method: "GET",
   });
 };
@@ -33,6 +39,19 @@ const deleteCustomer = (Id: string) => {
     method: "DELETE",
   });
 };
+const searchCustomerByName = (page: Number, name: string) => {
+  console.log(page, name);
+  let url;
+  if (name) {
+    url = `/api/Customer/searchByName/?CustomerName=${name}&page=${page}`;
+  } else {
+    url = `/api/Customer/searchByName/?CustomerName=${name}`;
+  }
+  return api.makeAuthRequest({
+    url: url,
+    method: "GET",
+  });
+};
 
 export const customerServices = {
   getAllCustomer,
@@ -40,4 +59,5 @@ export const customerServices = {
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  searchCustomerByName,
 };

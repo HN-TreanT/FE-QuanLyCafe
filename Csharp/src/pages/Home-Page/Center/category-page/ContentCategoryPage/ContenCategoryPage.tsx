@@ -1,6 +1,6 @@
 import { Col, Row, Table, Form, Menu, Input, MenuProps, Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +27,7 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
   const actions = useAction();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const loading = useSelector((state: any) => state.state.loadingState);
   const columns: ColumnsType<DataType> = [
     {
       title: "Danh mục",
@@ -156,6 +157,7 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
           </div>
           <div className="content-category-page">
             <Table
+              loading={loading}
               style={{ marginLeft: "20px" }}
               columns={columns}
               dataSource={valueCategories}

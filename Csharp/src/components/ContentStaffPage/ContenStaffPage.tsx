@@ -71,6 +71,7 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
+  const loading = useSelector((state: any) => state.state.loadingState);
   const [valueStaffs, setValueStaffs] = useState(value);
   useEffect(() => {
     setValueStaffs(value);
@@ -143,6 +144,7 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
           </div>
           <div className="content-staff-page">
             <Table
+              loading={loading}
               style={{ marginLeft: "20px" }}
               columns={columns}
               dataSource={valueStaffs}
