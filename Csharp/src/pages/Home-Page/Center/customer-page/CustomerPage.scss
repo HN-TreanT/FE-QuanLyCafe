@@ -1,0 +1,20 @@
+.customer-page{
+    .title-button-customer-page{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title-customer-page{
+            font-size: 1.8rem;
+            font-weight: 600;
+        
+        }
+        .button-add-customer{
+            span{
+                padding-left: 5px;
+            }
+    
+        }
+    }
+   
+    
+}

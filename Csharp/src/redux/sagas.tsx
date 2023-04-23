@@ -11,6 +11,7 @@ import materialSaga from "./material/saga";
 import categorySaga from "./category/saga";
 import staffSaga from "./staff/saga";
 import workShiftSaga from "./workshift/saga";
+import customerSaga from "./cutomer/saga";
 export default function* rootSaga() {
   yield all([
     authSaga(),
@@ -24,5 +25,6 @@ export default function* rootSaga() {
     categorySaga(),
     staffSaga(),
     workShiftSaga(),
+    customerSaga(),
   ]);
 }

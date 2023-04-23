@@ -9,9 +9,10 @@ import { MaterialActions } from "./material/actions";
 import { CategoryActions } from "./category/actions";
 import { StaffActions } from "./staff/actions";
 import { WorkshiftActions } from "./workshift/actions";
+import { CustomerActions } from "./cutomer/actions";
 
 const useAction = ()=>{
-    const actions = {AuthActions,StateAction,OverviewAction,ProductActions,PromotionAction,BillActions,OrderDetailActions,MaterialActions,CategoryActions,StaffActions,WorkshiftActions};
+    const actions = {AuthActions,StateAction,OverviewAction,ProductActions,PromotionAction,BillActions,OrderDetailActions,MaterialActions,CategoryActions,StaffActions,WorkshiftActions,CustomerActions};
   return actions
 }
 export default useAction;
