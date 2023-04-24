@@ -6,6 +6,7 @@ const types = {
   SELECTED_ROW_KEYS: "bill/selected-row-keys",
   SELECTED_PAGE: "bill/selected-page",
   SEARCH_VALUE: "bill/search-value",
+  TYPE_SEARCH: "bill/type-search",
 };
 const action = {
   loadData: () => {
@@ -45,6 +46,12 @@ const action = {
   setSearchValue: (data: string) => {
     return {
       type: types.SEARCH_VALUE,
+      payload: { data },
+    };
+  },
+  setTypeSearch: (data: any) => {
+    return {
+      type: types.TYPE_SEARCH,
       payload: { data },
     };
   },

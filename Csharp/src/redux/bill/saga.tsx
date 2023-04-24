@@ -27,22 +27,33 @@ function* handleErr(err: any) {
 }
 
 function* saga_loadData() {
+  //type search
+  let _typeSearch: Promise<any> = yield select(
+    (state: any) => state.bill.typeSearch
+  );
+  let typeSearch: any = _typeSearch;
+  console.log("check type search", typeSearch);
+  //search value
   let _seacrchValue: Promise<any> = yield select(
     (state: any) => state.bill.searchValue
   );
   let searchValue: any = _seacrchValue;
-  console.log("check search value ", searchValue);
+  // state bill
   let _selectedStateBill: Promise<any> = yield select(
     (state: any) => state.bill.selectedStateBill
   );
   let selectedStateBill: any = _selectedStateBill;
-  //console.log(selectedStateBill);
+  // page selected
   let _selectedPage: Promise<any> = yield select(
     (state: any) => state.bill.selectedPage
   );
   let selectedPage: any = _selectedPage;
+
   yield put(stateActions.action.loadingState(true));
+  ///api
   let _response: Promise<any> = yield billServices.getAllOrder(
+    typeSearch,
+    searchValue,
     selectedStateBill,
     selectedPage
   );

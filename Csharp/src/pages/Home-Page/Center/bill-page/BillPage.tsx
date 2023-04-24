@@ -87,6 +87,7 @@ const BillPage: React.FC = () => {
   const selectedPage = useSelector((state: any) => state.bill.selectedPage);
   const loading = useSelector((state: any) => state.state.loadingState);
   const orders = useSelector((state: any) => state.bill.billData);
+  const typeSearch = useSelector((state: any) => state.bill.typeSearch);
   const data = orders?.Data?.map((order: any) => {
     const date = new Date(order?.TimePay);
     const formattedDate = date.toLocaleDateString("vi-VN");
@@ -94,10 +95,10 @@ const BillPage: React.FC = () => {
       key: order?.IdOrder,
       timepay: order.TimePay ? formattedDate : "Chưa thanh toán",
       Id: order?.IdOrder,
-      table: order.IdTableNavigation?.Name,
-      customer: order.IdCustomerNavigation?.Fullname,
+      table: order?.NameTable,
+      customer: order?.Fullname,
       money: order?.payments ? order.payments : 0,
-      phonenumber: order.IdCustomerNavigation?.PhoneNumber,
+      phonenumber: order?.PhoneNumber,
     };
   });
   const searchValueDebounce = useDebounce<string>(searchValue, 500);
@@ -169,7 +170,11 @@ const BillPage: React.FC = () => {
     }
   };
   const handleInputSearchChange = (e: any) => {
+    dispatch(actions.BillActions.selectedPage(1));
     setSearchValue(e.target.value);
+  };
+  const handleSelectTypSearch = (e: any) => {
+    dispatch(actions.BillActions.setTypeSearch(e));
   };
   return (
     <div className="bill-page">
@@ -230,10 +235,12 @@ const BillPage: React.FC = () => {
                   <Form form={form} layout="horizontal" className="form-css">
                     <Space.Compact>
                       <Form.Item
-                        initialValue={"nameCustomer"}
+                        // initialValue={typeSearch}
                         name="selectedTypeSearch"
                       >
                         <Select
+                          defaultValue={typeSearch}
+                          onChange={handleSelectTypSearch}
                           options={[
                             { value: "nameCustomer", label: "Tên khách hàng" },
                             { value: "phonenumber", label: "Số điện thoại" },

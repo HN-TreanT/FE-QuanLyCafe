@@ -1,9 +1,24 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
 
-const getAllOrder = (selectedStateBill: string, page: Number) => {
+const getAllOrder = (
+  typeSearch: string,
+  searchValue: any,
+  selectedStateBill: string,
+  page: Number
+) => {
+  let url;
+  if (searchValue) {
+    if (typeSearch === undefined || typeSearch === "nameCustomer") {
+      typeSearch = "nameCustomer";
+      url = `/api/Order/${selectedStateBill}?page=${page}&typeSearch=${typeSearch}&searchValue=${searchValue}`;
+    }
+    url = `/api/Order/${selectedStateBill}?page=${page}&typeSearch=${typeSearch}&searchValue=${searchValue}`;
+  } else {
+    url = `/api/Order/${selectedStateBill}?page=${page}`;
+  }
   return api.makeAuthRequest({
-    url: `/api/Order/${selectedStateBill}?page=${page}`,
+    url: url,
     method: "GET",
   });
 };

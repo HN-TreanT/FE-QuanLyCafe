@@ -48,6 +48,13 @@ const BillReducer = (state: any = initAuth, action: any) => {
           searchValue: action.payload.data,
         },
       };
+    case actions.types.TYPE_SEARCH:
+      return {
+        ...state,
+        ...{
+          typeSearch: action.payload.data,
+        },
+      };
     default:
       return state;
   }
