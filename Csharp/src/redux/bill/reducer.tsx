@@ -3,6 +3,7 @@ import actions from "./actions";
 const initAuth = {
   selectedStateBill: "getAllOrder",
   selectedRowKeys: [],
+  selectedPage: 1,
 };
 const BillReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {
@@ -32,6 +33,20 @@ const BillReducer = (state: any = initAuth, action: any) => {
       return {
         ...state,
         selectedRowKeys: action.payload.selectedRowKeys,
+      };
+    case actions.types.SELECTED_PAGE:
+      return {
+        ...state,
+        ...{
+          selectedPage: action.payload.data,
+        },
+      };
+    case actions.types.SEARCH_VALUE:
+      return {
+        ...state,
+        ...{
+          searchValue: action.payload.data,
+        },
       };
     default:
       return state;

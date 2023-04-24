@@ -27,38 +27,49 @@ function* handleErr(err: any) {
 }
 
 function* saga_loadData() {
+  let _seacrchValue: Promise<any> = yield select(
+    (state: any) => state.bill.searchValue
+  );
+  let searchValue: any = _seacrchValue;
+  console.log("check search value ", searchValue);
+  let _selectedStateBill: Promise<any> = yield select(
+    (state: any) => state.bill.selectedStateBill
+  );
+  let selectedStateBill: any = _selectedStateBill;
+  //console.log(selectedStateBill);
+  let _selectedPage: Promise<any> = yield select(
+    (state: any) => state.bill.selectedPage
+  );
+  let selectedPage: any = _selectedPage;
+  yield put(stateActions.action.loadingState(true));
+  let _response: Promise<any> = yield billServices.getAllOrder(
+    selectedStateBill,
+    selectedPage
+  );
+  let response: any = _response;
+  if (response.Status) {
+    const data: any[] = [];
+    const promises: Promise<any>[] = response.Data.map(async (res: any) => {
+      let _orderDetails: Promise<any> =
+        orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
+      let orderDetails: any = await _orderDetails;
+      let payments = orderDetails.Data?.reduce(function (
+        total: Number,
+        currentValue: any
+      ) {
+        return total + currentValue.Price;
+      },
+      0);
+      data.push({ ...res, payments: payments });
+      response.Data = data;
+    });
+    yield all(promises);
+    yield put(actions.action.loadDataSuccess(response));
+    yield put(stateActions.action.loadingState(false));
+  } else {
+    yield handleFail("load data fail");
+  }
   try {
-    let _selectedStatebill: Promise<any> = yield select(
-      (state: any) => state.bill.selectedStateBill
-    );
-    let selectedStatebill: any = _selectedStatebill;
-
-    yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield billServices.getOrder(
-      selectedStatebill
-    );
-    let response: any = _response;
-    if (response.Status) {
-      const data: any[] = [];
-      const promises: Promise<any>[] = response.Data.map(async (res: any) => {
-        let _orderDetails: Promise<any> =
-          orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
-        let orderDetails: any = await _orderDetails;
-        let payments = orderDetails.Data?.reduce(function (
-          total: Number,
-          currentValue: any
-        ) {
-          return total + currentValue.Price;
-        },
-        0);
-        data.push({ ...res, payments: payments });
-      });
-      yield all(promises);
-      yield put(stateActions.action.loadingState(false));
-      yield put(actions.action.loadDataSuccess(data));
-    } else {
-      yield handleFail("Load bill info fail");
-    }
   } catch (ex: any) {
     yield handleErr(ex);
   }

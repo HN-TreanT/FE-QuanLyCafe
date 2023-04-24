@@ -100,9 +100,7 @@ const CustomerPage: React.FC = () => {
   const handleRowClick = (record: any) => {};
   const handleValueFormChange = () => {};
   const handleSearchValueChange = (e: any) => {
-    dispatch(actions.CustomerActions.setSelectedPage(1));
     setSearchValue(e.target.value);
-    console.log(searchValueDebounce);
   };
   const handleDeleteCategory = (e: any, record: any) => {};
   return (

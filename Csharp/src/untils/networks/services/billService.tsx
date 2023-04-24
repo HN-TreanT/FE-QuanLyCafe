@@ -1,8 +1,9 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getOrder = (data: any) => {
+
+const getAllOrder = (selectedStateBill: string, page: Number) => {
   return api.makeAuthRequest({
-    url: `api/Order/${data}`,
+    url: `/api/Order/${selectedStateBill}?page=${page}`,
     method: "GET",
   });
 };
@@ -13,4 +14,4 @@ const deleteOrder = (IdOrder: any) => {
     method: "DELETE",
   });
 };
-export const billServices = { getOrder, deleteOrder };
+export const billServices = { getAllOrder, deleteOrder };

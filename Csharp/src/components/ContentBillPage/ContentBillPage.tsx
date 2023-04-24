@@ -144,92 +144,77 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
   };
   return (
     <div className="container-bill">
-      {orders.length ? (
-        <>
-          <Modal
-            title={`${rowClickKey}#Chi tiết hóa đơn`}
-            footer={null}
-            open={isOpenModal}
-            onCancel={() => setIsOpenModal(false)}
-          >
-            <Row>
+      <Modal
+        title={`${rowClickKey}#Chi tiết hóa đơn`}
+        footer={null}
+        open={isOpenModal}
+        onCancel={() => setIsOpenModal(false)}
+      >
+        <Row>
+          <ItemOrderDetail
+            NameProduct="Tên món"
+            Amount="Số lượng"
+            Price="Giá thành"
+          />
+          {orderDts.map((orderDetail: any) => {
+            return (
               <ItemOrderDetail
-                NameProduct="Tên món"
-                Amount="Số lượng"
-                Price="Giá thành"
+                key={orderDetail?.IdOrderDetail}
+                NameProduct={orderDetail.IdProductNavigation?.Title}
+                Amount={`x${orderDetail?.Amout}`}
+                Price={`${orderDetail?.Price}`}
               />
-              {orderDts.map((orderDetail: any) => {
-                return (
-                  <ItemOrderDetail
-                    key={orderDetail?.IdOrderDetail}
-                    NameProduct={orderDetail.IdProductNavigation?.Title}
-                    Amount={`x${orderDetail?.Amout}`}
-                    Price={`${orderDetail?.Price}`}
-                  />
-                );
-              })}
-            </Row>
-          </Modal>
-          <div className="search-bill-of-bill-page">
-            <Form
-              form={form}
-              layout="horizontal"
-              onValuesChange={handleValueFormChange}
-              className="form-css"
-            >
-              <Space.Compact>
-                <Form.Item
-                  initialValue={"nameCustomer"}
-                  name="selectedTypeSearch"
-                >
-                  <Select
-                    options={[
-                      { value: "nameCustomer", label: "Tên khách hàng" },
-                      { value: "phonenumber", label: "Số điện thoại" },
-                      { value: "tableFood", label: "Bàn ăn" },
-                    ]}
-                  />
-                </Form.Item>
-                <Form.Item name="searchValue" className="input-search-bill">
-                  <Input.Search placeholder="Nhập giá trị muốn tìm kiếm" />
-                </Form.Item>
-              </Space.Compact>
-              <Button
-                className="button-delete-bill"
-                danger
-                onClick={hanldeClickDelete}
-              >
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  beat
-                  className="icon-delete-bill"
-                />
-                Delete
-              </Button>
-            </Form>
-          </div>
-          <div className="list-bill-in-bill-page">
-            <Table
-              loading={loading}
-              rowSelection={rowSelection}
-              columns={columns}
-              dataSource={data}
-              pagination={{
-                pageSize: 5,
-                showSizeChanger: false,
-                hideOnSinglePage: true,
-              }}
-              onRow={(record: DataType) => ({
-                onClick: () => handleRowClick(record),
-              })}
-            />
-          </div>
-        </>
-      ) : (
-        <div className="bill-page-empty-data">
-          <ImageEmptyData imagePath={billEmpty} width={150} height={150} />
-        </div>
-      )}
+            );
+          })}
+        </Row>
+      </Modal>
+      <div className="search-bill-of-bill-page">
+        <Form
+          form={form}
+          layout="horizontal"
+          onValuesChange={handleValueFormChange}
+          className="form-css"
+        >
+          <Space.Compact>
+            <Form.Item initialValue={"nameCustomer"} name="selectedTypeSearch">
+              <Select
+                options={[
+                  { value: "nameCustomer", label: "Tên khách hàng" },
+                  { value: "phonenumber", label: "Số điện thoại" },
+                  { value: "tableFood", label: "Bàn ăn" },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name="searchValue" className="input-search-bill">
+              <Input.Search placeholder="Nhập giá trị muốn tìm kiếm" />
+            </Form.Item>
+          </Space.Compact>
+          <Button
+            className="button-delete-bill"
+            danger
+            onClick={hanldeClickDelete}
+          >
+            <FontAwesomeIcon icon={faTrash} beat className="icon-delete-bill" />
+            Delete
+          </Button>
+        </Form>
+      </div>
+      <div className="list-bill-in-bill-page">
+        <Table
+          loading={loading}
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={data}
+          pagination={{
+            pageSize: 5,
+            showSizeChanger: false,
+            hideOnSinglePage: true,
+          }}
+          onRow={(record: DataType) => ({
+            onClick: () => handleRowClick(record),
+          })}
+        />
+      </div>
     </div>
   );
 };
