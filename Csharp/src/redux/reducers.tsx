@@ -10,6 +10,7 @@ import CategoryReducer from "./category/reducer";
 import StaffReducer from "./staff/reducer";
 import WorkshiftReducer from "./workshift/reducer";
 import CustomerReducer from "./cutomer/reducer";
+import TableFoodReducer from "./tableFood/reducer";
 const rootReducer = {
   auth: AuthReducer,
   state: StateReducer,
@@ -23,6 +24,7 @@ const rootReducer = {
   staff: StaffReducer,
   workshift: WorkshiftReducer,
   customer: CustomerReducer,
+  tablefood: TableFoodReducer,
 };
 
 export default rootReducer;

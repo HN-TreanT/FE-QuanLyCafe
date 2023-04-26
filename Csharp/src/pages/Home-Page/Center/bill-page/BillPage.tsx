@@ -43,7 +43,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: "Bàn ăn",
     dataIndex: "table",
-    render: (text) => <div>{`Bàn ${text}`}</div>,
+    render: (text) => <div>{text}</div>,
   },
   {
     title: "Khách hàng",
@@ -95,7 +95,7 @@ const BillPage: React.FC = () => {
       key: order?.IdOrder,
       timepay: order.TimePay ? formattedDate : "Chưa thanh toán",
       Id: order?.IdOrder,
-      table: order?.NameTable,
+      table: order?.NameTable ? `Bàn ${order?.NameTable}` : "Đã xóa",
       customer: order?.Fullname,
       money: order?.payments ? order.payments : 0,
       phonenumber: order?.PhoneNumber,
