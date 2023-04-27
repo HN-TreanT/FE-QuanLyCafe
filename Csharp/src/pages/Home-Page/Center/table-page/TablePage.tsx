@@ -192,7 +192,10 @@ const TablePage: React.FC = () => {
                         >
                           <div
                             className="item-table"
-                            style={{ color: " #7facfa" }}
+                            style={{
+                              color: " #7facfa",
+                              boxShadow: " 1px 1px 5px #7c7a783a",
+                            }}
                           >
                             <Image
                               src={TableStatus1}
@@ -212,7 +215,10 @@ const TablePage: React.FC = () => {
                         >
                           <div
                             className="item-table"
-                            style={{ color: " rgba(0, 0, 0, 0.508)" }}
+                            style={{
+                              color: " rgba(0, 0, 0, 0.508)",
+                              boxShadow: " 1px 1px 5px #7c7a783a",
+                            }}
                           >
                             <Image
                               src={TableStatus0}

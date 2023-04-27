@@ -1,0 +1,50 @@
+.listWarehouse-page{
+    .title-button-listWarehouse-page{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title-listWarehouse-page{
+            font-size: 1.8rem;
+            font-weight: 600;
+        
+        }
+        .button-add-listWarehouse{
+            span{
+                padding-left: 5px;
+            }
+    
+        }
+    }
+    .container-listWarehouse-page{
+        width: 100%;
+        min-height: 400px;
+        background-color:white;
+        box-shadow: 0px 0px 10px #e7e2e2;
+  
+        .header-listWarehouse-page{
+            .form-css{
+               padding:10px 10px 0 10px;
+               .type-search-listWarehouse{
+                margin-right: 10px;
+               }
+               .input-search-listWarehouse{
+                   width: 100%;
+               }   
+           }
+           
+        }
+        .content-listWarehouse-page{
+            padding-right: 20px;
+            .icon-button-listWarehouse{
+                margin-right: 5px;
+            }
+           
+        }
+    
+    }
+   
+    
+}
+.table-delete:hover{
+    color: red;
+}

@@ -110,11 +110,6 @@ const menuItems = [
         url: RouterLinks.IMPORT_WAREHOUSE,
       },
       {
-        key: "export",
-        label: "Xuất kho",
-        url: RouterLinks.EXPORT_WAREHOUSE,
-      },
-      {
         key: "history",
         label: "Lịch sử kho",
         url: RouterLinks.HISTORY_WAREHOUSE,
