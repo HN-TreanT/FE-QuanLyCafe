@@ -285,7 +285,7 @@ const BillPage: React.FC = () => {
                     columns={columns}
                     dataSource={data}
                     pagination={{
-                      total: orders.TotalPage,
+                      total: orders?.TotalPage,
                       pageSize: 5,
                       defaultCurrent: selectedPage,
                       showSizeChanger: false,

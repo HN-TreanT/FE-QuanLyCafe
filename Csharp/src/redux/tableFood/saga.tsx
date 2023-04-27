@@ -26,14 +26,20 @@ function* handleErr(err: any) {
 
 function* saga_loadData() {
   try {
+    let _page: Promise<any> = yield select(
+      (state: any) => state.tablefood.page
+    );
+    let page: any = _page;
     yield put(stateActions.action.loadingState(true));
-    let _reponse: Promise<any> = yield tableFoodService.getAllTableFood();
+    let _reponse: Promise<any> = yield tableFoodService.getAllTableFood(page);
     let response: any = _reponse;
+    console.log(response);
     if (response.Status) {
-      yield put(actions.action.loadDataSuccess(response.Data));
+      yield put(actions.action.loadDataSuccess(response));
       yield put(stateActions.action.loadingState(false));
     } else {
       handleFail("Not data fail");
+      yield put(stateActions.action.loadingState(false));
     }
   } catch (err: any) {
     yield handleErr(err);

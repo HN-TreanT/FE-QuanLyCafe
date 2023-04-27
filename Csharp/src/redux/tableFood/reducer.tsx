@@ -6,6 +6,7 @@ const initState = {
     Name: 0,
     Status: 0,
   },
+  page: 1,
 };
 const TableFoodReducer = (state: any = initState, action: any) => {
   switch (action.type) {
@@ -18,14 +19,13 @@ const TableFoodReducer = (state: any = initState, action: any) => {
         ...state,
         ...{ tableFoods: action.payload.data },
       };
-    case actions.types.TABLE_SELECTED:
+    case actions.types.PAGE:
       return {
         ...state,
         ...{
-          tableSelected: action.payload.data,
+          page: action.payload.data,
         },
       };
-
     default:
       return state;
   }

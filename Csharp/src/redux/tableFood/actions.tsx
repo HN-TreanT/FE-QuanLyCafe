@@ -1,7 +1,7 @@
 const types = {
   LOAD_DATA: "/tableFood/load-data",
   LOAD_DATA_SUCCESS: "/tableFood/load-data-sucess",
-  TABLE_SELECTED: "/tablefood/table-selected",
+  PAGE: "/tableFood/page",
 };
 
 const action = {
@@ -16,9 +16,9 @@ const action = {
       payload: { data },
     };
   },
-  tableSelected: (data: any) => {
+  setPage: (data: any) => {
     return {
-      type: types.TABLE_SELECTED,
+      type: types.PAGE,
       payload: { data },
     };
   },

@@ -7,17 +7,14 @@ import {
   Form,
   Image,
   Modal,
-  Input,
   InputNumber,
-  Select,
+  Pagination,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircle } from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../redux/useActions";
 import TableStatus1 from "../../../../assets/dinning-table-1.png";
 import TableStatus0 from "../../../../assets/dinning-table.png";
-
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import "./TablePage.scss";
 import { notification } from "../../../../components/notification";
 import { tableFoodService } from "../../../../untils/networks/services/tableFoodService";
@@ -31,24 +28,17 @@ interface TableDto {
 const TablePage: React.FC = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [formEdit] = Form.useForm();
   const actions = useAction();
   const tableFoods = useSelector((state: any) => state.tablefood.tableFoods);
   const loading = useSelector((state: any) => state.state.loadingState);
+  const page = useSelector((state: any) => state.tablefood.page);
   const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
-  const [tableSelected, setTableSelected] = useState<TableDto>();
-  console.log("check tabel", tableSelected);
+  const [tableSelect, setTableSelected] = useState<TableDto>();
 
   useEffect(() => {
     dispatch(actions.TableFoodActions.loadData());
   }, [dispatch, actions.TableFoodActions, isOpenModalEdit]);
-  const handleClickArrowRight = () => {
-    console.log("right");
-  };
-  const handleClickArrowLeft = () => {
-    console.log("left");
-  };
   const handleClickButtonAddTable = () => {
     setIsOpenModalCreate(true);
   };
@@ -93,15 +83,10 @@ const TablePage: React.FC = () => {
     setTableSelected(data);
     setIsOpenModalEdit(true);
   };
-  const handleDeleteTable = () => {
-    formEdit.resetFields();
-    // setIsOpenModalEdit(false);
-  };
-  const handleUpdate = () => {
-    //formEdit.resetFields();
-    // setIsOpenModalEdit(false);
-    setTableSelected(undefined);
-    console.log(formEdit.getFieldsValue());
+  const handleChangePage = (e: any) => {
+    console.log(e);
+    dispatch(actions.TableFoodActions.setPage(e));
+    dispatch(actions.TableFoodActions.loadData());
   };
   return (
     <div className="table-page">
@@ -135,57 +120,7 @@ const TablePage: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-      {/* modal edit table */}
-      {tableSelected && (
-        <Modal
-          title="Sửa bàn ăn"
-          open={true}
-          onCancel={() => {
-            formEdit.resetFields();
-            // setIsOpenModalEdit(false);
-            setTableSelected(undefined);
-          }}
-          footer={[
-            <Button key="delete" onClick={handleDeleteTable}>
-              Xóa bàn ăn
-            </Button>,
-            <Button key="submit" type="primary" onClick={handleUpdate}>
-              Lưu thay đổi
-            </Button>,
-          ]}
-        >
-          <Form layout="horizontal" form={formEdit}>
-            <Form.Item
-              initialValue={tableSelected?.Name}
-              label="Số bàn"
-              name="Name"
-            >
-              <InputNumber
-                value={tableSelected?.Name}
-                style={{ width: "100%" }}
-              ></InputNumber>
-            </Form.Item>
-            <Form.Item
-              initialValue={tableSelected?.Status}
-              label="Trạng thái"
-              name="Status"
-            >
-              <Select
-                options={[
-                  {
-                    label: "Đang có người",
-                    value: 1,
-                  },
-                  {
-                    label: "Còn trống",
-                    value: 0,
-                  },
-                ]}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}
+      <ModalEditTable isOpen={isOpenModalEdit} data={tableSelect} />
 
       <Row gutter={[15, 15]}>
         <Col span={21}>
@@ -199,12 +134,8 @@ const TablePage: React.FC = () => {
         </Col>
         <Col span={24}>
           <div className="container-table-page">
-            <div onClick={handleClickArrowLeft} className="box-icon-arrow">
-              <LeftOutlined className="icon-arrow" />
-            </div>
-
             <div className="content-table-page">
-              <Row gutter={[20, 30]}>
+              <Row gutter={[20, 25]}>
                 <Col span={24}>
                   <div className="header-content-table-page">
                     <div className="title-content-table-page">
@@ -250,53 +181,66 @@ const TablePage: React.FC = () => {
                     }}
                   ></div>
                 </Col>
-                {tableFoods.map((tableFood: any) => {
-                  if (tableFood?.Status === 1) {
-                    return (
-                      <Col
-                        onClick={() => handleClickItemTable(tableFood)}
-                        key={tableFood?.IdTable}
-                        span={4}
-                      >
-                        <div
-                          className="item-table"
-                          style={{ color: " #7facfa" }}
+                {Array.isArray(tableFoods.Data) ? (
+                  tableFoods?.Data?.map((tableFood: any) => {
+                    if (tableFood?.Status === 1) {
+                      return (
+                        <Col
+                          onClick={() => handleClickItemTable(tableFood)}
+                          key={tableFood?.IdTable}
+                          span={4}
                         >
-                          <Image
-                            src={TableStatus1}
-                            preview={false}
-                            style={{ width: "120px", height: "90px" }}
-                          />
-                          <div>{`Bàn ${tableFood?.Name}`}</div>
-                        </div>
-                      </Col>
-                    );
-                  } else {
-                    return (
-                      <Col
-                        onClick={() => handleClickItemTable(tableFood)}
-                        key={tableFood.IdTable}
-                        span={4}
-                      >
-                        <div
-                          className="item-table"
-                          style={{ color: " rgba(0, 0, 0, 0.508)" }}
+                          <div
+                            className="item-table"
+                            style={{ color: " #7facfa" }}
+                          >
+                            <Image
+                              src={TableStatus1}
+                              preview={false}
+                              style={{ width: "120px", height: "90px" }}
+                            />
+                            <div>{`Bàn ${tableFood?.Name}`}</div>
+                          </div>
+                        </Col>
+                      );
+                    } else {
+                      return (
+                        <Col
+                          onClick={() => handleClickItemTable(tableFood)}
+                          key={tableFood.IdTable}
+                          span={4}
                         >
-                          <Image
-                            src={TableStatus0}
-                            preview={false}
-                            style={{ width: "120px", height: "90px" }}
-                          />
-                          <div>{`Bàn ${tableFood?.Name}`}</div>
-                        </div>
-                      </Col>
-                    );
-                  }
-                })}
+                          <div
+                            className="item-table"
+                            style={{ color: " rgba(0, 0, 0, 0.508)" }}
+                          >
+                            <Image
+                              src={TableStatus0}
+                              preview={false}
+                              style={{ width: "120px", height: "90px" }}
+                            />
+                            <div>{`Bàn ${tableFood?.Name}`}</div>
+                          </div>
+                        </Col>
+                      );
+                    }
+                  })
+                ) : (
+                  <Col span={24}>
+                    <div style={{ width: "100%" }}>
+                      <span>Not found</span>
+                    </div>
+                  </Col>
+                )}
+                <Col span={17}></Col>
+                <Col span={7}>
+                  <Pagination
+                    onChange={handleChangePage}
+                    defaultCurrent={page}
+                    total={Math.ceil(tableFoods?.TotalPage / 18) * 10}
+                  />
+                </Col>
               </Row>
-            </div>
-            <div onClick={handleClickArrowRight} className="box-icon-arrow">
-              <RightOutlined className="icon-arrow" />
             </div>
           </div>
         </Col>

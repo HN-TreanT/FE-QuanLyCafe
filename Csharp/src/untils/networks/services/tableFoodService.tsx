@@ -1,8 +1,8 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getAllTableFood = () => {
+const getAllTableFood = (page: Number) => {
   return api.makeAuthRequest({
-    url: "/api/TableFood/getAllTableFood",
+    url: `/api/TableFood/getAllTableFood?page=${page}`,
     method: "GET",
   });
 };
