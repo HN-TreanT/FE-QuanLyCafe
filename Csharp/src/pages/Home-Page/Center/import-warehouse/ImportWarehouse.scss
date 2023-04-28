@@ -1,0 +1,53 @@
+.import-warehouse-page{
+    .title-button-import-warehouse-page{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title-import-warehouse-page{
+            font-size: 1.8rem;
+            font-weight: 600;
+        
+        }
+        .button-add-import-warehouse{
+            span{
+                padding-left: 5px;
+            }
+    
+        }
+    }
+    .container-import-warehouse-page{
+        width: 100%;
+        min-height: 400px;
+        background-color:white;
+        box-shadow: 0px 0px 10px #e7e2e2;
+  
+        .header-import-warehouse-page{
+            .form-css{
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               padding:10px 10px 0 10px;
+               .type-search-import-warehouse{
+                margin-right: 10px;
+               }
+               .input-search-import-warehouse{
+                   width: 100%;
+               }   
+           }
+           
+        }
+        .content-import-warehouse-page{
+            padding-right: 20px;
+            .icon-button-import-warehouse{
+                margin-right: 5px;
+            }
+           
+        }
+    
+    }
+   
+    
+}
+.table-delete:hover{
+    color: red;
+}

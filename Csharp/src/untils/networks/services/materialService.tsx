@@ -40,6 +40,20 @@ const updateMaterial = (Id: string, data: any) => {
     data,
   });
 };
+const getHistoryWarehouse = (page: Number, timeStart: any, timeEnd: any) => {
+  if (timeStart && timeEnd) {
+    console.log(timeStart, timeEnd);
+    return api.makeAuthRequest({
+      url: `/api/Material/getHistoryWarehouse?page=${page}&timeStart=${timeStart}&timeEnd=${timeEnd}`,
+      method: "GET",
+    });
+  } else {
+    return api.makeAuthRequest({
+      url: `/api/Material/getHistoryWarehouse?page=${page}`,
+      method: "GET",
+    });
+  }
+};
 export const materialService = {
   getAllMaterial,
   createManyUseMaterial,
@@ -47,4 +61,5 @@ export const materialService = {
   createMaterial,
   deleteMaterial,
   updateMaterial,
+  getHistoryWarehouse,
 };
