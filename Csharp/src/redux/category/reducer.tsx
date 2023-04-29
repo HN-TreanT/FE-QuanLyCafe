@@ -43,17 +43,6 @@ const CategoryReducer = (state: any = initAuth, action: any) => {
           categoryDetail: action.payload.data,
         },
       };
-    case actions.types.REDIRECT_DETAIL_PAGE:
-      return {
-        ...state,
-        ...{
-          navigate: action.payload.data,
-        },
-      };
-    case actions.types.REDIRECT_ACTION:
-      return {
-        ...state,
-      };
     default:
       return state;
   }

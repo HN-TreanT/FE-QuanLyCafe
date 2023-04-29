@@ -3,6 +3,8 @@ const types = {
   IS_LOADING: "state/is_loading",
   IS_SELECTED_MENU_ITEM: "state/is_selected_menu_item",
   KEYS_OPEN: "state/keys_open",
+  SET_NAVIGATE: "/set-navigate",
+  REDIRECT_ACTION: "/redirect-action",
 };
 
 const action = {
@@ -28,6 +30,17 @@ const action = {
     return {
       type: types.KEYS_OPEN,
       payload: { keys },
+    };
+  },
+  redirect: (data: any) => {
+    return {
+      type: types.SET_NAVIGATE,
+      payload: { data },
+    };
+  },
+  redirectAction: () => {
+    return {
+      type: types.REDIRECT_ACTION,
     };
   },
 };

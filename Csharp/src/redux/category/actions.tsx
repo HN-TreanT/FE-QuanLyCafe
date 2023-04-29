@@ -5,8 +5,8 @@ const types = {
   SELECTED_ROW: "/category/selected-row",
   LOAD_CATEGORY_DETAIL: "/category/category-detail",
   LOAD_CATEGORY_DETAIL_SUCCESS: "/category/category-detail-success",
-  REDIRECT_DETAIL_PAGE: "/category/redirect-detail-page",
-  REDIRECT_ACTION: "category.redirect-action",
+  // REDIRECT_DETAIL_PAGE: "/category/redirect-detail-page",
+  // REDIRECT_ACTION: "category/redirect-action",
 };
 const action = {
   loadData: () => {
@@ -41,17 +41,6 @@ const action = {
     return {
       type: types.LOAD_CATEGORY_DETAIL_SUCCESS,
       payload: { data },
-    };
-  },
-  redirect: (data: any) => {
-    return {
-      type: types.REDIRECT_DETAIL_PAGE,
-      payload: { data },
-    };
-  },
-  redirectAction: () => {
-    return {
-      type: types.REDIRECT_ACTION,
     };
   },
 };

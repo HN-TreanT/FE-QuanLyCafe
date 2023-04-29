@@ -73,10 +73,12 @@ function* saga_loadCategoryDetail() {
 function* saga_Redirect() {
   //action.type.
   let _navigate: Promise<any> = yield select(
-    (state: any) => state.category.navigate
+    (state: any) => state.state.navigate
   );
   let navigate: any = _navigate;
-  navigate(RouterLinks.DETAIL_CATEGORY);
+  if (navigate.navigate && navigate.path) {
+    navigate.navigate(navigate.path);
+  }
 }
 
 function* saga_RedirectAction() {
@@ -86,7 +88,7 @@ function* saga_RedirectAction() {
 function* listen() {
   yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
   yield takeEvery(actions.types.LOAD_CATEGORY_DETAIL, saga_loadCategoryDetail);
-  yield takeLatest(actions.types.REDIRECT_ACTION, saga_RedirectAction);
+  yield takeLatest(stateActions.types.REDIRECT_ACTION, saga_RedirectAction);
 }
 
 export default function* mainSaga() {

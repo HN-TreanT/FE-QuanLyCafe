@@ -71,8 +71,13 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
   };
   const handleRowClick = (record: any) => {
     dispatch(actions.CategoryActions.setSelectedRow(record.key));
-    dispatch(actions.CategoryActions.redirect(navigate));
-    dispatch(actions.CategoryActions.redirectAction());
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.DETAIL_CATEGORY,
+      })
+    );
+    dispatch(actions.StateAction.redirectAction());
   };
 
   const handleDeleteCategory = async (
@@ -107,8 +112,13 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
   const handleOKModal = () => {
     console.log("check key,", key);
     dispatch(actions.CategoryActions.setSelectedRow(key));
-    dispatch(actions.CategoryActions.redirect(navigate));
-    dispatch(actions.CategoryActions.redirectAction());
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.DETAIL_CATEGORY,
+      })
+    );
+    dispatch(actions.StateAction.redirectAction());
     setIsOpenModel(false);
   };
   return (

@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Input, Button, Form, Modal } from "antd";
+import { Row, Col, Input, Button, Form, Modal, InputNumber } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { Navigate, useNavigate } from "react-router-dom";
 import "./EnterCoupon.scss";
 import { RouterLinks } from "../../../../../const";
-import ListMaterailImport from "./ListMaterialImport/ListMaterialImport";
-import InfoMaterialImport from "./InfoMaterialImport/InfoMaterialImport";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Table, { ColumnsType } from "antd/es/table";
 import removeAccents from "../../../../../const/RemoveAccent";
+import Spinn from "../../../../../components/Spinning/Spinning";
 interface DataType {
   key: React.Key;
   IdMaterial: string;
   NameMaterial: string;
   Amount: Number;
+}
+interface DataType2 {
+  key: string;
+  NameMaterial: string;
+  IdMaterial: string;
+  Amount: string;
+  Price: string;
+  NameProvider: string;
+  PhoneProvider: Number;
 }
 const EnterCoupon: React.FC = () => {
   const columns: ColumnsType<DataType> = [
@@ -34,17 +42,70 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Amount",
     },
   ];
+  const columns2: ColumnsType<DataType2> = [
+    {
+      title: "Mã nguyên liệu",
+      dataIndex: "IdMaterial",
+      render: (text) => <div style={{ color: "#1677ff" }}>{text}</div>,
+    },
+    {
+      title: "Tên nguyên liệu",
+      dataIndex: "NameMaterial",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "Amount",
+      render: (text, record) => (
+        <InputNumber
+          step={1}
+          min={0}
+          required={true}
+          value={text}
+          onChange={(e) => handleAmountChange(e, record.key)}
+          type="number"
+        />
+      ),
+    },
+    {
+      title: "Giá nhập/SP(VND)",
+      dataIndex: "Price",
+      render: (text, record) => (
+        <InputNumber
+          // min={0}
+          step={1}
+          min={0}
+          required={true}
+          value={text}
+          onChange={(e) => handlePriceChange(e, record.key)}
+          type="number"
+        />
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "removeCoupon",
+      render: (text: any, record: DataType2) => (
+        <div
+          onClick={(e) => handleRemoveCoupon(e, record)}
+          className="table-delete"
+          style={{ cursor: "pointer" }}
+        >
+          X
+        </div>
+      ),
+    },
+  ];
+  const [formProvider] = Form.useForm();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [selectionType, setSelectionType] = useState<"checkbox" | "radio">(
-    "checkbox"
-  );
   const [selectedmaterials, setSelectedMaterials] = useState<any>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
+  const [valueSelectedMaterials, setValueSelectedMaterials] = useState<any>([]);
   const materials = useSelector((state: any) => state.material.materials);
+  const loading = useSelector((state: any) => state.state.loadingState);
   const [valueMaterials, setValueMaterials] = useState(materials);
   useEffect(() => {
     dispatch(actions.MaterialActions.loadData());
@@ -79,7 +140,15 @@ const EnterCoupon: React.FC = () => {
           PhoneProvider: "",
         };
       });
-      dispatch(actions.ImportGoodsActions.setMaterialSelectedImports(data));
+      const filteredSelectedMaterials = data.filter((material) => {
+        return !valueSelectedMaterials.some((selectedMaterial: any) => {
+          return selectedMaterial.key === material.key;
+        });
+      });
+      setValueSelectedMaterials((prevValue: any) => [
+        ...prevValue,
+        ...filteredSelectedMaterials,
+      ]);
     }
   };
   //mở phần thêm nguyên liệu
@@ -107,9 +176,71 @@ const EnterCoupon: React.FC = () => {
     navigate(RouterLinks.IMPORT_WAREHOUSE);
     dispatch(actions.ImportGoodsActions.loadData());
   };
-  const handleAddImportCoupon = () => {};
+  const handleAddImportCoupon = () => {
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.IMPORT_WAREHOUSE,
+      })
+    );
+    dispatch(
+      actions.ImportGoodsActions.setInfoProvider(formProvider.getFieldsValue())
+    );
+    dispatch(
+      actions.ImportGoodsActions.setMaterialSelectedImports(
+        valueSelectedMaterials
+      )
+    );
+    dispatch(actions.ImportGoodsActions.createImportGoods());
+  };
+
+  //remove material selected
+  const handleRemoveCoupon = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    record: any
+  ) => {
+    e.stopPropagation();
+    const filterMaterials = valueSelectedMaterials.filter(
+      (material: any) => material.IdMaterial !== record.IdMaterial
+    );
+    const filterRowKey = selectedRowKeys.filter(
+      (row: any) => row !== record.key
+    );
+    setSelectedRowKeys(filterRowKey);
+    setValueSelectedMaterials(filterMaterials);
+  };
+
+  ///amount change
+  const handleAmountChange = (e: any, key: any) => {
+    const newData = valueSelectedMaterials.map((item: any) => {
+      if (item.key === key) {
+        return {
+          ...item,
+          Amount: e,
+        };
+      }
+      return item;
+    });
+    setValueSelectedMaterials(newData);
+  };
+  ///price change
+  const handlePriceChange = (e: any, key: any) => {
+    const newData = valueSelectedMaterials.map((item: any) => {
+      if (item.key === key) {
+        return {
+          ...item,
+          Price: e,
+        };
+      }
+      return item;
+    });
+    setValueSelectedMaterials(newData);
+  };
+  //check validate
+
   return (
     <div className="enter-coupon-page">
+      {loading ? <Spinn /> : ""}
       <Modal
         open={isOpenModal}
         title="Tìm kiếm từ kho hàng hóa"
@@ -133,8 +264,9 @@ const EnterCoupon: React.FC = () => {
           <Col span={24}>
             <Table
               rowSelection={{
-                type: selectionType,
+                type: "checkbox",
                 ...rowSelection,
+                selectedRowKeys: selectedRowKeys,
               }}
               columns={columns}
               dataSource={
@@ -217,7 +349,25 @@ const EnterCoupon: React.FC = () => {
                     }}
                   ></div>
                 </Col>
-                <ListMaterailImport data={selectedmaterials} />
+                {/* <ListMaterailImport /> */}
+                <div className="info-coupon-page">
+                  <Col span={24}>
+                    <div className="list-bill-in-bill-page">
+                      <Table
+                        // rowSelection={rowSelection}
+                        columns={columns2}
+                        //  dataSource={selectedMaterials}
+                        dataSource={valueSelectedMaterials}
+                        pagination={{
+                          pageSize: 5,
+                          showSizeChanger: false,
+                          hideOnSinglePage: true,
+                        }}
+                      />
+                    </div>
+                  </Col>
+                </div>
+                {/*  */}
                 <Col span={18}></Col>
                 <Col span={2}>
                   <Button onClick={handleCancleImport} danger>
@@ -225,7 +375,21 @@ const EnterCoupon: React.FC = () => {
                   </Button>
                 </Col>
                 <Col span={4}>
-                  <Button onClick={handleAddImportCoupon} type="primary">
+                  <Button
+                    disabled={
+                      !Array.isArray(valueSelectedMaterials) ||
+                      valueSelectedMaterials?.length <= 0 ||
+                      valueSelectedMaterials.some(
+                        (material: any) =>
+                          material?.Price === 0 ||
+                          material?.Amount === 0 ||
+                          material?.Price === "" ||
+                          material?.Amount === ""
+                      )
+                    }
+                    onClick={handleAddImportCoupon}
+                    type="primary"
+                  >
                     Thêm phiếu nhập
                   </Button>
                 </Col>
@@ -235,7 +399,51 @@ const EnterCoupon: React.FC = () => {
           </div>
         </Col>
         <Col span={6}>
-          <InfoMaterialImport />
+          {/* <InfoMaterialImport /> */}
+          <div className="info-material-import">
+            <div style={{ padding: "10px" }}>
+              <Form form={formProvider} layout="vertical">
+                <Row gutter={[0, 10]}>
+                  <Col span={6}></Col>
+                  <Col span={12}>
+                    <div>
+                      <span style={{ fontSize: "18px" }}>Nhà cung cấp</span>
+                    </div>
+                  </Col>
+                  <Col span={6}></Col>
+                  <Col span={24}>
+                    <Row gutter={[0, 0]}>
+                      <Col span={24}>
+                        <div
+                          style={{
+                            border: "0.5px solid black",
+                            opacity: "0.05",
+                          }}
+                        ></div>
+                        <span style={{ fontWeight: "500" }}>
+                          Thông tin nhà cung cấp
+                        </span>
+                      </Col>
+                      <Col span={24}>
+                        <Form.Item label="Tên nhà cung cấp" name="NameProvider">
+                          <Input name="NameProvider"></Input>
+                        </Form.Item>
+                      </Col>
+                      <Col span={24}>
+                        <Form.Item label="Số điện thoại" name="PhoneProvider">
+                          <InputNumber
+                            min={0}
+                            name="PhoneProvider"
+                            style={{ width: "100%" }}
+                          ></InputNumber>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Form>
+            </div>
+          </div>
         </Col>
       </Row>
     </div>

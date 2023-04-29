@@ -33,6 +33,17 @@ const StateReducer = (state: any = initState, action: any) => {
           keys: action.payload.keys,
         },
       };
+    case actions.types.SET_NAVIGATE:
+      return {
+        ...state,
+        ...{
+          navigate: action.payload.data,
+        },
+      };
+    case actions.types.REDIRECT_ACTION:
+      return {
+        ...state,
+      };
     default:
       return state;
   }

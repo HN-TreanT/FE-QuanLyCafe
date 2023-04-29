@@ -8,11 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../const";
+import { notification } from "../../../../components/notification";
+import { importGoodService } from "../../../../untils/networks/services/importGoodsService";
 interface DataType {
   key: string;
   CreatedAt: Date;
   Id: string;
   NameMaterial: string;
+  PhoneProvider: string;
   Amount: Number;
   Price: Number;
   NameProvider: string;
@@ -54,6 +57,23 @@ const ImportWarehouse: React.FC = () => {
       title: "Nhà cung cấp",
       dataIndex: "NameProvider",
     },
+    {
+      title: "Số điện thoại",
+      dataIndex: "PhoneProvider",
+    },
+    {
+      title: "",
+      dataIndex: "deleteImportGoods",
+      render: (text: any, record: DataType) => (
+        <div
+          onClick={(e) => handleDelete(e, record)}
+          className="table-delete"
+          style={{ cursor: "pointer" }}
+        >
+          X
+        </div>
+      ),
+    },
   ];
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -64,6 +84,7 @@ const ImportWarehouse: React.FC = () => {
   const importGoods = useSelector(
     (state: any) => state.importgoods.importGoods
   );
+
   if (Array.isArray(importGoods?.Data)) {
     data = importGoods?.Data.map((ig: any) => {
       const date = new Date(ig?.CreatedAt);
@@ -76,6 +97,7 @@ const ImportWarehouse: React.FC = () => {
           ? ig.IdMaterialNavigation.NameMaterial
           : "",
         NameProvider: ig.NameProvider ? ig.NameProvider : "",
+        PhoneProvider: ig.PhoneProvider ? ig.PhoneProvider : "",
         Amount: ig.Amount ? ig.Amount : "",
         Price: ig.Price ? ig.Price : "",
       };
@@ -90,6 +112,42 @@ const ImportWarehouse: React.FC = () => {
   const handleClickButtonAddCoupon = () => {
     dispatch(actions.MaterialActions.loadData());
     navigate(RouterLinks.ENTER_COUPON_PAGE);
+  };
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    record: any
+  ) => {
+    console.log(record.key);
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      let resposne = await importGoodService.deleteImportGood(record.key);
+      if (resposne.Status) {
+        dispatch(actions.ImportGoodsActions.loadData());
+        dispatch(actions.StateAction.loadingState(false));
+        notification({
+          message: "Delete Success",
+          title: "Thông báo",
+          position: "top-right",
+          type: "success",
+        });
+      } else {
+        notification({
+          message: resposne?.Message,
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+        dispatch(actions.StateAction.loadingState(false));
+      }
+    } catch (err: any) {
+      notification({
+        message: "Delete failed",
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
+      dispatch(actions.StateAction.loadingState(false));
+    }
   };
   return (
     <div className="import-warehouse-page">

@@ -33,10 +33,18 @@ const deleteImportGood = (Id: string) => {
     method: "DELETE",
   });
 };
+const createListImportGoods = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/ImportGoods/createManyImportGoods",
+    method: "POST",
+    data,
+  });
+};
 export const importGoodService = {
   getAllImportGoods,
   getDetailImportGoods,
   createImportGoods,
   updateImportGood,
   deleteImportGood,
+  createListImportGoods,
 };

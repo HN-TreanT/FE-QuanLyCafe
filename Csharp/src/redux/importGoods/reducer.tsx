@@ -5,12 +5,20 @@ interface MaterialState {
   page: Number;
   selectedPageHistory: Number;
   materialSelected: any[];
+  infoProvider: {
+    NameProvider: string;
+    PhoneProvider: Number;
+  };
 }
 const initAuth: MaterialState = {
   importGoods: [],
   page: 1,
   selectedPageHistory: 1,
   materialSelected: [],
+  infoProvider: {
+    NameProvider: "",
+    PhoneProvider: 0,
+  },
 };
 const ImportGoodReducer = (state: MaterialState = initAuth, action: any) => {
   switch (action.type) {
@@ -62,6 +70,17 @@ const ImportGoodReducer = (state: MaterialState = initAuth, action: any) => {
         ...state,
         ...{
           materialSelected: action.payload.data,
+        },
+      };
+    case actions.types.CREATE_IMPORT_GOODS:
+      return {
+        ...state,
+      };
+    case actions.types.INFO_PROVIDER:
+      return {
+        ...state,
+        ...{
+          infoProvider: action.payload.data,
         },
       };
     default:
