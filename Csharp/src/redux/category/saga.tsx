@@ -1,9 +1,18 @@
-import { all, fork, put, select, takeEvery } from "redux-saga/effects";
+import {
+  all,
+  fork,
+  put,
+  select,
+  takeEvery,
+  takeLatest,
+} from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
 import { categoryService } from "../../untils/networks/services/categoryService";
 
+import { RouterLinks } from "../../const";
+import { push } from "react-router-redux";
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
   notification({
@@ -39,8 +48,45 @@ function* saga_loadData() {
   }
 }
 
+function* saga_loadCategoryDetail() {
+  try {
+    let _selectedRow: Promise<any> = yield select(
+      (state: any) => state.category.selectedRow
+    );
+    let selectedRow: any = _selectedRow;
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield categoryService.getCateroryById(
+      selectedRow
+    );
+    let response: any = _response;
+    if (response.Status) {
+      yield put(actions.action.categorySelected(response.Data));
+      yield put(stateActions.action.loadingState(false));
+      yield put(push(RouterLinks.DETAIL_CATEGORY));
+    } else {
+      yield handleFail(response.Message);
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
+function* saga_Redirect() {
+  //action.type.
+  let _navigate: Promise<any> = yield select(
+    (state: any) => state.category.navigate
+  );
+  let navigate: any = _navigate;
+  navigate(RouterLinks.DETAIL_CATEGORY);
+}
+
+function* saga_RedirectAction() {
+  yield saga_loadCategoryDetail();
+  yield saga_Redirect();
+}
 function* listen() {
   yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
+  yield takeEvery(actions.types.LOAD_CATEGORY_DETAIL, saga_loadCategoryDetail);
+  yield takeLatest(actions.types.REDIRECT_ACTION, saga_RedirectAction);
 }
 
 export default function* mainSaga() {

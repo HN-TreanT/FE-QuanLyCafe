@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import useAction from "../../../../../redux/useActions";
@@ -17,6 +17,9 @@ const DetailCategory: React.FC = () => {
     (state: any) => state.category.categorySelected
   );
   const loading = useSelector((state: any) => state.state.loadingState);
+  // useEffect(() => {
+  //   dispatch(actions.CategoryActions.loadCategoryDetail());
+  // }, [dispatch, actions.CategoryActions]);
   let i = 0;
   const products = categorySelected?.Products.map((product: any) => {
     i = i + 1;

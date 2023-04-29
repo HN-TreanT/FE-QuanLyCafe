@@ -6,6 +6,7 @@ const types = {
   LOAD_HISTORY_WAREHOUSE_SUCCESS: "/load-historywarehouse-success",
   SELECTED_PAGE_HISTORY: "/selected-page-history",
   SELECTED_TIME_HISTORY: "/selected-time-history",
+  MATERIAL_SELECTED_IMPORTS: "/material-selected-imports",
 };
 const action = {
   loadHistoryWarehouse: () => {
@@ -45,6 +46,12 @@ const action = {
   setTimeHistory: (data: any) => {
     return {
       type: types.SELECTED_TIME_HISTORY,
+      payload: { data },
+    };
+  },
+  setMaterialSelectedImports: (data: any) => {
+    return {
+      type: types.MATERIAL_SELECTED_IMPORTS,
       payload: { data },
     };
   },

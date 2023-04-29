@@ -1,0 +1,27 @@
+.enter-coupon-page{
+    
+    .tittle-enter-coupon-page{
+        font-size: 1.7rem;
+       font-weight: 600;
+    }
+    .info-coupon-page{
+        width: 100%;
+         .content-info-coupon-page{
+           
+             min-height: 530px;
+         //   height: 100%;
+              background-color:white;
+              box-shadow: 0px 0px 10px #e7e2e2;
+            .title-info-coupon-page{
+                font-size: 1.3rem;
+                font-weight: 500;
+            }
+         }
+    }
+    .info-material-import{
+        width: 100%;
+        min-height: 530px;
+         background-color:white;
+         box-shadow: 0px 0px 10px #e7e2e2;
+    }
+}

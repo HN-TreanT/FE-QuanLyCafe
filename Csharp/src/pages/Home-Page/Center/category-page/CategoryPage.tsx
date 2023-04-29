@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Button, Modal, Input } from "antd";
+import { Row, Col, Button, Modal, Input, Form } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./CategoryPage.scss";
@@ -11,6 +11,7 @@ import { notification } from "../../../../components/notification";
 import Spinn from "../../../../components/Spinning/Spinning";
 
 const CategoryPage: React.FC = () => {
+  const [form] = Form.useForm();
   const actions = useAction();
   const dispatch = useDispatch();
   const [isOpenModel, setIsOpenModel] = useState(false);
@@ -37,7 +38,7 @@ const CategoryPage: React.FC = () => {
       if (category.Status) {
         dispatch(actions.CategoryActions.loadData());
         setIsOpenModel(false);
-        setValueAddCategory("");
+        form.resetFields();
         notification({
           message: "create success",
           title: "Thông báo",
@@ -51,6 +52,7 @@ const CategoryPage: React.FC = () => {
           position: "top-right",
           type: "danger",
         });
+        form.resetFields();
         setIsOpenModel(false);
       }
     } catch (err: any) {
@@ -60,6 +62,7 @@ const CategoryPage: React.FC = () => {
         position: "top-right",
         type: "danger",
       });
+      form.resetFields();
       setIsOpenModel(false);
     }
   };
@@ -68,9 +71,18 @@ const CategoryPage: React.FC = () => {
       <Modal
         title="Thêm danh mục"
         open={isOpenModel}
-        onCancel={() => setIsOpenModel(false)}
+        onCancel={() => {
+          setIsOpenModel(false);
+          form.resetFields();
+        }}
         footer={[
-          <Button key="back" onClick={() => setIsOpenModel(false)}>
+          <Button
+            key="back"
+            onClick={() => {
+              setIsOpenModel(false);
+              form.resetFields();
+            }}
+          >
             Hủy
           </Button>,
           <Button key="submit" type="primary" onClick={handleAddCategory}>
@@ -81,9 +93,13 @@ const CategoryPage: React.FC = () => {
       >
         <div>
           <div style={{ paddingBottom: "5px" }}>Tên danh mục</div>
-          <Input
-            onChange={(e: any) => setValueAddCategory(e.target.value)}
-          ></Input>
+          <Form form={form}>
+            <Form.Item name="NameCategory">
+              <Input
+                onChange={(e: any) => setValueAddCategory(e.target.value)}
+              ></Input>
+            </Form.Item>
+          </Form>
         </div>
       </Modal>
       <Row gutter={[0, 15]}>

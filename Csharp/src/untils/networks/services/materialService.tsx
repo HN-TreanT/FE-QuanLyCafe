@@ -42,7 +42,6 @@ const updateMaterial = (Id: string, data: any) => {
 };
 const getHistoryWarehouse = (page: Number, timeStart: any, timeEnd: any) => {
   if (timeStart && timeEnd) {
-    console.log(timeStart, timeEnd);
     return api.makeAuthRequest({
       url: `/api/Material/getHistoryWarehouse?page=${page}&timeStart=${timeStart}&timeEnd=${timeEnd}`,
       method: "GET",

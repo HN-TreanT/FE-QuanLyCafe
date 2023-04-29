@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { Row, Col, Form, Button, Input, Table, MenuProps, Menu } from "antd";
-import { ColumnProps, ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
 import "./ImportWarehouse.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { RouterLinks } from "../../../../const";
 interface DataType {
   key: string;
   CreatedAt: Date;
@@ -54,6 +56,7 @@ const ImportWarehouse: React.FC = () => {
     },
   ];
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const loading = useSelector((state: any) => state.state.loadingState);
@@ -72,9 +75,7 @@ const ImportWarehouse: React.FC = () => {
         NameMaterial: ig.IdMaterialNavigation.NameMaterial
           ? ig.IdMaterialNavigation.NameMaterial
           : "",
-        NameProvider: ig.IdProviderNavigation.Name
-          ? ig.IdProviderNavigation.Name
-          : "",
+        NameProvider: ig.NameProvider ? ig.NameProvider : "",
         Amount: ig.Amount ? ig.Amount : "",
         Price: ig.Price ? ig.Price : "",
       };
@@ -86,6 +87,10 @@ const ImportWarehouse: React.FC = () => {
   const handleValueFormChange = () => {};
   const handleSearchValueChange = () => {};
   const handleRowClick = (record: any) => {};
+  const handleClickButtonAddCoupon = () => {
+    dispatch(actions.MaterialActions.loadData());
+    navigate(RouterLinks.ENTER_COUPON_PAGE);
+  };
   return (
     <div className="import-warehouse-page">
       <Row gutter={[0, 15]}>
@@ -95,7 +100,7 @@ const ImportWarehouse: React.FC = () => {
               Danh sách phiếu nhập
             </div>
             <Button
-              //  onClick={handleClickButtonAddProduct}
+              onClick={handleClickButtonAddCoupon}
               type="primary"
               className="button-add-import-warehouse"
             >

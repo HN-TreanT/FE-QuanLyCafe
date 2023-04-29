@@ -53,15 +53,27 @@ function* saga_LoadHistoryWarehouse() {
       (state: any) => state.importgoods.selectedPageHistory
     );
     let selectedPage: any = _seletedPage;
+    console.log("check time", selectedTime);
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield materialService.getHistoryWarehouse(
-      selectedPage,
-      selectedTime[0],
-      selectedTime[1]
-    );
-    let response: any = _response;
-    yield put(actions.action.loadHistoryWarehouseSuccess(response));
-    yield put(stateActions.action.loadingState(false));
+    if (Array.isArray(selectedTime)) {
+      let _response: Promise<any> = yield materialService.getHistoryWarehouse(
+        selectedPage,
+        selectedTime[0],
+        selectedTime[1]
+      );
+      let response: any = _response;
+      yield put(actions.action.loadHistoryWarehouseSuccess(response));
+      yield put(stateActions.action.loadingState(false));
+    } else {
+      let _response: Promise<any> = yield materialService.getHistoryWarehouse(
+        selectedPage,
+        undefined,
+        undefined
+      );
+      let response: any = _response;
+      yield put(actions.action.loadHistoryWarehouseSuccess(response));
+      yield put(stateActions.action.loadingState(false));
+    }
   } catch (err: any) {
     yield handleErr(err);
     yield put(stateActions.action.loadingState(false));

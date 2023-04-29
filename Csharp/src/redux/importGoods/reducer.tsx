@@ -4,11 +4,13 @@ interface MaterialState {
   importGoods: any[];
   page: Number;
   selectedPageHistory: Number;
+  materialSelected: any[];
 }
 const initAuth: MaterialState = {
   importGoods: [],
   page: 1,
   selectedPageHistory: 1,
+  materialSelected: [],
 };
 const ImportGoodReducer = (state: MaterialState = initAuth, action: any) => {
   switch (action.type) {
@@ -53,6 +55,13 @@ const ImportGoodReducer = (state: MaterialState = initAuth, action: any) => {
         ...state,
         ...{
           selectedTimeHistory: action.payload.data,
+        },
+      };
+    case actions.types.MATERIAL_SELECTED_IMPORTS:
+      return {
+        ...state,
+        ...{
+          materialSelected: action.payload.data,
         },
       };
     default:

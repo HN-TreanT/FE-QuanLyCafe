@@ -2,9 +2,14 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-
-import { store, persistor } from "./redux";
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { store, persistor, history } from "./redux";
+import {
+  Route,
+  Routes,
+  BrowserRouter,
+  Navigate,
+  Router,
+} from "react-router-dom";
 import { RouterLinks } from "./const";
 import Login from "./pages/login-page/login";
 import { AuthorizationComponent } from "./components/authorization/AuthorizationComponent";
@@ -30,6 +35,7 @@ import AddStaffPage from "./pages/Home-Page/Center/Staff-page/AddStaffPage/AddSt
 import DetailStaffPage from "./pages/Home-Page/Center/Staff-page/DetailStaffPage/DetailStaffPage";
 import WorkShiftPage from "./pages/Home-Page/Center/workshift-page/WorkShiftPage";
 import DetailWorkShift from "./pages/Home-Page/Center/workshift-page/DetailWorkShift/DetailWorkShift";
+import EnterCoupon from "./pages/Home-Page/Center/import-warehouse/EnterCoupon/EnterCoupon";
 
 function App() {
   return (
@@ -185,6 +191,12 @@ function App() {
                           <AuthorizationComponent
                             element={<DetailWorkShift />}
                           />
+                        }
+                      />
+                      <Route
+                        path={RouterLinks.ENTER_COUPON_PAGE}
+                        element={
+                          <AuthorizationComponent element={<EnterCoupon />} />
                         }
                       />
                     </Route>

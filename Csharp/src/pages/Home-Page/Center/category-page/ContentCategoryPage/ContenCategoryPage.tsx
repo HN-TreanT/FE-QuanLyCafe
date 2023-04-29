@@ -1,4 +1,4 @@
-import { Col, Row, Table, Form, Menu, Input, MenuProps, Button } from "antd";
+import { Col, Row, Table, Form, Menu, Input, MenuProps, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
@@ -28,6 +28,8 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const loading = useSelector((state: any) => state.state.loadingState);
+  const [isOpenModal, setIsOpenModel] = useState(false);
+  const [key, setKey] = useState("");
   const columns: ColumnsType<DataType> = [
     {
       title: "Danh mục",
@@ -67,30 +69,18 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
       setValueCategories(value);
     }
   };
-  const handleRowClick = async (record: any) => {
-    console.log(record.key);
-    try {
-      const category = await categoryService.getCateroryById(record.key);
-      if ((category.Status = true)) {
-        dispatch(actions.CategoryActions.categorySelected(category.Data));
-        navigate(RouterLinks.DETAIL_CATEGORY);
-      } else {
-        notification({
-          message: "Not found ca  tegory",
-          title: "Thông báo",
-          position: "top-right",
-          type: "danger",
-        });
-      }
-    } catch (err: any) {
-      console.log(err.Message);
-    }
+  const handleRowClick = (record: any) => {
+    dispatch(actions.CategoryActions.setSelectedRow(record.key));
+    dispatch(actions.CategoryActions.redirect(navigate));
+    dispatch(actions.CategoryActions.redirectAction());
   };
+
   const handleDeleteCategory = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     record: any
   ) => {
     e.stopPropagation();
+    setKey(record.key);
     try {
       const response = await categoryService.deleteCategory(record.key);
       if (response.Status) {
@@ -105,11 +95,34 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
         });
       }
     } catch (e) {
-      console.log(e);
+      // notification({
+      //   message: "delete category fail",
+      //   title: "Thông báo",
+      //   position: "top-right",
+      //   type: "danger",
+      // });
+      setIsOpenModel(true);
     }
+  };
+  const handleOKModal = () => {
+    console.log("check key,", key);
+    dispatch(actions.CategoryActions.setSelectedRow(key));
+    dispatch(actions.CategoryActions.redirect(navigate));
+    dispatch(actions.CategoryActions.redirectAction());
+    setIsOpenModel(false);
   };
   return (
     <>
+      <Modal
+        title="Danh mục này còn chứa các mặt hàng"
+        open={isOpenModal}
+        onCancel={() => {
+          setIsOpenModel(false);
+        }}
+        onOk={handleOKModal}
+      >
+        <span>Bạn có muốn chuyển đến chuyển danh mục cho các mặt hàng?</span>
+      </Modal>
       <Col span={24}>
         <div className="container-category-page">
           <div className="header-category-page">

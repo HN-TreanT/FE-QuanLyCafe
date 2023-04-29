@@ -41,7 +41,7 @@ const persistedReducer = persistReducer(
 const store = createStore(
   // combineReducers({
   //   ...reducers,
-  //   router: routerReducer,
+  //   router: ConnectedRouter(history),
   // }),
   persistedReducer,
   composeEnhancers(applyMiddleware(...middleware))

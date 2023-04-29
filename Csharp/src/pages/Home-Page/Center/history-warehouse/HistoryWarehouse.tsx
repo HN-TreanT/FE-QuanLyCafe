@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Row, Col, Table, DatePicker, Space, Button } from "antd";
+import { Row, Col, Table, DatePicker, Space, Button, Form } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
@@ -38,7 +38,7 @@ const HistoryWarehouse: React.FC = () => {
       dataIndex: "Unit",
     },
   ];
-
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
   const loading = useSelector((state: any) => state.state.loadingState);
@@ -48,32 +48,45 @@ const HistoryWarehouse: React.FC = () => {
   const historyWarehouse = useSelector(
     (state: any) => state.importgoods.historyWarehouse
   );
-  if (Array.isArray(historyWarehouse.Data)) {
-    let i = 0;
-    data = historyWarehouse?.Data.map((his: any) => {
-      i++;
-      return {
-        key: his.Id ? `his.Id ${i + 1}` : "",
-        CreatedAt: his.CreatedAt ? his.CreatedAt : "",
-        NameMaterial: his.NameMaterial ? his.NameMaterial : "",
-        Amount: his.Amount ? his.Amount : "",
-        Unit: his.Unit ? his.Unit : "",
-      };
-    });
+  const time = useSelector(
+    (state: any) => state.importgoods.selectedTimeHistory
+  );
+  if (historyWarehouse?.Data) {
+    if (Array.isArray(historyWarehouse.Data)) {
+      let i = 0;
+      data = historyWarehouse?.Data?.map((his: any) => {
+        i++;
+        return {
+          key: his.Id ? `${his.Id} ${i + 1}` : "",
+          CreatedAt: his.CreatedAt ? his.CreatedAt : "",
+          NameMaterial: his.NameMaterial ? his.NameMaterial : "",
+          Amount: his.Amount ? his.Amount : "",
+          Unit: his.Unit ? his.Unit : "",
+        };
+      });
+    }
   }
+
   useEffect(() => {
     dispatch(actions.ImportGoodsActions.loadHistoryWarehouse());
   }, [dispatch, actions.ImportGoodsActions, selectedPage]);
-  const handleChangeSelectTime = (e: any) => {
-    const dateTime = e.map((datetime: any) => {
-      const myDate = dayjs(datetime).format("DD/MM/YYYY HH:mm:ss");
-      return myDate;
-    });
-    dispatch(actions.ImportGoodsActions.setTimeHistory(dateTime));
+  const handleValueChange = () => {
+    console.log(form.getFieldsValue().time);
+    if (Array.isArray(form.getFieldsValue().time)) {
+      const dateTime = form.getFieldsValue().time.map((datetime: any) => {
+        const myDate = dayjs(datetime).format("DD/MM/YYYY HH:mm:ss");
+        return myDate;
+      });
+      dispatch(actions.ImportGoodsActions.setTimeHistory(dateTime));
+    }
+    if (!form.getFieldsValue().time) {
+      dispatch(actions.ImportGoodsActions.setTimeHistory(null));
+    }
   };
   const handleClickSearch = () => {
-    dispatch(actions.ImportGoodsActions.setPage(1));
-    dispatch(actions.ImportGoodsActions.loadData());
+    dispatch(actions.ImportGoodsActions.setPageHistory(1));
+    dispatch(actions.ImportGoodsActions.loadHistoryWarehouse());
+    //dispatch(actions.ImportGoodsActions.setTimeHistory([]));
   };
   return (
     <div className="history-warehouse-page">
@@ -86,10 +99,21 @@ const HistoryWarehouse: React.FC = () => {
         <Col span={8}>
           <Space.Compact>
             <Button onClick={handleClickSearch}>Lọc</Button>
-            <DatePicker.RangePicker
-              showTime
-              onChange={handleChangeSelectTime}
-            />
+            <Form form={form} onValuesChange={handleValueChange}>
+              <Form.Item
+                initialValue={
+                  Array.isArray(time)
+                    ? [
+                        dayjs(time[0], "DD/MM/YYYY HH:mm:ss"),
+                        dayjs(time[1], "DD/MM/YYYY HH:mm:ss"),
+                      ]
+                    : null
+                }
+                name="time"
+              >
+                <DatePicker.RangePicker showTime />
+              </Form.Item>
+            </Form>
           </Space.Compact>
         </Col>
         <Col span={24}>
@@ -111,7 +135,8 @@ const HistoryWarehouse: React.FC = () => {
                 pagination={{
                   defaultCurrent: selectedPage,
                   pageSize: 6,
-                  total: historyWarehouse.TotalPage,
+                  total: historyWarehouse?.TotalPage,
+
                   onChange: (page) => {
                     dispatch(actions.ImportGoodsActions.setPageHistory(page));
                   },
