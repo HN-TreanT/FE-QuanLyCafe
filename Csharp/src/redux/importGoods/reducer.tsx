@@ -83,6 +83,17 @@ const ImportGoodReducer = (state: MaterialState = initAuth, action: any) => {
           infoProvider: action.payload.data,
         },
       };
+    case actions.types.SEARCH_VALUE:
+      return {
+        ...state,
+        ...{
+          searchValue: action.payload.data,
+        },
+      };
+    case actions.types.GET_IMPORTSGOODS_BY_ID:
+      return {
+        ...state,
+      };
     default:
       return state;
   }

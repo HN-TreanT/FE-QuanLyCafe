@@ -1,8 +1,12 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getAllImportGoods = (page: Number) => {
+const getAllImportGoods = (
+  page: Number,
+  timeStart: string,
+  timeEnd: string
+) => {
   return api.makeAuthRequest({
-    url: `/api/ImportGoods/getAllImportGood?page=${page}`,
+    url: `https://localhost:7066/api/ImportGoods/getAllImportGood?page=${page}&timeStart=${timeStart}&timeEnd=${timeEnd}`,
     method: "GET",
   });
 };

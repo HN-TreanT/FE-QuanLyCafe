@@ -9,6 +9,8 @@ const types = {
   MATERIAL_SELECTED_IMPORTS: "importGoods/material-selected-imports",
   CREATE_IMPORT_GOODS: "importGoods/create-import-goods",
   INFO_PROVIDER: "importGoods/info-provider",
+  SEARCH_VALUE: "importGoods/search-value",
+  GET_IMPORTSGOODS_BY_ID: "importGoods/get-importGoods-by-id",
 };
 const action = {
   loadHistoryWarehouse: () => {
@@ -66,6 +68,17 @@ const action = {
     return {
       type: types.INFO_PROVIDER,
       payload: { data },
+    };
+  },
+  setSearchValue: (data: any) => {
+    return {
+      type: types.SEARCH_VALUE,
+      payload: { data },
+    };
+  },
+  getImportGoodsById: () => {
+    return {
+      type: types.GET_IMPORTSGOODS_BY_ID,
     };
   },
 };

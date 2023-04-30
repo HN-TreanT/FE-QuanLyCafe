@@ -1,5 +1,15 @@
-import React, { useEffect } from "react";
-import { Row, Col, Form, Button, Input, Table, MenuProps, Menu } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Row,
+  Col,
+  Form,
+  Button,
+  Input,
+  Table,
+  MenuProps,
+  Menu,
+  DatePicker,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
@@ -10,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../const";
 import { notification } from "../../../../components/notification";
 import { importGoodService } from "../../../../untils/networks/services/importGoodsService";
+import dayjs from "dayjs";
 interface DataType {
   key: string;
   CreatedAt: Date;
@@ -81,10 +92,12 @@ const ImportWarehouse: React.FC = () => {
   const actions = useAction();
   const loading = useSelector((state: any) => state.state.loadingState);
   const selectedPage = useSelector((state: any) => state.importgoods.page);
+  const searchValue = useSelector(
+    (state: any) => state.importgoods.searchValue
+  );
   const importGoods = useSelector(
     (state: any) => state.importgoods.importGoods
   );
-
   if (Array.isArray(importGoods?.Data)) {
     data = importGoods?.Data.map((ig: any) => {
       const date = new Date(ig?.CreatedAt);
@@ -106,13 +119,13 @@ const ImportWarehouse: React.FC = () => {
   useEffect(() => {
     dispatch(actions.ImportGoodsActions.loadData());
   }, [dispatch, actions.ImportGoodsActions, selectedPage]);
-  const handleValueFormChange = () => {};
-  const handleSearchValueChange = () => {};
+
   const handleRowClick = (record: any) => {};
   const handleClickButtonAddCoupon = () => {
     dispatch(actions.MaterialActions.loadData());
     navigate(RouterLinks.ENTER_COUPON_PAGE);
   };
+  // delete
   const handleDelete = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     record: any
@@ -149,6 +162,48 @@ const ImportWarehouse: React.FC = () => {
       dispatch(actions.StateAction.loadingState(false));
     }
   };
+  //change input id
+  const handleInputIdChange = (e: any) => {
+    if (e.target.value === "") {
+      dispatch(actions.ImportGoodsActions.loadData());
+    }
+    dispatch(
+      actions.ImportGoodsActions.setSearchValue({
+        ...searchValue,
+        valueId: e.target.value,
+      })
+    );
+  };
+  //change input name
+  const handleInputNameChange = (e: any) => {
+    console.log(e.target.value);
+  };
+  //change input time
+  const handleInputTime = (e: any) => {
+    if (e) {
+      dispatch(
+        actions.ImportGoodsActions.setSearchValue({
+          ...searchValue,
+          timeStart: e[0].toString(),
+          timeEnd: e[1].toString(),
+        })
+      );
+      dispatch(actions.ImportGoodsActions.loadData());
+    } else {
+      dispatch(
+        actions.ImportGoodsActions.setSearchValue({
+          ...searchValue,
+          timeStart: "",
+          timeEnd: "",
+        })
+      );
+      dispatch(actions.ImportGoodsActions.loadData());
+    }
+  };
+
+  const handleClickSearchId = async () => {
+    dispatch(actions.ImportGoodsActions.getImportGoodsById());
+  };
   return (
     <div className="import-warehouse-page">
       <Row gutter={[0, 15]}>
@@ -163,14 +218,14 @@ const ImportWarehouse: React.FC = () => {
               className="button-add-import-warehouse"
             >
               <FontAwesomeIcon icon={faPlus} />
-              <span> Thêm phiếu nhập</span>
+              <span> Nhập mặt hàng</span>
             </Button>
           </div>
         </Col>
         <Col span={24}>
           <div className="container-import-warehouse-page">
             <div className="header-import-warehouse-page">
-              <Row>
+              <Row gutter={[0, 10]}>
                 <Col span={24}>
                   <Menu
                     selectedKeys={["enterCoupon"]}
@@ -179,35 +234,74 @@ const ImportWarehouse: React.FC = () => {
                   />
                 </Col>
                 <Col span={24}>
-                  <div
-                    style={{
-                      border: "0.5px solid black",
-                      opacity: "0.05",
-                    }}
-                  ></div>
-                </Col>
-                <Col span={24}>
-                  <Form
-                    form={form}
-                    layout="horizontal"
-                    onValuesChange={handleValueFormChange}
-                    className="form-css"
-                  >
-                    <Form.Item
-                      name="searchValue"
-                      className="input-search-import-warehouse"
-                    >
-                      <Input
-                        onChange={handleSearchValueChange}
-                        placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                        prefix={
-                          <FontAwesomeIcon
-                            icon={faMagnifyingGlass}
-                            className="icon-search"
+                  <Form form={form} className="form-css">
+                    <Row gutter={[30, 20]}>
+                      <Col span={6}>
+                        <Form.Item
+                          name="Id"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Mã tham chiếu
+                          </label>
+                          <Input
+                            bordered={false}
+                            placeholder="Nhập mã tham chiếu"
+                            onChange={handleInputIdChange}
+                            prefix={
+                              <FontAwesomeIcon
+                                onClick={handleClickSearchId}
+                                icon={faMagnifyingGlass}
+                                className="icon-search"
+                              />
+                            }
                           />
-                        }
-                      />
-                    </Form.Item>
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          name="nameMaterial"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Tên nguyên liệu
+                          </label>
+                          <Input
+                            onChange={handleInputNameChange}
+                            bordered={false}
+                            placeholder="Nhập tên nguyên liệu"
+                            prefix={
+                              <FontAwesomeIcon
+                                icon={faMagnifyingGlass}
+                                className="icon-search"
+                              />
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          name="time"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Thời gian
+                          </label>
+                          <DatePicker.RangePicker
+                            defaultValue={
+                              searchValue.timeStart && searchValue.timeEnd
+                                ? [
+                                    dayjs(searchValue.timeStart),
+                                    dayjs(searchValue.timeEnd),
+                                  ]
+                                : null
+                            }
+                            onChange={handleInputTime}
+                            className="date-picker-form"
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
                   </Form>
                 </Col>
               </Row>

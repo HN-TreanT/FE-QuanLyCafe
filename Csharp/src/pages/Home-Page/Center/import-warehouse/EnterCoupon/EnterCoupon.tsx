@@ -57,6 +57,7 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Amount",
       render: (text, record) => (
         <InputNumber
+          className="input-number"
           step={1}
           min={0}
           required={true}
@@ -71,7 +72,7 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Price",
       render: (text, record) => (
         <InputNumber
-          // min={0}
+          className="input-number"
           step={1}
           min={0}
           required={true}
@@ -236,7 +237,6 @@ const EnterCoupon: React.FC = () => {
     });
     setValueSelectedMaterials(newData);
   };
-  //check validate
 
   return (
     <div className="enter-coupon-page">
@@ -407,7 +407,9 @@ const EnterCoupon: React.FC = () => {
                   <Col span={6}></Col>
                   <Col span={12}>
                     <div>
-                      <span style={{ fontSize: "18px" }}>Nhà cung cấp</span>
+                      <span style={{ fontSize: "18px", fontWeight: "500" }}>
+                        Nhà cung cấp
+                      </span>
                     </div>
                   </Col>
                   <Col span={6}></Col>

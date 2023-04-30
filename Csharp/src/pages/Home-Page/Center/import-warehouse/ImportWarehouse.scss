@@ -23,15 +23,19 @@
   
         .header-import-warehouse-page{
             .form-css{
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
                padding:10px 10px 0 10px;
                .type-search-import-warehouse{
                 margin-right: 10px;
                }
                .input-search-import-warehouse{
                    width: 100%;
+                   .icon-search{
+                    cursor: pointer;
+                    &:hover{
+                     color:rgb(64, 135, 217) ;
+                    }
+                   }
+                   
                }   
            }
            
@@ -40,6 +44,7 @@
             padding-right: 20px;
             .icon-button-import-warehouse{
                 margin-right: 5px;
+
             }
            
         }
@@ -51,3 +56,50 @@
 .table-delete:hover{
     color: red;
 }
+
+.input-label-inline-border {
+    position: relative;
+    .ant-form-item-control {
+      padding: 4px;
+      position: relative;
+      z-index: 1;
+      &:hover:before,
+      &:focus:before  {  
+        border-color: rgb(64, 135, 217);
+        
+      }
+     
+    }
+    .ant-form-item-control::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid rgba(0, 0, 0, 0.119);
+      border-radius: 10px;
+      z-index: 0;
+    }
+    .ant-form-item-label{
+      position: absolute;
+      top: -18px;
+      left: 30px;
+      padding-left: 2px;
+      padding-right: 2px;
+      opacity: 0.9;
+      background-color: white;
+    }
+    .ant-input {
+      border: none;
+      padding-left: 40px;
+      
+    }
+    &:hover .ant-form-item-label{
+        color: rgb(64, 135, 217);
+    }
+    .date-picker-form{
+        border: none;
+    }
+  }
+  

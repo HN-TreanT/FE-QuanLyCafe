@@ -31,9 +31,15 @@ function* saga_loadData() {
       (state: any) => state.importgoods.page
     );
     let selectedPage: any = _seletedPage;
+    let _searchValue: Promise<any> = yield select(
+      (state: any) => state.importgoods.searchValue
+    );
+    let searchValue: any = _searchValue;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield importGoodService.getAllImportGoods(
-      selectedPage
+      selectedPage,
+      searchValue.timeStart ? searchValue.timeStart : "",
+      searchValue.timeEnd ? searchValue.timeEnd : ""
     );
     let response: any = _response;
     if (response.Status) {
@@ -140,6 +146,30 @@ function* saga_Redirect() {
   }
 }
 
+function* saga_getImportGoodsById() {
+  try {
+    yield put(stateActions.action.loadingState(true));
+    let _searchValue: Promise<any> = yield select(
+      (state: any) => state.importgoods.searchValue
+    );
+    let searchValue: any = _searchValue;
+    let _response: Promise<any> = yield importGoodService.getDetailImportGoods(
+      searchValue?.valueId
+    );
+    let response: any = _response;
+    if (response.Status) {
+      response.Data = [response.Data];
+      yield put(stateActions.action.loadingState(false));
+      yield put(actions.action.loadDataSuccess(response));
+    } else {
+      yield put(stateActions.action.loadingState(false));
+      yield put(actions.action.loadDataSuccess([]));
+    }
+    yield put(stateActions.action.loadingState(false));
+  } catch (err: any) {
+    yield put(stateActions.action.loadingState(false));
+  }
+}
 function* handleCreateImportGoods() {
   yield saga_createImportGoods();
   yield saga_Redirect();
@@ -153,6 +183,10 @@ function* listen() {
   );
   // yield takeEvery(actions.types.CREATE_IMPORT_GOODS, saga_createImportGoods);
   yield takeEvery(actions.types.CREATE_IMPORT_GOODS, handleCreateImportGoods);
+  yield takeEvery(
+    actions.types.GET_IMPORTSGOODS_BY_ID,
+    saga_getImportGoodsById
+  );
 }
 
 export default function* mainSaga() {
