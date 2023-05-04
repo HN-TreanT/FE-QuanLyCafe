@@ -31,4 +31,5 @@ export const RouterLinks = {
   DETAIL_STAFF_PAGE: "/home/staff/detial-staff-page",
   DETAIL_WORK_SHIFT: "/home/workshift/detail-workshift",
   ENTER_COUPON_PAGE: "/home/warehouse/import-enterCoupon",
+  PROMOTION_PAGE: "/home/promotion-page",
 };

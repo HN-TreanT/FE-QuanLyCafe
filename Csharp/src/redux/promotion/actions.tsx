@@ -1,6 +1,8 @@
 const types = {
   SET_PROMOTION_EXPIRED: "/promotion/SET_promotion_expired",
-  SET_PROMOTION_EXPIRED_SUCCESS: "/promotion/SET_promotion_expired_success",
+  LOAD_DATA_SUCCESS: "/promotion/load-data-success",
+  LOAD_DATA: "promotion/load-data",
+  SELECTED_PROMOTION_STATE: "promotion/selected-promotion-state",
 };
 
 const action = {
@@ -9,10 +11,21 @@ const action = {
       type: types.SET_PROMOTION_EXPIRED,
     };
   },
-  SetPromotionExpiredSuccess: (promotions: any) => {
+  loadDataSuccess: (promotions: any) => {
     return {
-      type: types.SET_PROMOTION_EXPIRED_SUCCESS,
+      type: types.LOAD_DATA_SUCCESS,
       payload: { promotions },
+    };
+  },
+  loadData: () => {
+    return {
+      type: types.LOAD_DATA,
+    };
+  },
+  setStatePromotion: (data: any) => {
+    return {
+      type: types.SELECTED_PROMOTION_STATE,
+      payload: { data },
     };
   },
 };

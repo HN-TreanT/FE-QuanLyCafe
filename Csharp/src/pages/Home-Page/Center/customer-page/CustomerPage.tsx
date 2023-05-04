@@ -10,6 +10,7 @@ import {
   Input,
   Modal,
   Select,
+  InputNumber,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -287,7 +288,7 @@ const CustomerPage: React.FC = () => {
             name="phoneNumber"
             label="Số điện thoại"
           >
-            <Input></Input>
+            <InputNumber style={{ width: "100%" }}></InputNumber>
           </Form.Item>
           <Form.Item
             rules={[

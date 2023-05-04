@@ -108,18 +108,23 @@ const ContenProductList: React.FC<any> = ({ value }) => {
   const handleClickEdit = async (Id: any) => {
     const dbProduct = await productServices.GetProductById(Id);
     dispatch(actions.MaterialActions.loadData());
+    console.log(dbProduct);
     if (dbProduct.Status) {
-      dispatch(
-        actions.MaterialActions.selectedMaterial(
-          Array.isArray(dbProduct.Data.UseMaterials) &&
-            dbProduct.Data.UseMaterials.map((item: any) => {
+      if (Array.isArray(dbProduct?.Data.UseMaterials)) {
+        dispatch(
+          actions.MaterialActions.selectedMaterial({
+            selectedRowKeys: dbProduct.Data.UseMaterials.map((item: any) => {
+              return item.IdMaterialNavigation.IdMaterial;
+            }),
+            selectedRows: dbProduct.Data.UseMaterials.map((item: any) => {
               return {
                 ...item.IdMaterialNavigation,
                 Amount: item.Amount,
               };
-            })
-        )
-      );
+            }),
+          })
+        );
+      }
       dispatch(
         actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct)
       );

@@ -30,6 +30,12 @@ const ProductList: React.FC = () => {
     };
   });
   const handleClickButtonAddProduct = () => {
+    dispatch(
+      actions.MaterialActions.selectedMaterial({
+        selectedRowKeys: [],
+        selectedRows: [],
+      })
+    );
     dispatch(actions.MaterialActions.selectedMaterial([]));
     dispatch(actions.MaterialActions.loadData());
     navigate(RouterLinks.ADD_PRODUCT_PAGE);

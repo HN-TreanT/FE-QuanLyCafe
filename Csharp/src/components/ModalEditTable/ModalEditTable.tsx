@@ -62,7 +62,7 @@ const ModalEditTable: React.FC<any> = ({ isOpen, data }) => {
       if (response.Status) {
         dispatch(actions.TableFoodActions.loadData());
         notification({
-          message: "delete success",
+          message: "update success",
           title: "Thông báo",
           position: "top-right",
           type: "success",

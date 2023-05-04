@@ -31,7 +31,23 @@ function* saga_setPromotionExpired() {
     let response: any = _response;
     console.log(response.Status);
     if (response.Status) {
-      yield put(actions.action.SetPromotionExpiredSuccess(response.Data));
+      yield put(actions.action.loadDataSuccess(response.Data));
+      yield put(stateActions.action.loadingState(false));
+    } else {
+      yield handleFail("load fail");
+    }
+  } catch (ex: any) {
+    yield handleErr(ex);
+  }
+}
+
+function* saga_loadData() {
+  try {
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield promotionServices.GetAllPromotion();
+    let response: any = _response;
+    if (response.Status) {
+      yield put(actions.action.loadDataSuccess(response.Data));
       yield put(stateActions.action.loadingState(false));
     } else {
       yield handleFail("load fail");
@@ -46,6 +62,7 @@ function* listen() {
     actions.types.SET_PROMOTION_EXPIRED,
     saga_setPromotionExpired
   );
+  yield takeEvery(actions.types.LOAD_DATA, saga_loadData);
 }
 
 export default function* mainSaga() {

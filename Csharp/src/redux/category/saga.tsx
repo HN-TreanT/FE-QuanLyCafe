@@ -13,6 +13,7 @@ import { categoryService } from "../../untils/networks/services/categoryService"
 
 import { RouterLinks } from "../../const";
 import { push } from "react-router-redux";
+import { productServices } from "../../untils/networks/services/productService";
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
   notification({
@@ -58,6 +59,9 @@ function* saga_loadCategoryDetail() {
     let _response: Promise<any> = yield categoryService.getCateroryById(
       selectedRow
     );
+    // let _response: Promise<any> = yield productServices.GetAllProductByCategory(
+    //   selectedRow
+    // );
     let response: any = _response;
     if (response.Status) {
       yield put(actions.action.categorySelected(response.Data));

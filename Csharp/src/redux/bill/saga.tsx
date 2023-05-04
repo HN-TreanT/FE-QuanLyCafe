@@ -78,7 +78,10 @@ function* saga_loadData() {
     yield put(actions.action.loadDataSuccess(response));
     yield put(stateActions.action.loadingState(false));
   } else {
-    yield handleFail("load data fail");
+    response.Data = [];
+    yield put(actions.action.loadDataSuccess(response));
+    yield put(stateActions.action.loadingState(false));
+    //yield handleFail("load data fail");
   }
   try {
   } catch (ex: any) {

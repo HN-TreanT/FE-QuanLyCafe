@@ -6,11 +6,22 @@ const PromotionReducer = (state: any = initState, action: any) => {
       return {
         ...state,
       };
-    case actions.types.SET_PROMOTION_EXPIRED_SUCCESS:
+    case actions.types.LOAD_DATA_SUCCESS:
       return {
         ...state,
         ...{
           promotionExpired: action.payload.promotions,
+        },
+      };
+    case actions.types.LOAD_DATA:
+      return {
+        ...state,
+      };
+    case actions.types.SELECTED_PROMOTION_STATE:
+      return {
+        ...state,
+        ...{
+          statePromotion: action.payload.data,
         },
       };
 

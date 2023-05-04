@@ -289,7 +289,7 @@ const ImportWarehouse: React.FC = () => {
                           </label>
                           <DatePicker.RangePicker
                             defaultValue={
-                              searchValue.timeStart && searchValue.timeEnd
+                              searchValue?.timeStart && searchValue?.timeEnd
                                 ? [
                                     dayjs(searchValue.timeStart),
                                     dayjs(searchValue.timeEnd),

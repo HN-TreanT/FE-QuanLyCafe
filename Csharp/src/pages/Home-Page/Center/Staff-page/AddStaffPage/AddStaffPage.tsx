@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
+import {
+  Row,
+  Col,
+  Button,
+  Input,
+  Form,
+  Select,
+  DatePicker,
+  InputNumber,
+} from "antd";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,26 +16,39 @@ import useAction from "../../../../../redux/useActions";
 import "./AddStaffPage.scss";
 import { RouterLinks } from "../../../../../const";
 const AddStaffPage: React.FC = () => {
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
   const [isDisabled, setIsDisabled] = useState(true);
   const workshifts = useSelector((state: any) => state.workshift.workshifts);
+  const staffs = useSelector((state: any) => state.staff.staffs);
   useEffect(() => {
     dispatch(actions.WorkshiftActions.loadData());
   }, [dispatch, actions.WorkshiftActions]);
   const handleChange = () => {
-    console.log(form.getFieldsValue());
-    dispatch(actions.StaffActions.setInfoStaffCreate(form.getFieldsValue()));
+    dispatch(
+      actions.StaffActions.setInfoStaffCreate({
+        ...form.getFieldsValue(),
+        PhoneNumber: form.getFieldsValue().PhoneNumber?.toString(),
+      })
+    );
+
     if (
+      form.getFieldsValue().PhoneNumber &&
       form.getFieldsValue().Fullname &&
       form.getFieldsValue().Email &&
       form.getFieldsValue().Salary &&
       form.getFieldsValue().WorkShifts &&
       form.getFieldsValue().WorkShifts.length !== 0
     ) {
-      setIsDisabled(false);
+      if (!emailRegex.test(form.getFieldsValue().Email)) {
+        setIsDisabled(true);
+      } else {
+        setIsDisabled(false);
+      }
     } else {
       setIsDisabled(true);
     }
@@ -92,11 +114,26 @@ const AddStaffPage: React.FC = () => {
                       rules={[
                         {
                           type: "email",
-                          message: "The input is not valid E-mail!",
+                          message: "Đây không phải là email!",
                         },
                         {
                           required: true,
-                          message: "Please input your E-mail!",
+                          message: "Vui lòng nhập email!",
+                        },
+                        {
+                          validator: async (_, value) => {
+                            let check = false;
+                            staffs.forEach((item: any) => {
+                              if (value === item?.Email) {
+                                check = true;
+                                setIsDisabled(true);
+                              }
+                            });
+                            console.log(value);
+                            if (check) {
+                              throw new Error("Email đã tồn tại ");
+                            }
+                          },
                         },
                       ]}
                     >
@@ -105,8 +142,34 @@ const AddStaffPage: React.FC = () => {
                   </Col>
 
                   <Col span={10}>
-                    <Form.Item name="PhoneNumber" label="Số điện thoai">
-                      <Input placeholder="Nhập số điện thoại"></Input>
+                    <Form.Item
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập số điện thoại!",
+                        },
+                        {
+                          validator: async (_, value) => {
+                            let check = false;
+                            staffs.forEach((item: any) => {
+                              if (value?.toString() === item?.PhoneNumber) {
+                                check = true;
+                                setIsDisabled(true);
+                              }
+                            });
+                            if (check) {
+                              throw new Error("số điện thoại đã tồn tại ");
+                            }
+                          },
+                        },
+                      ]}
+                      name="PhoneNumber"
+                      label="Số điện thoai"
+                    >
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        placeholder="Nhập số điện thoại"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={10}>
@@ -144,7 +207,11 @@ const AddStaffPage: React.FC = () => {
                       name="Salary"
                       label="Lương"
                     >
-                      <Input placeholder="Nhập lương"></Input>
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        min={0}
+                        placeholder="Nhập lương"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

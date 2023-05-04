@@ -1,6 +1,8 @@
 import React from "react";
 import { Menu, Image } from "antd";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { RouterLinks } from "../../const";
 import {
   ReconciliationOutlined,
@@ -115,6 +117,17 @@ const menuItems = [
         url: RouterLinks.HISTORY_WAREHOUSE,
       },
     ],
+  },
+  {
+    key: "promotion",
+    label: "Khuyến mãi",
+    url: RouterLinks.PROMOTION_PAGE,
+    icon: (
+      <FontAwesomeIcon
+        icon={faBullhorn}
+        style={{ fontSize: "1.2rem", paddingRight: "0.5rem" }}
+      />
+    ),
   },
 ];
 const SideBar: React.FC = () => {

@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
-import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import {
+  Row,
+  Col,
+  Button,
+  Input,
+  Form,
+  Select,
+  DatePicker,
+  InputNumber,
+} from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
@@ -13,6 +22,8 @@ import { notification } from "../../../../../components/notification";
 import { staffService } from "../../../../../untils/networks/services/staffService";
 import Spinn from "../../../../../components/Spinning/Spinning";
 const DetailStaffPage: React.FC = () => {
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
@@ -30,7 +41,12 @@ const DetailStaffPage: React.FC = () => {
   }
   const handleChange = () => {
     console.log(form.getFieldsValue());
-    dispatch(actions.StaffActions.setInfoStaffCreate(form.getFieldsValue()));
+    dispatch(
+      actions.StaffActions.setInfoStaffCreate({
+        ...form.getFieldsValue(),
+        PhoneNumber: form.getFieldsValue().PhoneNumber?.toString(),
+      })
+    );
     if (
       form.getFieldsValue().Fullname &&
       form.getFieldsValue().Email &&
@@ -38,7 +54,11 @@ const DetailStaffPage: React.FC = () => {
       form.getFieldsValue().WorkShifts &&
       form.getFieldsValue().WorkShifts.length !== 0
     ) {
-      setIsDisabled(false);
+      if (!emailRegex.test(form.getFieldsValue().Email)) {
+        setIsDisabled(true);
+      } else {
+        setIsDisabled(false);
+      }
     } else {
       setIsDisabled(true);
     }
@@ -147,14 +167,17 @@ const DetailStaffPage: React.FC = () => {
                       name="Email"
                       label="E-mail"
                       initialValue={detailStaff?.Email}
+                      shouldUpdate={(prevValues, curValues) =>
+                        curValues.Email === prevValues.Email
+                      }
                       rules={[
                         {
                           type: "email",
-                          message: "The input is not valid E-mail!",
+                          message: "Đây không phải là email",
                         },
                         {
                           required: true,
-                          message: "Please input your E-mail!",
+                          message: "Hãy nhập email của bạn",
                         },
                       ]}
                     >
@@ -168,7 +191,10 @@ const DetailStaffPage: React.FC = () => {
                       label="Số điện thoai"
                       initialValue={detailStaff?.PhoneNumber}
                     >
-                      <Input placeholder="Nhập số điện thoại"></Input>
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        placeholder="Nhập số điện thoại"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={10}>
@@ -215,7 +241,10 @@ const DetailStaffPage: React.FC = () => {
                       label="Lương"
                       initialValue={detailStaff?.Salary}
                     >
-                      <Input placeholder="Nhập lương"></Input>
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        placeholder="Nhập lương"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

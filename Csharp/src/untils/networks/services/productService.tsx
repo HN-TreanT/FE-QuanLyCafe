@@ -12,6 +12,12 @@ const GetAllProduct = () => {
     method: "GET",
   });
 };
+const GetAllProductByCategory = (Id: string) => {
+  return api.makeAuthRequest({
+    url: `/api/Product/getAllProductByCategory/${Id}`,
+    method: "GET",
+  });
+};
 const CreateProduct = (data: any) => {
   return api.makeAuthRequest({
     url: "/api/Product/createProduct",
@@ -45,4 +51,5 @@ export const productServices = {
   DeleteProduct,
   GetProductById,
   updateProduct,
+  GetAllProductByCategory,
 };

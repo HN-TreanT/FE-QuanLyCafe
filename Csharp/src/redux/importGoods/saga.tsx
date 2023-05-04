@@ -38,8 +38,8 @@ function* saga_loadData() {
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield importGoodService.getAllImportGoods(
       selectedPage,
-      searchValue.timeStart ? searchValue.timeStart : "",
-      searchValue.timeEnd ? searchValue.timeEnd : ""
+      searchValue?.timeStart ? searchValue.timeStart : "",
+      searchValue?.timeEnd ? searchValue.timeEnd : ""
     );
     let response: any = _response;
     if (response.Status) {
@@ -100,14 +100,14 @@ function* saga_createImportGoods() {
     if (Array.isArray(selectedMaterials)) {
       let data = selectedMaterials.map((item: any) => {
         return {
-          IdMaterial: item.IdMaterial ? item.IdMaterial : "",
-          NameMaterial: item.NameMaterial ? item.NameMaterial : "",
-          Amount: item.Amount ? item.Amount : 0,
-          Price: item.Price && item.Amount ? item.Price * item.Amount : 0,
-          NameProvider: infoProvider.NameProvider
+          IdMaterial: item?.IdMaterial ? item.IdMaterial : "",
+          NameMaterial: item?.NameMaterial ? item.NameMaterial : "",
+          Amount: item?.Amount ? item.Amount : 0,
+          Price: item?.Price && item.Amount ? item.Price * item.Amount : 0,
+          NameProvider: infoProvider?.NameProvider
             ? infoProvider.NameProvider
             : "không có",
-          PhoneProvider: infoProvider.PhoneProvider
+          PhoneProvider: infoProvider?.PhoneProvider
             ? infoProvider.PhoneProvider.toString()
             : "",
         };

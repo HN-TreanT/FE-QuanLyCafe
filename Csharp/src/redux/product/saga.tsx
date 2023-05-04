@@ -93,7 +93,18 @@ function* saga_AddProduct() {
       }
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.loadData());
-      yield put(MaterialActions.selectedMaterial([]));
+      yield put(
+        MaterialActions.selectedMaterial({
+          selectedRowKeys: [],
+          selectedRows: [],
+        })
+      );
+      notification({
+        message: "create success",
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
     } else {
       yield handleFail("add product fail");
     }

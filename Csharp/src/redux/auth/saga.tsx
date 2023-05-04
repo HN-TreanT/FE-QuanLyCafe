@@ -3,6 +3,7 @@ import actions, { AuthActions } from "./actions";
 import stateActions from "../state/actions";
 import { authService } from "../../untils/networks/services/authService";
 import { notification } from "../../components/notification";
+import jwt_decode from "jwt-decode";
 
 function* saga_Login() {
   try {
@@ -15,6 +16,12 @@ function* saga_Login() {
     let response: any = _response;
 
     if (response.StatusCode === 1) {
+      const decodedToken = jwt_decode(response.Token) as { [key: string]: any };
+      const role =
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
+      localStorage.setItem("permission", role);
       localStorage.setItem("token", response.Token);
       localStorage.setItem("refreshToken", response.RefreshToken);
       yield put(actions.action.userInfo(response));

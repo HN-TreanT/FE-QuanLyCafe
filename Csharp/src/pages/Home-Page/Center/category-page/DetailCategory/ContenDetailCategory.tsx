@@ -158,7 +158,9 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
         formData
       );
       if (response.Status) {
+        dispatch(actions.CategoryActions.loadData());
         dispatch(actions.StateAction.loadingState(false));
+        navigate(RouterLinks.CATEGORY_PAGE);
         notification({
           message: "update success",
           title: "Thông báo",

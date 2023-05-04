@@ -20,6 +20,7 @@ import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks, serverConfig } from "../../../../../const";
 import Spinn from "../../../../../components/Spinning/Spinning";
+import ModalMaterials from "../../../../../components/ModalMaterials/ModalMaterials";
 
 const UpdateProductPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const UpdateProductPage: React.FC = () => {
   const actions = useAction();
   const [form] = Form.useForm();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
   const infoProduct = useSelector((state: any) => state.product.infoProduct);
   const loading = useSelector((state: any) => state.state.loadingState);
   let category: any[] = [];
@@ -69,6 +71,16 @@ const UpdateProductPage: React.FC = () => {
 
   /////////////////////////////////////////
   const handleChange = () => {
+    if (
+      form.getFieldsValue().Title &&
+      form.getFieldsValue().category &&
+      form.getFieldsValue().Price &&
+      form.getFieldsValue().Unit
+    ) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
     let data: any[] = [];
     let formData = new FormData();
     console.log(form.getFieldsValue());
@@ -78,8 +90,8 @@ const UpdateProductPage: React.FC = () => {
     formData.append("Unit", form.getFieldsValue().Unit);
     formData.append("Title", form.getFieldsValue().Title);
     formData.append("IdCategory", form.getFieldsValue().category);
-    data = Array.isArray(selectedMaterials)
-      ? selectedMaterials.map((selectedMaterial: any) => {
+    data = Array.isArray(selectedMaterials?.selectedRows)
+      ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
             IdMaterial: selectedMaterial.IdMaterial,
             Amount: form.getFieldsValue([
@@ -117,7 +129,8 @@ const UpdateProductPage: React.FC = () => {
         onOk={handleClickOkAddMaterial}
         style={{ minHeight: "300px" }}
       >
-        <ModalAddMaterial visible={isOpenModal} />
+        {/* <ModalAddMaterial visible={isOpenModal} /> */}
+        <ModalMaterials visible={isOpenModal} />
       </Modal>
       <Form form={form} onValuesChange={handleChange} layout="vertical">
         <span
@@ -250,7 +263,11 @@ const UpdateProductPage: React.FC = () => {
                   <Col span={19}></Col>
 
                   <Col span={5}>
-                    <Button type="primary" onClick={handleUpdateProduct}>
+                    <Button
+                      disabled={isDisabled}
+                      type="primary"
+                      onClick={handleUpdateProduct}
+                    >
                       Cập nhật
                     </Button>
                   </Col>
@@ -272,44 +289,55 @@ const UpdateProductPage: React.FC = () => {
                       size="middle"
                     />
                   </Col>
-                  {Array.isArray(selectedMaterials) &&
-                    selectedMaterials.map((selectedMaterial: any) => {
-                      return (
-                        <React.Fragment key={selectedMaterial.IdMaterial}>
-                          <Col span={8}>
-                            <span>{selectedMaterial.NameMaterial}</span>
-                          </Col>
-                          <Col span={12}>
-                            <Form.Item
-                              name={`amount${selectedMaterial.IdMaterial}`}
-                              initialValue={selectedMaterial.Amount}
-                            >
-                              <InputNumber />
-                            </Form.Item>
-                          </Col>
-                          <Col span={2}>{selectedMaterial.Unit}</Col>
-                          <Col span={2}>
-                            <div
-                              onClick={() => {
-                                const updatedSelectedMaterials =
-                                  selectedMaterials.filter(
-                                    (item: any) =>
-                                      item.IdMaterial !==
-                                      selectedMaterial.IdMaterial
+                  {Array.isArray(selectedMaterials?.selectedRows) &&
+                    selectedMaterials.selectedRows.map(
+                      (selectedMaterial: any) => {
+                        return (
+                          <React.Fragment key={selectedMaterial.IdMaterial}>
+                            <Col span={8}>
+                              <span>{selectedMaterial.NameMaterial}</span>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                name={`amount${selectedMaterial.IdMaterial}`}
+                                initialValue={selectedMaterial.Amount}
+                              >
+                                <InputNumber />
+                              </Form.Item>
+                            </Col>
+                            <Col span={2}>{selectedMaterial.Unit}</Col>
+                            <Col span={2}>
+                              <div
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  const updatedSelectedMaterials =
+                                    selectedMaterials.selectedRows.filter(
+                                      (item: any) =>
+                                        item.IdMaterial !==
+                                        selectedMaterial.IdMaterial
+                                    );
+
+                                  const updateSelectedKeys =
+                                    selectedMaterials.selectedRowKeys.filter(
+                                      (item: any) =>
+                                        item !== selectedMaterial.IdMaterial
+                                    );
+
+                                  dispatch(
+                                    actions.MaterialActions.selectedMaterial({
+                                      selectedRows: updatedSelectedMaterials,
+                                      selectedRowKeys: updateSelectedKeys,
+                                    })
                                   );
-                                dispatch(
-                                  actions.MaterialActions.selectedMaterial(
-                                    updatedSelectedMaterials
-                                  )
-                                );
-                              }}
-                            >
-                              X
-                            </div>
-                          </Col>
-                        </React.Fragment>
-                      );
-                    })}
+                                }}
+                              >
+                                X
+                              </div>
+                            </Col>
+                          </React.Fragment>
+                        );
+                      }
+                    )}
                   <Col span={24}>
                     <div style={{ color: "#1677ff", cursor: "pointer" }}>
                       <PlusOutlined />

@@ -20,20 +20,22 @@ import "./AddProductPage.scss";
 import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks } from "../../../../../const";
 import Spinn from "../../../../../components/Spinning/Spinning";
-
+import ModalMaterials from "../../../../../components/ModalMaterials/ModalMaterials";
 const AddProductPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
+  const [isDisabled, setIsDisabled] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   let category: any[] = [];
-  useEffect(() => {
-    dispatch(actions.CategoryActions.loadData());
-  }, [dispatch, actions.CategoryActions]);
   const selectedMaterials = useSelector(
     (state: any) => state.material.selectedMaterials
   );
+  useEffect(() => {
+    dispatch(actions.CategoryActions.loadData());
+  }, [dispatch, actions.CategoryActions]);
+
   const categories = useSelector((state: any) => state.category.categories);
   category = categories.map((category: any) => {
     return {
@@ -43,7 +45,6 @@ const AddProductPage: React.FC = () => {
   });
 
   //xử lý file ///////////////
-
   const [file, setFile] = useState<any>();
   const [fileUrl, setFileUrl] = useState("");
   const handleUpload = (uploadFile: any): boolean => {
@@ -71,15 +72,22 @@ const AddProductPage: React.FC = () => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
   /////////////////////////////////////////
   const handleChange = () => {
-    //console.log(file);
-    //console.log(form.getFieldsValue());
+    if (
+      form.getFieldsValue().Title &&
+      form.getFieldsValue().category &&
+      form.getFieldsValue().Price &&
+      form.getFieldsValue().Unit &&
+      file
+    ) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
     let data: any[] = [];
     let formData = new FormData();
     console.log(form.getFieldsValue());
-    // formData.append("file", file);
     console.log(file);
     formData.append("file", file);
     formData.append("Description", form.getFieldsValue().Description);
@@ -87,8 +95,8 @@ const AddProductPage: React.FC = () => {
     formData.append("Unit", form.getFieldsValue().Unit);
     formData.append("Title", form.getFieldsValue().Title);
     formData.append("IdCategory", form.getFieldsValue().category);
-    data = Array.isArray(selectedMaterials)
-      ? selectedMaterials.map((selectedMaterial: any) => {
+    data = Array.isArray(selectedMaterials?.selectedRows)
+      ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
             IdMaterial: selectedMaterial.IdMaterial,
             Amount: form.getFieldsValue([
@@ -127,8 +135,10 @@ const AddProductPage: React.FC = () => {
         onOk={handleClickOkAddMaterial}
         style={{ minHeight: "300px" }}
       >
-        <ModalAddMaterial visible={isOpenModal} />
+        <ModalMaterials visible={isOpenModal} />
+        {/* <ModalAddMaterial visible={isOpenModal} /> */}
       </Modal>
+
       <Form form={form} onValuesChange={handleChange} layout="vertical">
         <span
           onClick={handleCancleProduct}
@@ -229,7 +239,11 @@ const AddProductPage: React.FC = () => {
                       ]}
                       label="Giá bán"
                     >
-                      <Input placeholder="Nhập giá bán"></Input>
+                      <InputNumber
+                        min={0}
+                        style={{ width: "100%" }}
+                        placeholder="Nhập giá bán"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -249,14 +263,11 @@ const AddProductPage: React.FC = () => {
                   <Col span={18}></Col>
 
                   <Col span={6}>
-                    {/* <Button
-                      onClick={handleCancleProduct}
-                      danger
-                      style={{ marginRight: "10px" }}
+                    <Button
+                      disabled={isDisabled}
+                      type="primary"
+                      onClick={handleAddProduct}
                     >
-                      Hủy
-                    </Button> */}
-                    <Button type="primary" onClick={handleAddProduct}>
                       Thêm mặt hàng
                     </Button>
                   </Col>
@@ -278,43 +289,54 @@ const AddProductPage: React.FC = () => {
                       size="middle"
                     />
                   </Col>
-                  {Array.isArray(selectedMaterials) &&
-                    selectedMaterials.map((selectedMaterial: any) => {
-                      return (
-                        <React.Fragment key={selectedMaterial.IdMaterial}>
-                          <Col span={8}>
-                            <span>{selectedMaterial.NameMaterial}</span>
-                          </Col>
-                          <Col span={12}>
-                            <Form.Item
-                              name={`amount${selectedMaterial.IdMaterial}`}
-                            >
-                              <InputNumber />
-                            </Form.Item>
-                          </Col>
-                          <Col span={2}>{selectedMaterial.Unit}</Col>
-                          <Col span={2}>
-                            <div
-                              onClick={() => {
-                                const updatedSelectedMaterials =
-                                  selectedMaterials.filter(
-                                    (item: any) =>
-                                      item.IdMaterial !==
-                                      selectedMaterial.IdMaterial
+                  {Array.isArray(selectedMaterials?.selectedRows) &&
+                    selectedMaterials.selectedRows.map(
+                      (selectedMaterial: any) => {
+                        return (
+                          <React.Fragment key={selectedMaterial.IdMaterial}>
+                            <Col span={8}>
+                              <span>{selectedMaterial.NameMaterial}</span>
+                            </Col>
+                            <Col span={12}>
+                              <Form.Item
+                                name={`amount${selectedMaterial.IdMaterial}`}
+                              >
+                                <InputNumber />
+                              </Form.Item>
+                            </Col>
+                            <Col span={2}>{selectedMaterial.Unit}</Col>
+                            <Col span={2}>
+                              <div
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  const updatedSelectedMaterials =
+                                    selectedMaterials.selectedRows.filter(
+                                      (item: any) =>
+                                        item.IdMaterial !==
+                                        selectedMaterial.IdMaterial
+                                    );
+
+                                  const updateSelectedKeys =
+                                    selectedMaterials.selectedRowKeys.filter(
+                                      (item: any) =>
+                                        item !== selectedMaterial.IdMaterial
+                                    );
+
+                                  dispatch(
+                                    actions.MaterialActions.selectedMaterial({
+                                      selectedRows: updatedSelectedMaterials,
+                                      selectedRowKeys: updateSelectedKeys,
+                                    })
                                   );
-                                dispatch(
-                                  actions.MaterialActions.selectedMaterial(
-                                    updatedSelectedMaterials
-                                  )
-                                );
-                              }}
-                            >
-                              X
-                            </div>
-                          </Col>
-                        </React.Fragment>
-                      );
-                    })}
+                                }}
+                              >
+                                X
+                              </div>
+                            </Col>
+                          </React.Fragment>
+                        );
+                      }
+                    )}
                   <Col span={24}>
                     <div style={{ color: "#1677ff", cursor: "pointer" }}>
                       <PlusOutlined />
