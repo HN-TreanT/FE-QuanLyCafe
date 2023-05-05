@@ -79,7 +79,8 @@ const AddProductPage: React.FC = () => {
       form.getFieldsValue().category &&
       form.getFieldsValue().Price &&
       form.getFieldsValue().Unit &&
-      file
+      form.getFieldsValue().file
+      //file
     ) {
       setIsDisabled(false);
     } else {
@@ -88,8 +89,8 @@ const AddProductPage: React.FC = () => {
     let data: any[] = [];
     let formData = new FormData();
     console.log(form.getFieldsValue());
-    console.log(file);
-    formData.append("file", file);
+    //console.log(file);
+    formData.append("file", form.getFieldsValue()?.file?.file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);
     formData.append("Unit", form.getFieldsValue().Unit);
@@ -119,8 +120,13 @@ const AddProductPage: React.FC = () => {
     setIsOpenModal(false);
   };
   const handleAddProduct = () => {
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.PRODUCTS_PAGE,
+      })
+    );
     dispatch(actions.ProductActions.addProduct());
-    navigate(RouterLinks.PRODUCTS_PAGE);
   };
   const handleCancleProduct = () => {
     navigate(RouterLinks.PRODUCTS_PAGE);
@@ -169,27 +175,27 @@ const AddProductPage: React.FC = () => {
                         },
                       ]}
                     >
-                      <ImgCrop rotationSlider>
-                        <Upload
-                          name="file"
-                          onChange={handleChangeFile}
-                          listType="picture-card"
-                          className="avatar-uploader"
-                          showUploadList={false}
-                          beforeUpload={handleUpload}
-                          onPreview={handlePreview}
-                        >
-                          {fileUrl ? (
-                            <img
-                              src={fileUrl ? fileUrl : ""}
-                              alt="avatar"
-                              style={{ width: "100%" }}
-                            />
-                          ) : (
-                            uploadButton
-                          )}
-                        </Upload>
-                      </ImgCrop>
+                      {/* <ImgCrop rotationSlider> */}
+                      <Upload
+                        name="file"
+                        onChange={handleChangeFile}
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        beforeUpload={handleUpload}
+                        onPreview={handlePreview}
+                      >
+                        {fileUrl ? (
+                          <img
+                            src={fileUrl ? fileUrl : ""}
+                            alt="avatar"
+                            style={{ width: "100%" }}
+                          />
+                        ) : (
+                          uploadButton
+                        )}
+                      </Upload>
+                      {/* </ImgCrop> */}
                     </Form.Item>
                   </Col>
                   <Col span={18}>
@@ -252,7 +258,7 @@ const AddProductPage: React.FC = () => {
                       rules={[
                         {
                           required: true,
-                          message: "Giá bán không  được bỏ trống",
+                          message: "Đơn vị không  được bỏ trống",
                         },
                       ]}
                       label="Đơn vị"

@@ -52,12 +52,8 @@ const HomePage: React.FC = () => {
   if (selectedPage === "history") {
     url = RouterLinks.HISTORY_WAREHOUSE;
   }
-  if (selectedPage === "promotion") {
-    url = RouterLinks.PROMOTION_PAGE;
-  }
   useEffect(() => {
     navigate(url);
-    // dispatch(actions.StateAction.selectedMenuItem("overview"));
   }, []);
   return (
     <div className="container">

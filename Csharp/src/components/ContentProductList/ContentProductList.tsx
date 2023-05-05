@@ -219,6 +219,7 @@ const ContenProductList: React.FC<any> = ({ value }) => {
               dataSource={valueProducts}
               pagination={{
                 pageSize: 4,
+
                 showSizeChanger: false,
                 hideOnSinglePage: true,
               }}

@@ -152,41 +152,41 @@ const UpdateProductPage: React.FC = () => {
                     <div className="title-info-product">Thông tin chung</div>
                   </Col>
                   <Col span={6}>
-                    <ImgCrop rotationSlider>
-                      <Form.Item
-                        label="Ảnh mặt hàng"
-                        name="file"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Ảnh mặt hàng không  được bỏ trống",
-                          },
-                        ]}
+                    {/* <ImgCrop rotationSlider> */}
+                    <Form.Item
+                      label="Ảnh mặt hàng"
+                      name="file"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Ảnh mặt hàng không  được bỏ trống",
+                        },
+                      ]}
+                    >
+                      <Upload
+                        listType="picture-card"
+                        className="avatar-uploader"
+                        showUploadList={false}
+                        beforeUpload={handleUpload}
+                        onPreview={handlePreview}
                       >
-                        <Upload
-                          listType="picture-card"
-                          className="avatar-uploader"
-                          showUploadList={false}
-                          beforeUpload={handleUpload}
-                          onPreview={handlePreview}
-                        >
-                          {fileUrl ? (
-                            <img
-                              src={fileUrl}
-                              alt="avatar"
-                              style={{ width: "100%" }}
-                            />
-                          ) : (
-                            ""
-                            // <img
-                            //   src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
-                            //   alt="avatar"
-                            //   style={{ width: "100%" }}
-                            // />
-                          )}
-                        </Upload>
-                      </Form.Item>
-                    </ImgCrop>
+                        {fileUrl ? (
+                          <img
+                            src={fileUrl}
+                            alt="avatar"
+                            style={{ width: "100%" }}
+                          />
+                        ) : (
+                          ""
+                          // <img
+                          //   src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
+                          //   alt="avatar"
+                          //   style={{ width: "100%" }}
+                          // />
+                        )}
+                      </Upload>
+                    </Form.Item>
+                    {/* </ImgCrop> */}
                   </Col>
                   <Col span={18}>
                     <Col span={24}>
@@ -242,7 +242,10 @@ const UpdateProductPage: React.FC = () => {
                       label="Giá bán"
                       initialValue={infoProduct?.Price}
                     >
-                      <Input placeholder="Nhập giá bán"></Input>
+                      <InputNumber
+                        style={{ width: "100%" }}
+                        placeholder="Nhập giá bán"
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

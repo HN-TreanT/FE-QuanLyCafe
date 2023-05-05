@@ -22,6 +22,7 @@ import useDebounce from "../../../../hooks/useDebounce";
 import { notification } from "../../../../components/notification";
 import { customerServices } from "../../../../untils/networks/services/customerServices";
 import ModalEditCustomer from "../../../../components/ModalEditCustomer/ModalEditCustomer";
+
 interface DataType {
   key: string;
   Fullname: string;
@@ -91,6 +92,7 @@ const CustomerPage: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [customerDetail, setCustomerDetail] = useState<CustomerDetail>();
   const searchValueDebounce = useDebounce<string>(searchValue, 500);
+
   useEffect(() => {
     dispatch(actions.CustomerActions.setSearchValue(searchValueDebounce));
     dispatch(actions.CustomerActions.loadData());
@@ -284,6 +286,19 @@ const CustomerPage: React.FC = () => {
                 required: true,
                 message: "Số điện thoại khách hàng không được bỏ trống",
               },
+              {
+                validator: async (_, value) => {
+                  if (value) {
+                    if (
+                      value.toString().length < 10 ||
+                      value.toString().length > 11
+                    ) {
+                      setIsDisabled(true);
+                      throw new Error("số điện thoại không  hợp lệ! ");
+                    }
+                  }
+                },
+              },
             ]}
             name="phoneNumber"
             label="Số điện thoại"
@@ -382,11 +397,13 @@ const CustomerPage: React.FC = () => {
                 columns={columns}
                 dataSource={valueCustomers}
                 pagination={{
+                  //  showTotal: 1,
                   defaultCurrent: selectedPage,
                   pageSize: 5,
                   total: customers?.TotalPage,
                   onChange: (page) => {
                     dispatch(actions.CustomerActions.setSelectedPage(page));
+                    dispatch(actions.CustomerActions.loadData());
                   },
                 }}
                 onRow={(record: DataType) => ({

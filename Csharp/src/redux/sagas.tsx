@@ -4,7 +4,6 @@ import authSaga from "./auth/saga";
 import stateSaga from "./state/saga";
 import overviewSaga from "./overview/saga";
 import productSaga from "./product/saga";
-import promotionSaga from "./promotion/saga";
 import billSaga from "./bill/saga";
 import orderDetailSaga from "./orderDetail/saga";
 import materialSaga from "./material/saga";
@@ -20,7 +19,6 @@ export default function* rootSaga() {
     stateSaga(),
     overviewSaga(),
     productSaga(),
-    promotionSaga(),
     billSaga(),
     orderDetailSaga(),
     materialSaga(),

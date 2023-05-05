@@ -32,6 +32,7 @@ const TablePage: React.FC = () => {
   const tableFoods = useSelector((state: any) => state.tablefood.tableFoods);
   const loading = useSelector((state: any) => state.state.loadingState);
   const page = useSelector((state: any) => state.tablefood.page);
+  const [disabled, setDisabled] = useState(true);
   const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [tableSelect, setTableSelected] = useState<TableDto>();
@@ -109,12 +110,30 @@ const TablePage: React.FC = () => {
           >
             Hủy
           </Button>,
-          <Button key="submit" type="primary" onClick={hadleCreateTable}>
+          <Button
+            disabled={disabled}
+            key="submit"
+            type="primary"
+            onClick={hadleCreateTable}
+          >
             Thêm
           </Button>,
         ]}
       >
-        <Form layout="horizontal" form={form}>
+        <Form
+          layout="horizontal"
+          form={form}
+          onValuesChange={() => {
+            if (
+              form.getFieldsValue()?.Name &&
+              form.getFieldsValue()?.Name !== ""
+            ) {
+              setDisabled(false);
+            } else {
+              setDisabled(true);
+            }
+          }}
+        >
           <Form.Item label="Số bàn" name="Name">
             <InputNumber style={{ width: "100%" }}></InputNumber>
           </Form.Item>

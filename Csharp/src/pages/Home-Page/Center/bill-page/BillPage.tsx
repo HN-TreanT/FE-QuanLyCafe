@@ -12,16 +12,22 @@ import {
   Button,
   Input,
   Select,
+  DatePicker,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faSearch,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../redux/useActions";
 import { orderDetailServices } from "../../../../untils/networks/services/OrderDetailService";
 import ItemOrderDetail from "../../../../components/ItemDetailOrder/ItemDetailOrder";
 import "./BillPage.scss";
 import useDebounce from "../../../../hooks/useDebounce";
+import dayjs from "dayjs";
 interface DataType {
   key: string;
   timepay: string;
@@ -169,12 +175,33 @@ const BillPage: React.FC = () => {
       setOrderDts(OrderDetails.Data);
     }
   };
+
+  // options={[
+  //   { value: "nameCustomer", label: "Tên khách hàng" },
+  //   { value: "phonenumber", label: "Số điện thoại" },
+  //   { value: "tableFood", label: "Bàn ăn" },
+  // ]}
   const handleInputSearchChange = (e: any) => {
     dispatch(actions.BillActions.selectedPage(1));
     setSearchValue(e.target.value);
   };
   const handleSelectTypSearch = (e: any) => {
     dispatch(actions.BillActions.setTypeSearch(e));
+  };
+  const handleSearchNameCustomer = (e: any) => {
+    dispatch(actions.BillActions.setTypeSearch("nameCustomer"));
+    dispatch(actions.BillActions.selectedPage(1));
+    setSearchValue(e.target.value);
+  };
+  const handleSearchPhoneCustomer = (e: any) => {
+    dispatch(actions.BillActions.setTypeSearch("phonenumber"));
+    dispatch(actions.BillActions.selectedPage(1));
+    setSearchValue(e.target.value);
+  };
+  const handlSearchTableFood = (e: any) => {
+    dispatch(actions.BillActions.setTypeSearch("tableFood"));
+    dispatch(actions.BillActions.selectedPage(1));
+    setSearchValue(e.target.value);
   };
   return (
     <div className="bill-page">
@@ -232,50 +259,87 @@ const BillPage: React.FC = () => {
                   </Row>
                 </Modal>
                 <div className="search-bill-of-bill-page">
-                  <Form form={form} layout="horizontal" className="form-css">
-                    <Space.Compact>
-                      <Form.Item
-                        // initialValue={typeSearch}
-                        name="selectedTypeSearch"
-                      >
-                        <Select
-                          defaultValue={typeSearch}
-                          onChange={handleSelectTypSearch}
-                          options={[
-                            { value: "nameCustomer", label: "Tên khách hàng" },
-                            { value: "phonenumber", label: "Số điện thoại" },
-                            { value: "tableFood", label: "Bàn ăn" },
-                          ]}
-                        />
-                      </Form.Item>
-                      <Form.Item
-                        name="searchValue"
-                        className="input-search-bill"
-                      >
-                        <Input
-                          onChange={handleInputSearchChange}
-                          placeholder="Nhập giá trị muốn tìm kiếm"
-                          prefix={
-                            <FontAwesomeIcon
-                              icon={faSearch}
-                              color="rgba(0, 0, 0, 0.295)"
-                            />
-                          }
-                        ></Input>
-                      </Form.Item>
-                    </Space.Compact>
-                    <Button
-                      className="button-delete-bill"
-                      danger
-                      onClick={hanldeClickDelete}
-                    >
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        beat
-                        className="icon-delete-bill"
-                      />
-                      Delete
-                    </Button>
+                  <Form form={form} className="form-css">
+                    <Row gutter={[30, 20]}>
+                      <Col span={6}>
+                        <Form.Item
+                          name="Id"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Tên khách hàng
+                          </label>
+                          <Input
+                            bordered={false}
+                            placeholder="Nhập tên khách hàng"
+                            onChange={handleSearchNameCustomer}
+                            prefix={
+                              <FontAwesomeIcon
+                                //  onClick={handleClickSearchId}
+                                icon={faMagnifyingGlass}
+                                className="icon-search"
+                              />
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          name="nameMaterial"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Số điện thoại
+                          </label>
+                          <Input
+                            onChange={handleSearchPhoneCustomer}
+                            bordered={false}
+                            placeholder="Nhập tên nguyên liệu"
+                            prefix={
+                              <FontAwesomeIcon
+                                icon={faMagnifyingGlass}
+                                className="icon-search"
+                              />
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Form.Item
+                          name="time"
+                          className="input-search-import-warehouse input-label-inline-border"
+                        >
+                          <label className="ant-form-item-label" htmlFor="">
+                            Nhập tên bàn ăn
+                          </label>
+                          <Input
+                            onChange={handlSearchTableFood}
+                            bordered={false}
+                            placeholder="Nhập tên bàn ăn"
+                            prefix={
+                              <FontAwesomeIcon
+                                icon={faMagnifyingGlass}
+                                className="icon-search"
+                              />
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={6}>
+                        <Button
+                          className="button-delete-bill"
+                          danger
+                          onClick={hanldeClickDelete}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            beat
+                            className="icon-delete-bill"
+                          />
+                          Delete
+                        </Button>
+                      </Col>
+                    </Row>
                   </Form>
                 </div>
                 <div className="list-bill-in-bill-page">

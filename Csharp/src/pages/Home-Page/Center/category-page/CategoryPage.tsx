@@ -15,6 +15,7 @@ const CategoryPage: React.FC = () => {
   const actions = useAction();
   const dispatch = useDispatch();
   const [isOpenModel, setIsOpenModel] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [valueAddCategory, setValueAddCategory] = useState("");
   const categories = useSelector((state: any) => state.category.categories);
   useEffect(() => {
@@ -85,7 +86,12 @@ const CategoryPage: React.FC = () => {
           >
             Hủy
           </Button>,
-          <Button key="submit" type="primary" onClick={handleAddCategory}>
+          <Button
+            disabled={disabled}
+            key="submit"
+            type="primary"
+            onClick={handleAddCategory}
+          >
             Thêm
           </Button>,
         ]}
@@ -96,7 +102,17 @@ const CategoryPage: React.FC = () => {
           <Form form={form}>
             <Form.Item name="NameCategory">
               <Input
-                onChange={(e: any) => setValueAddCategory(e.target.value)}
+                onChange={(e: any) => {
+                  setValueAddCategory(e.target.value);
+                  if (
+                    form.getFieldsValue()?.NameCategory !== "" &&
+                    form.getFieldsValue()?.NameCategory
+                  ) {
+                    setDisabled(false);
+                  } else {
+                    setDisabled(true);
+                  }
+                }}
               ></Input>
             </Form.Item>
           </Form>

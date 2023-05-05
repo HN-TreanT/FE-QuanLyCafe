@@ -49,20 +49,11 @@ const OverviewPage: React.FC = () => {
   const topSellProduct = useSelector(
     (state: any) => state.product.productsTopSell
   );
-  const promotionExpired = useSelector(
-    (state: any) => state.promotion.promotionExpired
-  );
+
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());
     dispatch(actions.ProductActions.GetTopSellProduct());
-    dispatch(actions.PromotionAction.SetPromotionExpired());
-  }, [
-    actions.OverviewAction,
-    dispatch,
-    timeState,
-    actions.ProductActions,
-    actions.PromotionAction,
-  ]);
+  }, [actions.OverviewAction, dispatch, timeState, actions.ProductActions]);
   const handleValueChange = (value: any) => {
     let time;
     if (value === "today") time = 1;
@@ -200,7 +191,7 @@ const OverviewPage: React.FC = () => {
               <div className="title_overview " style={{ marginBottom: "13px" }}>
                 <span>KHUYẾN MÃI CÒN HẠN</span>
               </div>
-              <OverviewReportBill promotions={promotionExpired} />
+              <OverviewReportBill promotions={0} />
             </div>
           </Col>
           <Col span={12}>

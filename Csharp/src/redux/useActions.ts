@@ -2,7 +2,6 @@ import { AuthActions } from "./auth/actions";
 import { StateAction } from "./state/actions";
 import { OverviewAction } from "./overview/actions";
 import { ProductActions } from "./product/actions";
-import { PromotionAction } from "./promotion/actions";
 import { BillActions } from "./bill/actions";
 import { OrderDetailActions } from "./orderDetail/actions";
 import { MaterialActions } from "./material/actions";
@@ -15,7 +14,7 @@ import { ImportGoodsActions } from "./importGoods/actions";
 
 const useAction = ()=>{
     const actions = {
-    AuthActions,StateAction,OverviewAction,ProductActions,PromotionAction,BillActions,
+    AuthActions,StateAction,OverviewAction,ProductActions,BillActions,
     OrderDetailActions,MaterialActions,CategoryActions,StaffActions,WorkshiftActions,
     CustomerActions,TableFoodActions,ImportGoodsActions};
   return actions

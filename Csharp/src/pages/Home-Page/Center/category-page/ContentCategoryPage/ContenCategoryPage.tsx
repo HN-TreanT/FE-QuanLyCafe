@@ -91,6 +91,12 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
       if (response.Status) {
         dispatch(actions.CategoryActions.loadData());
         navigate(RouterLinks.CATEGORY_PAGE);
+        notification({
+          message: "xóa mặt hàng thành công",
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
       } else {
         notification({
           message: "delete category fail",
@@ -100,12 +106,6 @@ const ContentCategoryPage: React.FC<any> = ({ value }) => {
         });
       }
     } catch (e) {
-      // notification({
-      //   message: "delete category fail",
-      //   title: "Thông báo",
-      //   position: "top-right",
-      //   type: "danger",
-      // });
       setIsOpenModel(true);
     }
   };

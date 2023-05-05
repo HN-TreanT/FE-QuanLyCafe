@@ -57,12 +57,19 @@ const AddStaffPage: React.FC = () => {
     navigate(RouterLinks.STAFF_PAGE);
   };
   const handleAddStaff = () => {
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.STAFF_PAGE,
+      })
+    );
     dispatch(actions.StaffActions.createStaff());
-    navigate(RouterLinks.STAFF_PAGE);
+    // navigate(RouterLinks.STAFF_PAGE);
   };
   const handleCancleStaff = () => {
     navigate(RouterLinks.STAFF_PAGE);
   };
+
   return (
     <div className="add-staff-page">
       <Form form={form} onValuesChange={handleChange} layout="vertical">
@@ -129,7 +136,6 @@ const AddStaffPage: React.FC = () => {
                                 setIsDisabled(true);
                               }
                             });
-                            console.log(value);
                             if (check) {
                               throw new Error("Email đã tồn tại ");
                             }
@@ -159,6 +165,21 @@ const AddStaffPage: React.FC = () => {
                             });
                             if (check) {
                               throw new Error("số điện thoại đã tồn tại ");
+                            }
+                          },
+                        },
+                        {
+                          validator: async (_, value) => {
+                            if (value) {
+                              if (
+                                value.toString().length < 10 ||
+                                value.toString().length > 11
+                              ) {
+                                setIsDisabled(true);
+                                throw new Error(
+                                  "số điện thoại không  hợp lệ! "
+                                );
+                              }
                             }
                           },
                         },

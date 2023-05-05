@@ -25,6 +25,16 @@ function* handleErr(err: any) {
     type: "danger",
   });
 }
+function* saga_Redirect() {
+  //action.type.
+  let _navigate: Promise<any> = yield select(
+    (state: any) => state.state.navigate
+  );
+  let navigate: any = _navigate;
+  if (navigate.navigate && navigate.path) {
+    navigate.navigate(navigate.path);
+  }
+}
 function* saga_GetTopSellProduct() {
   try {
     let _time: Promise<any> = yield select(
@@ -89,7 +99,7 @@ function* saga_AddProduct() {
       );
       let res: any = _res;
       if (!res.Status) {
-        yield handleFail("add material fail");
+        yield handleFail("Mặt hàng tồn tại");
       }
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.loadData());
@@ -99,14 +109,15 @@ function* saga_AddProduct() {
           selectedRows: [],
         })
       );
+      yield saga_Redirect();
       notification({
-        message: "create success",
+        message: "Thêm mặt hàng thành công",
         title: "Thông báo",
         position: "top-right",
-        type: "danger",
+        type: "success",
       });
     } else {
-      yield handleFail("add product fail");
+      yield handleFail(newProduct?.Message);
     }
   } catch (err: any) {
     yield handleErr(err);
@@ -124,8 +135,14 @@ function* saga_deleteProduct() {
   if (response.Status) {
     yield put(actions.action.loadData());
     yield put(stateActions.action.loadingState(false));
+    notification({
+      message: "xóa thành công",
+      title: "Thông báo",
+      position: "top-right",
+      type: "success",
+    });
   } else {
-    yield handleFail("delete product fail");
+    yield handleFail("Xóa thất bại");
   }
   try {
   } catch (err: any) {

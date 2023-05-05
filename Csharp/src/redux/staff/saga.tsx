@@ -23,6 +23,16 @@ function* handleErr(err: any) {
     type: "danger",
   });
 }
+function* saga_Redirect() {
+  //action.type.
+  let _navigate: Promise<any> = yield select(
+    (state: any) => state.state.navigate
+  );
+  let navigate: any = _navigate;
+  if (navigate.navigate && navigate.path) {
+    navigate.navigate(navigate.path);
+  }
+}
 
 function* saga_loadData() {
   try {
@@ -64,8 +74,15 @@ function* saga_createStaff() {
       yield put(actions.action.loadData());
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.setInfoStaffCreate({}));
+      notification({
+        message: "Tạo nhân viên thành công",
+        title: "Thông báo",
+        position: "top-right",
+        type: "success",
+      });
+      yield saga_Redirect();
     } else {
-      yield handleFail("create staff fail");
+      yield handleFail(response?.Message);
     }
   } catch (err: any) {
     yield handleErr(err);
@@ -91,7 +108,7 @@ function* saga_updateStaff() {
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.loadData());
       notification({
-        message: "Update success",
+        message: "Sửa đổi thành công",
         title: "Thông báo",
         position: "top-right",
         type: "success",

@@ -26,7 +26,6 @@ import CustomerPage from "./pages/Home-Page/Center/customer-page/CustomerPage";
 import TablePage from "./pages/Home-Page/Center/table-page/TablePage";
 import ListWarehouse from "./pages/Home-Page/Center/list-warehouse/ListWarehouse";
 import ImportWarehouse from "./pages/Home-Page/Center/import-warehouse/ImportWarehouse";
-import PromotionPage from "./pages/Home-Page/Center/promotion-page/PromotionPage";
 import HistoryWarehouse from "./pages/Home-Page/Center/history-warehouse/HistoryWarehouse";
 import AddProductPage from "./pages/Home-Page/Center/product-list/AddProduct-page/AddProductPage";
 import UpdateProductPage from "./pages/Home-Page/Center/product-list/UpdateProduct-page/UpdateProductPage";
@@ -123,12 +122,6 @@ function App() {
                           <AuthorizationComponent
                             element={<ImportWarehouse />}
                           />
-                        }
-                      />
-                      <Route
-                        path={RouterLinks.PROMOTION_PAGE}
-                        element={
-                          <AuthorizationComponent element={<PromotionPage />} />
                         }
                       />
                       <Route
