@@ -18,7 +18,6 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
   const selectedMaterials = useSelector(
     (state: any) => state.material.selectedMaterials
   );
-  console.log(selectedMaterials.selectedRows);
   // const [selectedRowKeys, setSelectedRowKeys] = useState<any>(
   //   selectedMaterials?.selectedRowKeys
   // );

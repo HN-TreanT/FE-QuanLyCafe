@@ -128,20 +128,6 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
     }
   };
 
-  const handleValueFormChange = () => {
-    const a = BillSupport.SearchBill({
-      ...form.getFieldsValue(),
-      orders: orders,
-    });
-    if (form.getFieldsValue().searchValue) {
-      setData(a);
-    } else {
-      setData(orders);
-    }
-  };
-  const hanldeClickDelete = () => {
-    dispatch(actions.BillActions.deleteBill());
-  };
   return (
     <div className="container-bill">
       <Modal
@@ -168,37 +154,6 @@ const ContentBillPage: React.FC<any> = ({ orders }) => {
           })}
         </Row>
       </Modal>
-      <div className="search-bill-of-bill-page">
-        <Form
-          form={form}
-          layout="horizontal"
-          onValuesChange={handleValueFormChange}
-          className="form-css"
-        >
-          <Space.Compact>
-            <Form.Item initialValue={"nameCustomer"} name="selectedTypeSearch">
-              <Select
-                options={[
-                  { value: "nameCustomer", label: "Tên khách hàng" },
-                  { value: "phonenumber", label: "Số điện thoại" },
-                  { value: "tableFood", label: "Bàn ăn" },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item name="searchValue" className="input-search-bill">
-              <Input.Search placeholder="Nhập giá trị muốn tìm kiếm" />
-            </Form.Item>
-          </Space.Compact>
-          <Button
-            className="button-delete-bill"
-            danger
-            onClick={hanldeClickDelete}
-          >
-            <FontAwesomeIcon icon={faTrash} beat className="icon-delete-bill" />
-            Delete
-          </Button>
-        </Form>
-      </div>
       <div className="list-bill-in-bill-page">
         <Table
           loading={loading}

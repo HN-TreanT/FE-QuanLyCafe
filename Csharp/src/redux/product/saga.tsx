@@ -57,11 +57,27 @@ function* saga_GetTopSellProduct() {
 
 function* saga_loadData() {
   try {
+    let _selectedPage: Promise<any> = yield select(
+      (state: any) => state.product.selectedPage
+    );
+    let selectedPage: any = _selectedPage;
+    let _searchValue: Promise<any> = yield select(
+      (state: any) => state.product.searchValue
+    );
+    let searchValue: any = _searchValue;
+    let _typeSearch: Promise<any> = yield select(
+      (state: any) => state.product.typeSearch
+    );
+    let typeSearch: any = _typeSearch;
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield productServices.GetAllProduct();
+    let _response: Promise<any> = yield productServices.GetAllProduct(
+      selectedPage,
+      searchValue,
+      typeSearch
+    );
     let response: any = _response;
     if (response.Status) {
-      yield put(actions.action.loadDataSuccess(response.Data));
+      yield put(actions.action.loadDataSuccess(response));
       yield put(stateActions.action.loadingState(false));
     } else {
       yield handleFail("load data fail");

@@ -3,6 +3,9 @@ const initState = {
   productsTopSell: [],
   products: [],
   Id: "",
+  selectedPage: 1,
+  searchValue: "",
+  typeSearch: "",
 };
 const ProductReducer = (state: any = initState, action: any) => {
   switch (action.type) {
@@ -51,6 +54,27 @@ const ProductReducer = (state: any = initState, action: any) => {
         ...state,
         ...{
           Id_product: action.payload.Id,
+        },
+      };
+    case actions.types.SELECTED_PAGE:
+      return {
+        ...state,
+        ...{
+          selectedPage: action.payload.data,
+        },
+      };
+    case actions.types.SEARCH_VALUE:
+      return {
+        ...state,
+        ...{
+          searchValue: action.payload.data,
+        },
+      };
+    case actions.types.TYPE_SEARCH:
+      return {
+        ...state,
+        ...{
+          typeSearch: action.payload.data,
         },
       };
     default:

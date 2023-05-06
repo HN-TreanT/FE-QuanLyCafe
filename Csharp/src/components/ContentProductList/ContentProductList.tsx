@@ -15,18 +15,17 @@ import { ProductSupport } from "../../const/ProductSupport";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faPen,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
 import { productServices } from "../../untils/networks/services/productService";
 import { notification } from "../notification";
-const items: MenuProps["items"] = [
-  {
-    label: "Tất cả nhân viên",
-    key: "listProduct",
-  },
-];
+
 interface DataType {
   key: string;
   pathImage: string;
@@ -35,9 +34,8 @@ interface DataType {
   category: string;
   price: Number;
 }
-const ContenProductList: React.FC<any> = ({ value }) => {
+const ContenProductList: React.FC<any> = ({ total, value }) => {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
   const columns: ColumnsType<DataType> = [
     {
       title: "",
@@ -108,7 +106,6 @@ const ContenProductList: React.FC<any> = ({ value }) => {
   const handleClickEdit = async (Id: any) => {
     const dbProduct = await productServices.GetProductById(Id);
     dispatch(actions.MaterialActions.loadData());
-    console.log(dbProduct);
     if (dbProduct.Status) {
       if (Array.isArray(dbProduct?.Data.UseMaterials)) {
         dispatch(
@@ -144,92 +141,28 @@ const ContenProductList: React.FC<any> = ({ value }) => {
     dispatch(actions.ProductActions.deleteProduct(key));
   };
 
-  //tìm kiếm
-  const handleSearchValueChange = (e: any) => {
-    const a = ProductSupport.SearchProduct({
-      ...form.getFieldsValue(),
-      products: value,
-    });
-    if (form.getFieldsValue().searchValue) {
-      setValueProducts(a);
-    } else {
-      setValueProducts(value);
-    }
-  };
-  const handleValueFormChange = () => {};
   return (
     <>
-      <Col span={24}>
-        <div className="container-product-page">
-          <div className="header-product-page">
-            <Row>
-              <Col span={24}>
-                <Menu
-                  selectedKeys={["listProduct"]}
-                  mode="horizontal"
-                  items={items}
-                />
-              </Col>
-              <Col span={24}>
-                <div
-                  style={{
-                    // height: "0.5px",
-                    border: "0.5px solid black",
-                    opacity: "0.05",
-                  }}
-                ></div>
-              </Col>
-              <Col span={24}>
-                <Form
-                  form={form}
-                  layout="horizontal"
-                  onValuesChange={handleValueFormChange}
-                  className="form-css"
-                >
-                  <Form.Item
-                    initialValue={"nameProduct"}
-                    name="selectedTypeSearch"
-                    className="type-search-product"
-                  >
-                    <Select
-                      options={[
-                        { value: "nameProduct", label: "Tên mặt hàng" },
-                        { value: "category", label: "Danh mục" },
-                      ]}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="searchValue"
-                    className="input-search-product"
-                  >
-                    <Input.Search
-                      onChange={handleSearchValueChange}
-                      placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                    />
-                  </Form.Item>
-                </Form>
-              </Col>
-            </Row>
-          </div>
-          <div className="content-product-page">
-            <Table
-              loading={loading}
-              style={{ marginLeft: "20px" }}
-              columns={columns}
-              dataSource={valueProducts}
-              pagination={{
-                pageSize: 4,
-
-                showSizeChanger: false,
-                hideOnSinglePage: true,
-              }}
-              onRow={(record: DataType) => ({
-                onClick: () => handleRowClick(record),
-              })}
-            />
-          </div>
-        </div>
-      </Col>
+      <div className="content-product-page">
+        <Table
+          loading={loading}
+          style={{ marginLeft: "20px" }}
+          columns={columns}
+          dataSource={valueProducts}
+          pagination={{
+            pageSize: 4,
+            total: total ? total : 1,
+            showSizeChanger: false,
+            hideOnSinglePage: true,
+            onChange: (page) => {
+              dispatch(actions.ProductActions.setSelectedPage(page));
+            },
+          }}
+          onRow={(record: DataType) => ({
+            onClick: () => handleRowClick(record),
+          })}
+        />
+      </div>
     </>
   );
 };

@@ -8,6 +8,9 @@ const types = {
   DELETE_PRODUCT: "/product/delete-product",
   UPDATE_PRODUCT: "/product/update-produce",
   SELECTD_PRODUCT_ID: "/product/selected-product-id",
+  SELECTED_PAGE: "product/selected-page",
+  SEARCH_VALUE: "product/search-value",
+  TYPE_SEARCH: "product/type-search",
 };
 
 const action = {
@@ -59,6 +62,24 @@ const action = {
     return {
       type: types.SELECTD_PRODUCT_ID,
       payload: { Id },
+    };
+  },
+  setSelectedPage: (data: any) => {
+    return {
+      type: types.SELECTED_PAGE,
+      payload: { data },
+    };
+  },
+  setSearchValue: (data: any) => {
+    return {
+      type: types.SEARCH_VALUE,
+      payload: { data },
+    };
+  },
+  setTypeSeacrch: (data: any) => {
+    return {
+      type: types.TYPE_SEARCH,
+      payload: { data },
     };
   },
 };

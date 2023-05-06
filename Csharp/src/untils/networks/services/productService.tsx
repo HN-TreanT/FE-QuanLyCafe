@@ -6,9 +6,19 @@ const GetTop5Product = (time: any) => {
     method: "GET",
   });
 };
-const GetAllProduct = () => {
+const GetAllProduct = (
+  selectedPage: Number,
+  searchValue: any,
+  typeSearch: any
+) => {
+  if (!searchValue) {
+    searchValue = "";
+  }
+  if (!typeSearch) {
+    typeSearch = "";
+  }
   return api.makeAuthRequest({
-    url: "/api/Product/getAllProduct",
+    url: `https://localhost:7066/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}`,
     method: "GET",
   });
 };
