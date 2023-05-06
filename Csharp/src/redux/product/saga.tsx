@@ -97,6 +97,7 @@ function* saga_AddProduct() {
       (state: any) => state.material.infoUseMaterials
     );
     let infoUseMaterial: any = _infoUseMaterial;
+    console.log(infoUseMaterial);
     yield put(stateActions.action.loadingState(true));
     let _newProduct: Promise<any> = yield productServices.CreateProduct(
       infoProduct
@@ -210,6 +211,7 @@ function* saga_updateProduct() {
         position: "top-right",
         type: "success",
       });
+      yield saga_Redirect();
     } else {
       yield handleFail("Thay đổi thất bại");
     }

@@ -1,8 +1,14 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getAllMaterial = () => {
+const getAllMaterial = (selectedPage: Number, searchValue: string) => {
+  if (!searchValue) {
+    searchValue = " ";
+  }
+  if (!selectedPage) {
+    selectedPage = 1;
+  }
   return api.makeAuthRequest({
-    url: `/api/Material/getAllMaterial`,
+    url: `/api/Material/getAllMaterial?page=${selectedPage}&name=${searchValue}`,
     method: "GET",
   });
 };

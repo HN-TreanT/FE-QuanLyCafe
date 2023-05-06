@@ -229,6 +229,7 @@ const AddStaffPage: React.FC = () => {
                       label="Lương"
                     >
                       <InputNumber
+                        addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         min={0}
                         placeholder="Nhập lương"

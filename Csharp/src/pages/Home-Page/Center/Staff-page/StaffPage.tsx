@@ -4,7 +4,6 @@ import { Row, Col, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./StaffPage.scss";
-import Spin from "../../../../components/Spinning/Spinning";
 import useAction from "../../../../redux/useActions";
 import { useNavigate } from "react-router-dom";
 import ContentStaffPage from "../../../../components/ContentStaffPage/ContenStaffPage";
@@ -16,28 +15,34 @@ const StaffPage: React.FC = () => {
   const selectedStateStaff = useSelector(
     (state: any) => state.staff.selectedStateStaff
   );
+  const selectedPage = useSelector((state: any) => state.staff.selectedPage);
   useEffect(() => {
     dispatch(actions.StaffActions.loadData());
-  }, [dispatch, actions.StaffActions, selectedStateStaff]);
+  }, [dispatch, actions.StaffActions, selectedStateStaff, selectedPage]);
   const staffs = useSelector((state: any) => state.staff.staffs);
-  const valueStaffs = staffs.map((staff: any) => {
-    const date = new Date(staff?.CreatedAt);
-    const formattedDate = date.toLocaleDateString("vi-VN");
-    return {
-      key: staff?.IdStaff,
-      email: staff?.Email,
-      nameStaff: staff?.Fullname,
-      workShift: staff?.SelectedWorkShifts.map((w: any) => `${w.IdWorkShift},`)
-        .join("")
-        .slice(0, -1),
-      address: staff?.Address,
-      phoneNumber: staff?.PhoneNumber,
-      createdAt: `${formattedDate}`,
-    };
-  });
+  console.log(staffs);
+  let valueStaffs: any[] = [];
+  if (Array.isArray(staffs?.Data)) {
+    valueStaffs = staffs.Data.map((staff: any) => {
+      const date = new Date(staff?.CreatedAt);
+      const formattedDate = date.toLocaleDateString("vi-VN");
+      return {
+        key: staff?.IdStaff,
+        email: staff?.Email,
+        nameStaff: staff?.Fullname,
+        workShift: staff?.SelectedWorkShifts.map(
+          (w: any) => `${w.IdWorkShift},`
+        )
+          .join("")
+          .slice(0, -1),
+        address: staff?.Address,
+        phoneNumber: staff?.PhoneNumber,
+        createdAt: `${formattedDate}`,
+      };
+    });
+  }
 
   const handleClickButtonAddStaff = () => {
-    // dispatch(actions.WorkshiftActions.loadData());
     navigate(RouterLinks.ADD_STAFF_PAGE);
   };
   return (
@@ -56,7 +61,10 @@ const StaffPage: React.FC = () => {
             </Button>
           </div>
         </Col>
-        <ContentStaffPage value={valueStaffs} />
+        <ContentStaffPage
+          total={staffs?.TotalPage ? staffs?.TotalPage : 1}
+          value={valueStaffs}
+        />
       </Row>
     </div>
   );

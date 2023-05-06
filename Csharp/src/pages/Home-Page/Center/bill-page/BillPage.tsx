@@ -5,29 +5,22 @@ import {
   Col,
   Table,
   Form,
-  Space,
   Modal,
   MenuProps,
   Menu,
   Button,
   Input,
-  Select,
-  DatePicker,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faSearch,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../redux/useActions";
 import { orderDetailServices } from "../../../../untils/networks/services/OrderDetailService";
 import ItemOrderDetail from "../../../../components/ItemDetailOrder/ItemDetailOrder";
 import "./BillPage.scss";
 import useDebounce from "../../../../hooks/useDebounce";
-import dayjs from "dayjs";
+
 interface DataType {
   key: string;
   timepay: string;
@@ -93,7 +86,6 @@ const BillPage: React.FC = () => {
   const selectedPage = useSelector((state: any) => state.bill.selectedPage);
   const loading = useSelector((state: any) => state.state.loadingState);
   const orders = useSelector((state: any) => state.bill.billData);
-  const typeSearch = useSelector((state: any) => state.bill.typeSearch);
   const data = orders?.Data?.map((order: any) => {
     const date = new Date(order?.TimePay);
     const formattedDate = date.toLocaleDateString("vi-VN");
@@ -174,19 +166,6 @@ const BillPage: React.FC = () => {
     if (OrderDetails.Status) {
       setOrderDts(OrderDetails.Data);
     }
-  };
-
-  // options={[
-  //   { value: "nameCustomer", label: "Tên khách hàng" },
-  //   { value: "phonenumber", label: "Số điện thoại" },
-  //   { value: "tableFood", label: "Bàn ăn" },
-  // ]}
-  const handleInputSearchChange = (e: any) => {
-    dispatch(actions.BillActions.selectedPage(1));
-    setSearchValue(e.target.value);
-  };
-  const handleSelectTypSearch = (e: any) => {
-    dispatch(actions.BillActions.setTypeSearch(e));
   };
   const handleSearchNameCustomer = (e: any) => {
     dispatch(actions.BillActions.setTypeSearch("nameCustomer"));

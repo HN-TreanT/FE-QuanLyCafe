@@ -4,11 +4,15 @@ interface MaterialState {
   materials: any[];
   infoUseMaterials: any[];
   selectedMaterials: any[];
+  selectedPage: Number;
+  searchValue: string;
 }
 const initAuth: MaterialState = {
   materials: [],
   infoUseMaterials: [],
   selectedMaterials: [],
+  selectedPage: 1,
+  searchValue: "",
 };
 const MaterialReducer = (state: MaterialState = initAuth, action: any) => {
   switch (action.type) {
@@ -35,6 +39,20 @@ const MaterialReducer = (state: MaterialState = initAuth, action: any) => {
         ...state,
         ...{
           infoUseMaterials: action.payload.data,
+        },
+      };
+    case actions.types.SELECTED_PAGE:
+      return {
+        ...state,
+        ...{
+          selectedPage: action.payload.data,
+        },
+      };
+    case actions.types.SEARCH_VALUE:
+      return {
+        ...state,
+        ...{
+          searchValue: action.payload.data,
         },
       };
     default:

@@ -3,6 +3,8 @@ const types = {
   LOAD_DATA_SUCCES: "/material/load-data-success",
   SELECTED_MATERIAL: "/material/selected-material",
   INFO_USE_MATERIAL: "/material/info-amount-material",
+  SELECTED_PAGE: "/material/selected-page",
+  SEARCH_VALUE: "/material/search-value",
 };
 const action = {
   selectedMaterial: (data: any) => {
@@ -25,6 +27,18 @@ const action = {
   infoUseMaterial: (data: any) => {
     return {
       type: types.INFO_USE_MATERIAL,
+      payload: { data },
+    };
+  },
+  setSelectedPage: (data: any) => {
+    return {
+      type: types.SELECTED_PAGE,
+      payload: { data },
+    };
+  },
+  setSearchValue: (data: any) => {
+    return {
+      type: types.SEARCH_VALUE,
       payload: { data },
     };
   },

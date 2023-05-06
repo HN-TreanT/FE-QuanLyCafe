@@ -19,7 +19,7 @@ interface DataType {
   unit: string;
   expiry: Number;
 }
-const ContentListWareHouse: React.FC<any> = ({ data }) => {
+const ContentListWareHouse: React.FC<any> = ({ total, data }) => {
   const [form] = Form.useForm();
   const columns: ColumnsType<DataType> = [
     {
@@ -112,47 +112,10 @@ const ContentListWareHouse: React.FC<any> = ({ data }) => {
     setMaterialDetail(record);
     setIsOpenModalEdit(true);
   };
-  //hadle search
-  const handleSearchValueChange = (e: any) => {
-    let filterMaterial: any[] = [];
-    filterMaterial = valueMaterial.filter((material: any) => {
-      const newMaterial = removeAccents(
-        material.NameMaterial
-      ).toLocaleLowerCase();
-      const searchMaterial = removeAccents(e.target.value).toLocaleLowerCase();
-      return newMaterial.includes(searchMaterial);
-    });
-    if (e.target.value) {
-      setValueMaterial(filterMaterial);
-    } else {
-      setValueMaterial(data);
-    }
-  };
 
   return (
     <>
       <ModalEditMaterial isOpen={isOpenModalEdit} data={materialsDetail} />
-      <Col span={24}>
-        <Form
-          form={form}
-          layout="horizontal"
-          //  onValuesChange={handleValueFormChange}
-          className="form-css"
-        >
-          <Form.Item name="searchValue" className="input-search-listWarehouse">
-            <Input
-              onChange={handleSearchValueChange}
-              placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-              prefix={
-                <FontAwesomeIcon
-                  icon={faMagnifyingGlass}
-                  className="icon-search"
-                />
-              }
-            />
-          </Form.Item>
-        </Form>
-      </Col>
 
       <Col span={24}>
         <div className="content-listWarehouse-page">
@@ -162,7 +125,11 @@ const ContentListWareHouse: React.FC<any> = ({ data }) => {
             columns={columns}
             dataSource={valueMaterial}
             pagination={{
-              pageSize: 6,
+              pageSize: 5,
+              total: total,
+              onChange: (page) => {
+                dispatch(actions.MaterialActions.setSelectedPage(page));
+              },
             }}
             onRow={(record: DataType) => ({
               onClick: () => handleRowClick(record),

@@ -63,6 +63,7 @@ const ImportWarehouse: React.FC = () => {
     {
       title: "Giá trị nhập",
       dataIndex: "Price",
+      render: (text) => <div>{`${text} đ`}</div>,
     },
     {
       title: "Nhà cung cấp",

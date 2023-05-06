@@ -17,7 +17,6 @@ import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import "./AddProductPage.scss";
-import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks } from "../../../../../const";
 import Spinn from "../../../../../components/Spinning/Spinning";
 import ModalMaterials from "../../../../../components/ModalMaterials/ModalMaterials";
@@ -32,6 +31,7 @@ const AddProductPage: React.FC = () => {
   const selectedMaterials = useSelector(
     (state: any) => state.material.selectedMaterials
   );
+
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
   }, [dispatch, actions.CategoryActions]);
@@ -86,16 +86,29 @@ const AddProductPage: React.FC = () => {
     } else {
       setIsDisabled(true);
     }
-    let data: any[] = [];
     let formData = new FormData();
-    console.log(form.getFieldsValue());
-    //console.log(file);
     formData.append("file", form.getFieldsValue()?.file?.file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);
     formData.append("Unit", form.getFieldsValue().Unit);
     formData.append("Title", form.getFieldsValue().Title);
     formData.append("IdCategory", form.getFieldsValue().category);
+    dispatch(actions.ProductActions.setInfoProduct(formData));
+  };
+  const handleChangeFile = (e: any) => {
+    setFile(e.file);
+  };
+  const handleClickAddMaterial = (e: any) => {
+    dispatch(actions.MaterialActions.setSelectedPage(1));
+    dispatch(actions.MaterialActions.loadData());
+    setIsOpenModal(true);
+  };
+  const handleClickOkAddMaterial = () => {
+    dispatch(actions.MaterialActions.setSelectedPage(1));
+    setIsOpenModal(false);
+  };
+  const handleAddProduct = () => {
+    let data: any[] = [];
     data = Array.isArray(selectedMaterials?.selectedRows)
       ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
@@ -107,25 +120,13 @@ const AddProductPage: React.FC = () => {
         })
       : [];
     dispatch(actions.MaterialActions.infoUseMaterial(data));
-    dispatch(actions.ProductActions.setInfoProduct(formData));
-  };
-  const handleChangeFile = (e: any) => {
-    setFile(e.file);
-  };
-  const handleClickAddMaterial = (e: any) => {
-    dispatch(actions.MaterialActions.loadData());
-    setIsOpenModal(true);
-  };
-  const handleClickOkAddMaterial = () => {
-    setIsOpenModal(false);
-  };
-  const handleAddProduct = () => {
     dispatch(
       actions.StateAction.redirect({
         navigate: navigate,
         path: RouterLinks.PRODUCTS_PAGE,
       })
     );
+
     dispatch(actions.ProductActions.addProduct());
   };
   const handleCancleProduct = () => {
@@ -133,16 +134,18 @@ const AddProductPage: React.FC = () => {
   };
   return (
     <div className="add-product-page">
-      {loading ? <Spinn /> : ""}
+      {/* {loading ? <Spinn /> : ""} */}
       <Modal
         title="Thêm mới nguyên liệu"
         open={isOpenModal}
-        onCancel={() => setIsOpenModal(false)}
+        onCancel={() => {
+          dispatch(actions.MaterialActions.setSelectedPage(1));
+          setIsOpenModal(false);
+        }}
         onOk={handleClickOkAddMaterial}
         style={{ minHeight: "300px" }}
       >
         <ModalMaterials visible={isOpenModal} />
-        {/* <ModalAddMaterial visible={isOpenModal} /> */}
       </Modal>
 
       <Form form={form} onValuesChange={handleChange} layout="vertical">
@@ -246,6 +249,7 @@ const AddProductPage: React.FC = () => {
                       label="Giá bán"
                     >
                       <InputNumber
+                        addonAfter="VNĐ"
                         min={0}
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
@@ -299,19 +303,25 @@ const AddProductPage: React.FC = () => {
                     selectedMaterials.selectedRows.map(
                       (selectedMaterial: any) => {
                         return (
-                          <React.Fragment key={selectedMaterial.IdMaterial}>
+                          <React.Fragment key={selectedMaterial?.IdMaterial}>
                             <Col span={8}>
-                              <span>{selectedMaterial.NameMaterial}</span>
+                              <span>{selectedMaterial?.NameMaterial}</span>
                             </Col>
                             <Col span={12}>
                               <Form.Item
-                                name={`amount${selectedMaterial.IdMaterial}`}
+                                name={`amount${selectedMaterial?.IdMaterial}`}
                               >
-                                <InputNumber />
+                                <InputNumber
+                                  addonAfter={
+                                    selectedMaterial?.Unit
+                                      ? selectedMaterial?.Unit
+                                      : ""
+                                  }
+                                />
                               </Form.Item>
                             </Col>
-                            <Col span={2}>{selectedMaterial.Unit}</Col>
-                            <Col span={2}>
+                            {/* <Col span={2}>{selectedMaterial.Unit}</Col> */}
+                            <Col span={4}>
                               <div
                                 style={{ cursor: "pointer" }}
                                 onClick={() => {

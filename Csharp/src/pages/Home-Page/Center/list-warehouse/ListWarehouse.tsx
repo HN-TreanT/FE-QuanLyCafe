@@ -23,6 +23,7 @@ import "dayjs/locale/vi"; // nếu muốn sử dụng ngôn ngữ tiếng Việt
 import removeAccents from "../../../../const/RemoveAccent";
 import { notification } from "../../../../components/notification";
 import { materialService } from "../../../../untils/networks/services/materialService";
+import useDebounce from "../../../../hooks/useDebounce";
 
 const items: MenuProps["items"] = [
   {
@@ -40,9 +41,13 @@ const ListWarehouse: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [IsOpenModalCreate, setIsOpenModalCreate] = useState(false);
   const materials = useSelector((state: any) => state.material.materials);
+  const selectedPage = useSelector((state: any) => state.material.selectedPage);
+  const [searchValue, setSearchValue] = useState("");
+  const searchValueDebounce = useDebounce<string>(searchValue, 500);
   useEffect(() => {
+    dispatch(actions.MaterialActions.setSearchValue(searchValueDebounce));
     dispatch(actions.MaterialActions.loadData());
-  }, [dispatch, actions.MaterialActions]);
+  }, [dispatch, actions.MaterialActions, selectedPage, searchValueDebounce]);
 
   //click open modal add material
   const handleClickButtonAddMaterial = () => {
@@ -98,6 +103,12 @@ const ListWarehouse: React.FC = () => {
       setIsDisabled(true);
     }
   };
+  //hadle search
+  const handleSearchValueChange = (e: any) => {
+    dispatch(actions.MaterialActions.setSelectedPage(1));
+    setSearchValue(e.target.value);
+  };
+
   return (
     <div className="listWarehouse-page">
       <Modal
@@ -163,18 +174,6 @@ const ListWarehouse: React.FC = () => {
                 name="Unit"
                 label="Đơn vị"
               >
-                {/* <Select
-                  options={[
-                    {
-                      label: "túi",
-                      value: "túi",
-                    },
-                    {
-                      label: "Nữ",
-                      value: "Nu",
-                    },
-                  ]}
-                ></Select> */}
                 <Input></Input>
               </Form.Item>
             </Col>
@@ -189,7 +188,7 @@ const ListWarehouse: React.FC = () => {
                 name="Expiry"
                 label="Thời gian sử dụng"
               >
-                <InputNumber style={{ width: "100%" }} />
+                <InputNumber addonAfter="ngày" style={{ width: "100%" }} />
               </Form.Item>
             </Col>
           </Row>
@@ -228,10 +227,35 @@ const ListWarehouse: React.FC = () => {
                     }}
                   ></div>
                 </Col>
+                <Col span={24}>
+                  <Form
+                    form={form}
+                    layout="horizontal"
+                    //  onValuesChange={handleValueFormChange}
+                    className="form-css"
+                  >
+                    <Form.Item
+                      name="searchValue"
+                      className="input-search-listWarehouse"
+                    >
+                      <Input
+                        onChange={handleSearchValueChange}
+                        placeholder="Nhập giá trị muốn tìm kiếm theo loại"
+                        prefix={
+                          <FontAwesomeIcon
+                            icon={faMagnifyingGlass}
+                            className="icon-search"
+                          />
+                        }
+                      />
+                    </Form.Item>
+                  </Form>
+                </Col>
                 <ContentListWareHouse
+                  total={materials?.TotalPage ? materials?.TotalPage : 0}
                   data={
-                    Array.isArray(materials)
-                      ? materials.map((material) => {
+                    Array.isArray(materials?.Data)
+                      ? materials.Data.map((material: any) => {
                           dayjs.locale("vi");
                           const date = dayjs(material?.CreatedAt);
                           const now = dayjs();

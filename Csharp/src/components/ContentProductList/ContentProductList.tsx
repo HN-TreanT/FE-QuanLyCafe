@@ -1,25 +1,9 @@
-import {
-  Col,
-  Row,
-  Table,
-  Form,
-  Menu,
-  Select,
-  Input,
-  MenuProps,
-  Button,
-  Image,
-} from "antd";
+import { Table, Button, Image } from "antd";
 import React, { useEffect, useState } from "react";
-import { ProductSupport } from "../../const/ProductSupport";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMagnifyingGlass,
-  faPen,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
@@ -60,6 +44,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
     {
       title: "Giá thành",
       dataIndex: "price",
+      render: (text) => <div>{`${text} đ`}</div>,
     },
     {
       title: "",
@@ -108,19 +93,44 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
     dispatch(actions.MaterialActions.loadData());
     if (dbProduct.Status) {
       if (Array.isArray(dbProduct?.Data.UseMaterials)) {
+        const value = dbProduct.Data.UseMaterials.map((item: any) => {
+          return {
+            key: item.IdMaterialNavigation?.IdMaterial
+              ? item.IdMaterialNavigation?.IdMaterial
+              : "",
+            IdMaterial: item.IdMaterialNavigation?.IdMaterial
+              ? item.IdMaterialNavigation?.IdMaterial
+              : "",
+            NameMaterial: item.IdMaterialNavigation?.NameMaterial
+              ? item.IdMaterialNavigation?.NameMaterial
+              : "",
+            Amount: item?.Amount ? item?.Amount : 0,
+            Unit: item.IdMaterialNavigation?.Unit
+              ? item.IdMaterialNavigation?.Unit
+              : "",
+          };
+        });
         dispatch(
           actions.MaterialActions.selectedMaterial({
-            selectedRowKeys: dbProduct.Data.UseMaterials.map((item: any) => {
-              return item.IdMaterialNavigation.IdMaterial;
+            selectedRowKeys: value.map((item: any) => {
+              return item.key;
             }),
-            selectedRows: dbProduct.Data.UseMaterials.map((item: any) => {
-              return {
-                ...item.IdMaterialNavigation,
-                Amount: item.Amount,
-              };
-            }),
+            selectedRows: value,
           })
         );
+        // dispatch(
+        //   actions.MaterialActions.selectedMaterial({
+        //     selectedRowKeys: dbProduct.Data.UseMaterials.map((item: any) => {
+        //       return item.IdMaterialNavigation.IdMaterial;
+        //     }),
+        //     selectedRows: dbProduct.Data.UseMaterials.map((item: any) => {
+        //       return {
+        //         ...item.IdMaterialNavigation,
+        //         Amount: item.Amount,
+        //       };
+        //     }),
+        //   })
+        // );
       }
       dispatch(
         actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct)

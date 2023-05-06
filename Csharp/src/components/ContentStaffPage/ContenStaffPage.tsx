@@ -1,15 +1,4 @@
-import {
-  Col,
-  Row,
-  Table,
-  Form,
-  Menu,
-  Select,
-  Input,
-  MenuProps,
-  Button,
-  Image,
-} from "antd";
+import { Col, Row, Table, Menu, Input, MenuProps } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
@@ -18,8 +7,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
-
-import { StaffSupport } from "../../const/StaffSupport";
 import { staffService } from "../../untils/networks/services/staffService";
 import { notification } from "../notification";
 const items: MenuProps["items"] = [
@@ -36,7 +23,7 @@ interface DataType {
   phoneNumber: string;
   createdAt: string;
 }
-const ContentStaffPage: React.FC<any> = ({ value }) => {
+const ContentStaffPage: React.FC<any> = ({ total, value }) => {
   const navigate = useNavigate();
   const columns: ColumnsType<DataType> = [
     {
@@ -82,7 +69,6 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
       dispatch(actions.StateAction.loadingState(true));
       const response = await staffService.getStaffById(record.key);
       if (response.Status) {
-        //  dispatch(actions.StaffActions.seletedStaff(record.key));
         dispatch(actions.StaffActions.setDetailStaff(response.Data));
         navigate(RouterLinks.DETAIL_STAFF_PAGE);
         dispatch(actions.StateAction.loadingState(false));
@@ -99,17 +85,7 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
     }
   };
   //tìm kiếm
-  const handleSearchValueChange = (e: any) => {
-    const filterStaffs = StaffSupport.SearchStaff({
-      searchValue: e.target.value,
-      staffs: value,
-    });
-    if (e.target.value) {
-      setValueStaffs(filterStaffs);
-    } else {
-      setValueStaffs(value);
-    }
-  };
+  const handleSearchValueChange = (e: any) => {};
 
   return (
     <>
@@ -149,9 +125,13 @@ const ContentStaffPage: React.FC<any> = ({ value }) => {
               columns={columns}
               dataSource={valueStaffs}
               pagination={{
+                total: total,
                 pageSize: 5,
                 showSizeChanger: false,
                 hideOnSinglePage: true,
+                onChange: (page) => {
+                  dispatch(actions.StaffActions.setSelectedPage(page));
+                },
               }}
               onRow={(record: DataType) => ({
                 onClick: () => handleRowClick(record),

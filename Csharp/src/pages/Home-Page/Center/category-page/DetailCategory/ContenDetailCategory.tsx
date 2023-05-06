@@ -51,7 +51,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
       title: "Giá thành",
       width: "40%",
       dataIndex: "price",
-      render: (text) => <div style={{ color: "#1677ff" }}>{text}</div>,
+      render: (text) => <div style={{ color: "#1677ff" }}>{`${text} đ`}</div>,
     },
     {
       title: "",

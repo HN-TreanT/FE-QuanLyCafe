@@ -51,8 +51,8 @@ const ProductList: React.FC = () => {
         selectedRows: [],
       })
     );
+
     dispatch(actions.MaterialActions.selectedMaterial([]));
-    dispatch(actions.MaterialActions.loadData());
     navigate(RouterLinks.ADD_PRODUCT_PAGE);
   };
   //tìm kiếm

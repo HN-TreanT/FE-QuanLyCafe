@@ -26,11 +26,24 @@ function* handleErr(err: any) {
 }
 function* saga_loadData() {
   try {
+    let _selectedPage: Promise<any> = yield select(
+      (state: any) => state.material.selectedPage
+    );
+    let selectedPage: any = _selectedPage;
+    let _searchValue: Promise<any> = yield select(
+      (state: any) => state.material.searchValue
+    );
+    let searchValue: any = _searchValue;
+    console.log("check selected page ", selectedPage);
+    console.log("check search value :", searchValue);
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield materialService.getAllMaterial();
+    let _response: Promise<any> = yield materialService.getAllMaterial(
+      selectedPage,
+      searchValue
+    );
     let response: any = _response;
     if (response.Status) {
-      yield put(actions.action.loadDataSuccess(response.Data));
+      yield put(actions.action.loadDataSuccess(response));
       yield put(stateActions.action.loadingState(false));
     } else {
       yield handleFail("load data fail");

@@ -66,6 +66,7 @@ const CustomerPage: React.FC = () => {
     {
       title: "Tổng chi tiêu",
       dataIndex: "TotalPay",
+      render: (text) => <div>{`${text} đ`}</div>,
     },
     {
       title: "",
@@ -397,7 +398,6 @@ const CustomerPage: React.FC = () => {
                 columns={columns}
                 dataSource={valueCustomers}
                 pagination={{
-                  //  showTotal: 1,
                   defaultCurrent: selectedPage,
                   pageSize: 5,
                   total: customers?.TotalPage,

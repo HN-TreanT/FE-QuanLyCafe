@@ -15,9 +15,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import ImgCrop from "antd-img-crop";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
-import ModalAddMaterial from "../../../../../components/ModalAddMaterial/ModalAddMaterial";
 import { RouterLinks, serverConfig } from "../../../../../const";
 import Spinn from "../../../../../components/Spinning/Spinning";
 import ModalMaterials from "../../../../../components/ModalMaterials/ModalMaterials";
@@ -81,15 +79,24 @@ const UpdateProductPage: React.FC = () => {
     } else {
       setIsDisabled(true);
     }
-    let data: any[] = [];
     let formData = new FormData();
-    console.log(form.getFieldsValue());
     formData.append("file", form.getFieldsValue().file?.file);
     formData.append("Description", form.getFieldsValue().Description);
     formData.append("Price", form.getFieldsValue().Price);
     formData.append("Unit", form.getFieldsValue().Unit);
     formData.append("Title", form.getFieldsValue().Title);
     formData.append("IdCategory", form.getFieldsValue().category);
+    dispatch(actions.ProductActions.setInfoProduct(formData));
+  };
+  const handleClickAddMaterial = (e: any) => {
+    dispatch(actions.MaterialActions.loadData());
+    setIsOpenModal(true);
+  };
+  const handleClickOkAddMaterial = () => {
+    setIsOpenModal(false);
+  };
+  const handleUpdateProduct = () => {
+    let data: any[] = [];
     data = Array.isArray(selectedMaterials?.selectedRows)
       ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
@@ -101,18 +108,13 @@ const UpdateProductPage: React.FC = () => {
         })
       : [];
     dispatch(actions.MaterialActions.infoUseMaterial(data));
-    dispatch(actions.ProductActions.setInfoProduct(formData));
-  };
-  const handleClickAddMaterial = (e: any) => {
-    dispatch(actions.MaterialActions.loadData());
-    setIsOpenModal(true);
-  };
-  const handleClickOkAddMaterial = () => {
-    setIsOpenModal(false);
-  };
-  const handleUpdateProduct = () => {
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.PRODUCTS_PAGE,
+      })
+    );
     dispatch(actions.ProductActions.updateProduct());
-    navigate(RouterLinks.PRODUCTS_PAGE);
   };
   const handleCancleProduct = () => {
     navigate(RouterLinks.PRODUCTS_PAGE);
@@ -129,7 +131,6 @@ const UpdateProductPage: React.FC = () => {
         onOk={handleClickOkAddMaterial}
         style={{ minHeight: "300px" }}
       >
-        {/* <ModalAddMaterial visible={isOpenModal} /> */}
         <ModalMaterials visible={isOpenModal} />
       </Modal>
       <Form form={form} onValuesChange={handleChange} layout="vertical">
@@ -152,7 +153,6 @@ const UpdateProductPage: React.FC = () => {
                     <div className="title-info-product">Thông tin chung</div>
                   </Col>
                   <Col span={6}>
-                    {/* <ImgCrop rotationSlider> */}
                     <Form.Item
                       label="Ảnh mặt hàng"
                       name="file"
@@ -178,15 +178,9 @@ const UpdateProductPage: React.FC = () => {
                           />
                         ) : (
                           ""
-                          // <img
-                          //   src={`${serverConfig.server}/public/${infoProduct?.Thumbnail}`}
-                          //   alt="avatar"
-                          //   style={{ width: "100%" }}
-                          // />
                         )}
                       </Upload>
                     </Form.Item>
-                    {/* </ImgCrop> */}
                   </Col>
                   <Col span={18}>
                     <Col span={24}>
@@ -296,23 +290,30 @@ const UpdateProductPage: React.FC = () => {
                     selectedMaterials.selectedRows.map(
                       (selectedMaterial: any) => {
                         return (
-                          <React.Fragment key={selectedMaterial.IdMaterial}>
+                          <React.Fragment key={selectedMaterial?.IdMaterial}>
                             <Col span={8}>
-                              <span>{selectedMaterial.NameMaterial}</span>
+                              <span>{selectedMaterial?.NameMaterial}</span>
                             </Col>
                             <Col span={12}>
                               <Form.Item
-                                name={`amount${selectedMaterial.IdMaterial}`}
-                                initialValue={selectedMaterial.Amount}
+                                name={`amount${selectedMaterial?.IdMaterial}`}
+                                initialValue={selectedMaterial?.Amount}
                               >
-                                <InputNumber />
+                                <InputNumber
+                                  addonAfter={
+                                    selectedMaterial?.Unit
+                                      ? selectedMaterial?.Unit
+                                      : ""
+                                  }
+                                />
                               </Form.Item>
                             </Col>
-                            <Col span={2}>{selectedMaterial.Unit}</Col>
-                            <Col span={2}>
+
+                            <Col span={4}>
                               <div
                                 style={{ cursor: "pointer" }}
                                 onClick={() => {
+                                  setIsDisabled(false);
                                   const updatedSelectedMaterials =
                                     selectedMaterials.selectedRows.filter(
                                       (item: any) =>

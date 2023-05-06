@@ -1,9 +1,10 @@
 import actions from "./actions";
 const initState = {
   staffs: [],
-  selectedStateStaff: "allStaff",
   infoStaffCreate: {},
   detailStaff: {},
+  selectedPage: 1,
+  searchNameValue: "",
 };
 const StaffReducer = (state: any = initState, action: any) => {
   switch (action.type) {
@@ -44,6 +45,20 @@ const StaffReducer = (state: any = initState, action: any) => {
     case actions.types.UPDATE_STAFF:
       return {
         ...state,
+      };
+    case actions.types.SELECTED_PAGE:
+      return {
+        ...state,
+        ...{
+          selectedPage: action.payload.data,
+        },
+      };
+    case actions.types.SEARCH_VALUE:
+      return {
+        ...state,
+        ...{
+          searchValue: action.payload.data,
+        },
       };
 
     default:

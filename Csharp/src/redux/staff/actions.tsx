@@ -6,6 +6,8 @@ const types = {
   CREATE_STAFF: "/staff/create-staff",
   DETAIL_STAFF: "/staff/detail-staff",
   UPDATE_STAFF: "/staff/update-staff",
+  SELECTED_PAGE: "/staff/selected-page",
+  SEARCH_VALUE: "/staff/search-value",
 };
 
 const action = {
@@ -46,6 +48,18 @@ const action = {
   handleUpdateStaff: () => {
     return {
       type: types.UPDATE_STAFF,
+    };
+  },
+  setSelectedPage: (data: any) => {
+    return {
+      type: types.SELECTED_PAGE,
+      payload: { data },
+    };
+  },
+  searchValue: (data: any) => {
+    return {
+      type: types.SEARCH_VALUE,
+      payload: { data },
     };
   },
 };

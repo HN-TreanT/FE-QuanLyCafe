@@ -2,7 +2,6 @@ import { all, fork, put, select, takeEvery } from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
-import { authService } from "../../untils/networks/services/authService";
 import { staffService } from "../../untils/networks/services/staffService";
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
@@ -36,24 +35,30 @@ function* saga_Redirect() {
 
 function* saga_loadData() {
   try {
-    let _selectedStaffState: Promise<any> = yield select(
-      (state: any) => state.staff.selectedStateStaff
+    let _selectedPage: Promise<any> = yield select(
+      (state: any) => state.staff.selectedPage
     );
-    let selectedStaffState: any = _selectedStaffState;
-    if (selectedStaffState === "allStaff") {
-      yield put(stateActions.action.loadingState(true));
-      let _response: Promise<any> = yield staffService.getAllStaff();
-      let response: any = _response;
-      if (response.Status) {
-        yield put(actions.action.loadDataSuccess(response.Data));
-        yield put(stateActions.action.loadingState(false));
-      } else {
-        yield handleFail("get staff error");
-      }
+    let selectedPage: any = _selectedPage;
+    let _searchValue: Promise<any> = yield select(
+      (state: any) => state.staff.searchNameValue
+    );
+    let searchValue: any = _searchValue;
+
+    console.log("check page ", selectedPage);
+    console.log("check search", searchValue);
+
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield staffService.getAllStaff(
+      selectedPage,
+      searchValue
+    );
+    let response: any = _response;
+    if (response.Status) {
+      yield put(actions.action.loadDataSuccess(response));
+      yield put(stateActions.action.loadingState(false));
+    } else {
+      yield handleFail("get staff error");
     }
-    if (selectedStaffState === "staffWorking") {
-    }
-    //yield put(actions.action.loadData());
   } catch (err: any) {
     yield handleErr(err);
   }

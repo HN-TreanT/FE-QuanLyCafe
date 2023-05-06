@@ -2,26 +2,32 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Input, Form } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import useAction from "../../redux/useActions";
-import removeAccents from "../../const/RemoveAccent";
 import Table, { ColumnsType } from "antd/es/table";
+import useDebounce from "../../hooks/useDebounce";
 interface DataType {
   key: React.Key;
   IdMaterial: string;
   NameMaterial: string;
   Amount: Number;
+  Unit: string;
 }
 const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
   const materials = useSelector((state: any) => state.material.materials);
+  const loading = useSelector((state: any) => state.state.loadingState);
+  const [searchValue, setSearchValue] = useState("");
+  const searchValueDebounce = useDebounce<string>(searchValue, 500);
   const selectedMaterials = useSelector(
     (state: any) => state.material.selectedMaterials
   );
-  // const [selectedRowKeys, setSelectedRowKeys] = useState<any>(
-  //   selectedMaterials?.selectedRowKeys
-  // );
-  const [valueMaterials, setValueMaterials] = useState(materials);
+  const selectedPage = useSelector((state: any) => state.material.selectedPage);
+  useEffect(() => {
+    dispatch(actions.MaterialActions.setSearchValue(searchValueDebounce));
+    dispatch(actions.MaterialActions.loadData());
+  }, [dispatch, actions.MaterialActions, selectedPage, searchValueDebounce]);
+
   const columns: ColumnsType<DataType> = [
     {
       title: "Mã nguyên liệu",
@@ -36,40 +42,54 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
       title: "Số lượng trong kho",
       dataIndex: "Amount",
     },
+    {
+      title: "",
+      dataIndex: "Unit",
+    },
   ];
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      console.log(selectedRows[selectedRows.length - 1]);
-      const index = selectedRows.length - 1;
-      const updateRows = selectedRows.map((row, i) => {
-        if (i === index) {
-          return { ...row, Amount: 0 };
-        }
-        return row;
-      });
+      if (
+        !selectedMaterials.selectedRows ||
+        !selectedMaterials.selectedRowKeys
+      ) {
+        selectedMaterials.selectedRows = [];
+        selectedMaterials.selectedRowKeys = [];
+      }
+      const updateSelectedRowsKey = selectedMaterials.selectedRowKeys
+        .concat(selectedRowKeys)
+        .filter(
+          (value: any, index: any, self: string | any[]) =>
+            self.indexOf(value) === index
+        );
+      const updateSelectedRows = selectedMaterials.selectedRows
+        .concat(selectedRows)
+        .filter((value: any, index: any, self: any[]) => {
+          const key = value.key;
+          const isDuplicate =
+            self.findIndex((item) => item.key === key) !== index;
+          return !isDuplicate;
+        });
+      console.log("pre selected", selectedMaterials.selectedRows);
+      console.log("check selected rows", selectedRows);
+      console.log("udpte", updateSelectedRows);
+
       dispatch(
         actions.MaterialActions.selectedMaterial({
-          selectedRowKeys: selectedRowKeys,
-          selectedRows: updateRows,
+          selectedRowKeys: updateSelectedRowsKey,
+          selectedRows: updateSelectedRows.map((row: any) => {
+            return {
+              ...row,
+              Amount: 0,
+            };
+          }),
         })
       );
-      //setSelectedRowKeys(selectedRowKeys);
     },
   };
   const handleSearchMaterial = (e: any) => {
-    let filterMaterial: any[] = [];
-    filterMaterial = valueMaterials.filter((material: any) => {
-      const newMaterial = removeAccents(
-        material.NameMaterial
-      ).toLocaleLowerCase();
-      const searchMaterial = removeAccents(e.target.value).toLocaleLowerCase();
-      return newMaterial?.includes(searchMaterial);
-    });
-    if (e.target.value) {
-      setValueMaterials(filterMaterial);
-    } else {
-      setValueMaterials(materials);
-    }
+    dispatch(actions.MaterialActions.setSelectedPage(1));
+    setSearchValue(e.target.value);
   };
   //back
   return (
@@ -93,43 +113,48 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
           }}
           columns={columns}
           dataSource={
-            Array.isArray(valueMaterials)
-              ? valueMaterials
-                  .map((material: any) => {
-                    return {
-                      key: material?.IdMaterial ? material?.IdMaterial : "",
-                      IdMaterial: material?.IdMaterial
-                        ? material?.IdMaterial
-                        : "",
-                      NameMaterial: material?.NameMaterial
-                        ? material?.NameMaterial
-                        : "",
-                      Amount: material?.Amount ? material?.Amount : 0,
-                    };
-                  })
-                  .sort((a, b) => {
-                    const aIsSelected =
-                      selectedMaterials.selectedRowKeys?.includes(a.key);
-                    const bIsSelected =
-                      selectedMaterials.selectedRowKeys?.includes(b.key);
+            Array.isArray(materials?.Data)
+              ? materials.Data.map((material: any) => {
+                  return {
+                    key: material?.IdMaterial ? material?.IdMaterial : "",
+                    IdMaterial: material?.IdMaterial
+                      ? material?.IdMaterial
+                      : "",
+                    NameMaterial: material?.NameMaterial
+                      ? material?.NameMaterial
+                      : "",
+                    Amount: material?.Amount ? material?.Amount : 0,
+                    Unit: material?.Unit ? material?.Unit : "",
+                  };
+                }).sort((a: { key: any }, b: { key: any }) => {
+                  const aIsSelected =
+                    selectedMaterials.selectedRowKeys?.includes(a.key);
+                  const bIsSelected =
+                    selectedMaterials.selectedRowKeys?.includes(b.key);
 
-                    if (aIsSelected && !bIsSelected) {
-                      return -1;
-                    }
+                  if (aIsSelected && !bIsSelected) {
+                    return -1;
+                  }
 
-                    if (!aIsSelected && bIsSelected) {
-                      return 1;
-                    }
+                  if (!aIsSelected && bIsSelected) {
+                    return 1;
+                  }
 
-                    return 0;
-                  })
+                  return 0;
+                })
               : []
           }
           pagination={{
+            current: selectedPage ? selectedPage : 1,
             pageSize: 5,
+            total: materials?.TotalPage ? materials.TotalPage : 1,
             showSizeChanger: false,
             hideOnSinglePage: true,
+            onChange: (page) => {
+              dispatch(actions.MaterialActions.setSelectedPage(page));
+            },
           }}
+          loading={loading}
         />
       </Col>
     </Row>

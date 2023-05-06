@@ -31,6 +31,7 @@ const DetailCategory: React.FC = () => {
       price: `${product?.Price}`,
     };
   });
+  console.log(products);
   const handleBack = () => {
     navigate(RouterLinks.CATEGORY_PAGE);
     dispatch(actions.StateAction.selectedMenuItem("category"));

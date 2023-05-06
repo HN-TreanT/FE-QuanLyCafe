@@ -242,6 +242,7 @@ const DetailStaffPage: React.FC = () => {
                       initialValue={detailStaff?.Salary}
                     >
                       <InputNumber
+                        addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         placeholder="Nhập lương"
                       ></InputNumber>
