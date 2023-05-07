@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Form,
-  Row,
-  Col,
-  Input,
-  Select,
-  Upload,
-  Modal,
-  Button,
-  InputNumber,
-} from "antd";
+import { Form, Row, Col, Input, Select, Upload, Modal, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -134,7 +124,6 @@ const AddProductPage: React.FC = () => {
   };
   return (
     <div className="add-product-page">
-      {/* {loading ? <Spinn /> : ""} */}
       <Modal
         title="Thêm mới nguyên liệu"
         open={isOpenModal}
@@ -178,7 +167,6 @@ const AddProductPage: React.FC = () => {
                         },
                       ]}
                     >
-                      {/* <ImgCrop rotationSlider> */}
                       <Upload
                         name="file"
                         onChange={handleChangeFile}
@@ -198,7 +186,6 @@ const AddProductPage: React.FC = () => {
                           uploadButton
                         )}
                       </Upload>
-                      {/* </ImgCrop> */}
                     </Form.Item>
                   </Col>
                   <Col span={18}>
@@ -248,12 +235,23 @@ const AddProductPage: React.FC = () => {
                       ]}
                       label="Giá bán"
                     >
-                      <InputNumber
+                      <Input
+                        type="number"
                         addonAfter="VNĐ"
                         min={0}
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -310,13 +308,35 @@ const AddProductPage: React.FC = () => {
                             <Col span={12}>
                               <Form.Item
                                 name={`amount${selectedMaterial?.IdMaterial}`}
+                                rules={[
+                                  {
+                                    validator: async (_, value) => {
+                                      if (!value) {
+                                        throw new Error(
+                                          "Không được bỏ trống! "
+                                        );
+                                      }
+                                    },
+                                  },
+                                ]}
                               >
-                                <InputNumber
+                                <Input
+                                  type="number"
                                   addonAfter={
                                     selectedMaterial?.Unit
                                       ? selectedMaterial?.Unit
                                       : ""
                                   }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "-" ||
+                                      e.key === "e" ||
+                                      e.key === "+" ||
+                                      e.key === "E"
+                                    ) {
+                                      e.preventDefault();
+                                    }
+                                  }}
                                 />
                               </Form.Item>
                             </Col>

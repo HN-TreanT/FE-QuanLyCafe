@@ -105,7 +105,19 @@ const WorkShiftPage: React.FC = () => {
                   },
                 ]}
               >
-                <Input></Input>
+                <Input
+                  type="number"
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "-" ||
+                      e.key === "e" ||
+                      e.key === "+" ||
+                      e.key === "E"
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                ></Input>
               </Form.Item>
             </Col>
             <Col span={24}>

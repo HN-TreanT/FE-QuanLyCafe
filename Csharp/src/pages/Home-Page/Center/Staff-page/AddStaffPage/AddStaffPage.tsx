@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  Input,
-  Form,
-  Select,
-  DatePicker,
-  InputNumber,
-} from "antd";
-import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import "./AddStaffPage.scss";
 import { RouterLinks } from "../../../../../const";
+import { staffService } from "../../../../../untils/networks/services/staffService";
 const AddStaffPage: React.FC = () => {
   const emailRegex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -24,7 +16,6 @@ const AddStaffPage: React.FC = () => {
   const [form] = Form.useForm();
   const [isDisabled, setIsDisabled] = useState(true);
   const workshifts = useSelector((state: any) => state.workshift.workshifts);
-  const staffs = useSelector((state: any) => state.staff.staffs);
   useEffect(() => {
     dispatch(actions.WorkshiftActions.loadData());
   }, [dispatch, actions.WorkshiftActions]);
@@ -130,12 +121,14 @@ const AddStaffPage: React.FC = () => {
                         {
                           validator: async (_, value) => {
                             let check = false;
-                            staffs.forEach((item: any) => {
-                              if (value === item?.Email) {
-                                check = true;
-                                setIsDisabled(true);
-                              }
-                            });
+                            let res;
+                            if (value) {
+                              res = await staffService.getStaffByEmail(value);
+                            }
+                            if (res?.Status) {
+                              check = true;
+                              setIsDisabled(true);
+                            }
                             if (check) {
                               throw new Error("Email đã tồn tại ");
                             }
@@ -156,20 +149,6 @@ const AddStaffPage: React.FC = () => {
                         },
                         {
                           validator: async (_, value) => {
-                            let check = false;
-                            staffs.forEach((item: any) => {
-                              if (value?.toString() === item?.PhoneNumber) {
-                                check = true;
-                                setIsDisabled(true);
-                              }
-                            });
-                            if (check) {
-                              throw new Error("số điện thoại đã tồn tại ");
-                            }
-                          },
-                        },
-                        {
-                          validator: async (_, value) => {
                             if (value) {
                               if (
                                 value.toString().length < 10 ||
@@ -179,6 +158,14 @@ const AddStaffPage: React.FC = () => {
                                 throw new Error(
                                   "số điện thoại không  hợp lệ! "
                                 );
+                              } else {
+                                let res = await staffService.getStaffByPhone(
+                                  value
+                                );
+                                if (res?.Status) {
+                                  setIsDisabled(true);
+                                  throw new Error("số điện thoại đã tồn tại ");
+                                }
                               }
                             }
                           },
@@ -187,10 +174,21 @@ const AddStaffPage: React.FC = () => {
                       name="PhoneNumber"
                       label="Số điện thoai"
                     >
-                      <InputNumber
+                      <Input
+                        type="number"
                         style={{ width: "100%" }}
                         placeholder="Nhập số điện thoại"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={10}>
@@ -228,12 +226,23 @@ const AddStaffPage: React.FC = () => {
                       name="Salary"
                       label="Lương"
                     >
-                      <InputNumber
+                      <Input
+                        type="number"
                         addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         min={0}
                         placeholder="Nhập lương"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

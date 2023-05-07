@@ -10,7 +10,6 @@ import {
   Col,
   Menu,
   MenuProps,
-  InputNumber,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -188,7 +187,21 @@ const ListWarehouse: React.FC = () => {
                 name="Expiry"
                 label="Thời gian sử dụng"
               >
-                <InputNumber addonAfter="ngày" style={{ width: "100%" }} />
+                <Input
+                  type="number"
+                  addonAfter="ngày"
+                  style={{ width: "100%" }}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "-" ||
+                      e.key === "e" ||
+                      e.key === "+" ||
+                      e.key === "E"
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
               </Form.Item>
             </Col>
           </Row>

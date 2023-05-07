@@ -1,20 +1,13 @@
-import { Col, Row, Table, Menu, Input, MenuProps } from "antd";
+import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../const";
 import { staffService } from "../../untils/networks/services/staffService";
 import { notification } from "../notification";
-const items: MenuProps["items"] = [
-  {
-    label: "Tất cả nhân viên",
-    key: "allStaff",
-  },
-];
+
 interface DataType {
   email: string;
   nameStaff: string;
@@ -55,9 +48,6 @@ const ContentStaffPage: React.FC<any> = ({ total, value }) => {
   ];
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedStateStaff = useSelector(
-    (state: any) => state.staff.selectedStateStaff
-  );
   const loading = useSelector((state: any) => state.state.loadingState);
   const [valueStaffs, setValueStaffs] = useState(value);
   useEffect(() => {
@@ -84,62 +74,29 @@ const ContentStaffPage: React.FC<any> = ({ total, value }) => {
       console.log(err);
     }
   };
-  //tìm kiếm
-  const handleSearchValueChange = (e: any) => {};
 
   return (
     <>
-      <Col span={24}>
-        <div className="container-staff-page">
-          <div className="header-staff-page">
-            <Row gutter={[15, 15]}>
-              <Col span={24}>
-                <Menu
-                  defaultSelectedKeys={["allStaff"]}
-                  selectedKeys={selectedStateStaff}
-                  mode="horizontal"
-                  items={items}
-                />
-              </Col>
-              <Col span={24}>
-                <div style={{ padding: "0 10px 0 10px", width: "100%" }}>
-                  <Input
-                    className="input-search-staff"
-                    onChange={handleSearchValueChange}
-                    placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                    prefix={
-                      <FontAwesomeIcon
-                        icon={faSearch}
-                        className="icon-search"
-                      />
-                    }
-                  ></Input>
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div className="content-staff-page">
-            <Table
-              loading={loading}
-              style={{ marginLeft: "20px" }}
-              columns={columns}
-              dataSource={valueStaffs}
-              pagination={{
-                total: total,
-                pageSize: 5,
-                showSizeChanger: false,
-                hideOnSinglePage: true,
-                onChange: (page) => {
-                  dispatch(actions.StaffActions.setSelectedPage(page));
-                },
-              }}
-              onRow={(record: DataType) => ({
-                onClick: () => handleRowClick(record),
-              })}
-            />
-          </div>
-        </div>
-      </Col>
+      <div className="content-staff-page">
+        <Table
+          loading={loading}
+          style={{ marginLeft: "20px" }}
+          columns={columns}
+          dataSource={valueStaffs}
+          pagination={{
+            total: total,
+            pageSize: 5,
+            showSizeChanger: false,
+            hideOnSinglePage: true,
+            onChange: (page) => {
+              dispatch(actions.StaffActions.setSelectedPage(page));
+            },
+          }}
+          onRow={(record: DataType) => ({
+            onClick: () => handleRowClick(record),
+          })}
+        />
+      </div>
     </>
   );
 };

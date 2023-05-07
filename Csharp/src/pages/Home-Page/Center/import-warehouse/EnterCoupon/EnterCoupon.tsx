@@ -11,6 +11,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Table, { ColumnsType } from "antd/es/table";
 import removeAccents from "../../../../../const/RemoveAccent";
 import Spinn from "../../../../../components/Spinning/Spinning";
+import useDebounce from "../../../../../hooks/useDebounce";
 interface DataType {
   key: React.Key;
   IdMaterial: string;
@@ -58,12 +59,20 @@ const EnterCoupon: React.FC = () => {
       render: (text, record) => (
         <InputNumber
           className="input-number"
-          step={1}
-          min={0}
           required={true}
           value={text}
           onChange={(e) => handleAmountChange(e, record.key)}
           type="number"
+          onKeyDown={(e) => {
+            if (
+              e.key === "-" ||
+              e.key === "e" ||
+              e.key === "+" ||
+              e.key === "E"
+            ) {
+              e.preventDefault();
+            }
+          }}
         />
       ),
     },
@@ -72,13 +81,22 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Price",
       render: (text, record) => (
         <InputNumber
+          addonAfter="VNĐ"
           className="input-number"
-          step={1}
-          min={0}
           required={true}
           value={text}
           onChange={(e) => handlePriceChange(e, record.key)}
           type="number"
+          onKeyDown={(e) => {
+            if (
+              e.key === "-" ||
+              e.key === "e" ||
+              e.key === "+" ||
+              e.key === "E"
+            ) {
+              e.preventDefault();
+            }
+          }}
         />
       ),
     },
@@ -107,10 +125,13 @@ const EnterCoupon: React.FC = () => {
   const [valueSelectedMaterials, setValueSelectedMaterials] = useState<any>([]);
   const materials = useSelector((state: any) => state.material.materials);
   const loading = useSelector((state: any) => state.state.loadingState);
-  const [valueMaterials, setValueMaterials] = useState(materials);
+  const [searchValue, setSearchValue] = useState("");
+  const searchValueDebounce = useDebounce<string>(searchValue, 500);
+  const selectedPage = useSelector((state: any) => state.material.selectedPage);
   useEffect(() => {
+    dispatch(actions.MaterialActions.setSearchValue(searchValueDebounce));
     dispatch(actions.MaterialActions.loadData());
-  }, [dispatch, actions.MaterialActions]);
+  }, [dispatch, actions.MaterialActions, searchValueDebounce, selectedPage]);
 
   //select material
   const rowSelection = {
@@ -158,19 +179,8 @@ const EnterCoupon: React.FC = () => {
   };
 
   const handleSearchMaterial = (e: any) => {
-    let filterMaterial: any[] = [];
-    filterMaterial = valueMaterials.filter((material: any) => {
-      const newMaterial = removeAccents(
-        material.NameMaterial
-      ).toLocaleLowerCase();
-      const searchMaterial = removeAccents(e.target.value).toLocaleLowerCase();
-      return newMaterial.includes(searchMaterial);
-    });
-    if (e.target.value) {
-      setValueMaterials(filterMaterial);
-    } else {
-      setValueMaterials(materials);
-    }
+    dispatch(actions.MaterialActions.setSelectedPage(1));
+    setSearchValue(e.target.value);
   };
   const handleCancleImport = () => {
     dispatch(actions.ImportGoodsActions.setMaterialSelectedImports([]));
@@ -270,40 +280,42 @@ const EnterCoupon: React.FC = () => {
               }}
               columns={columns}
               dataSource={
-                Array.isArray(valueMaterials)
-                  ? valueMaterials
-                      .map((material: any) => {
-                        return {
-                          key: material?.IdMaterial ? material?.IdMaterial : "",
-                          IdMaterial: material?.IdMaterial
-                            ? material?.IdMaterial
-                            : "",
-                          NameMaterial: material?.NameMaterial
-                            ? material?.NameMaterial
-                            : "",
-                          Amount: material?.Amount ? material?.Amount : 0,
-                        };
-                      })
-                      .sort((a, b) => {
-                        const aIsSelected = selectedRowKeys.includes(a.key);
-                        const bIsSelected = selectedRowKeys.includes(b.key);
+                Array.isArray(materials?.Data)
+                  ? materials.Data.map((material: any) => {
+                      return {
+                        key: material?.IdMaterial ? material?.IdMaterial : "",
+                        IdMaterial: material?.IdMaterial
+                          ? material?.IdMaterial
+                          : "",
+                        NameMaterial: material?.NameMaterial
+                          ? material?.NameMaterial
+                          : "",
+                        Amount: material?.Amount ? material?.Amount : 0,
+                      };
+                    }).sort((a: { key: any }, b: { key: any }) => {
+                      const aIsSelected = selectedRowKeys.includes(a.key);
+                      const bIsSelected = selectedRowKeys.includes(b.key);
 
-                        if (aIsSelected && !bIsSelected) {
-                          return -1;
-                        }
+                      if (aIsSelected && !bIsSelected) {
+                        return -1;
+                      }
 
-                        if (!aIsSelected && bIsSelected) {
-                          return 1;
-                        }
+                      if (!aIsSelected && bIsSelected) {
+                        return 1;
+                      }
 
-                        return 0;
-                      })
+                      return 0;
+                    })
                   : []
               }
               pagination={{
                 pageSize: 5,
+                total: materials?.TotalPage ? materials?.TotalPage : 0,
                 showSizeChanger: false,
                 hideOnSinglePage: true,
+                onChange: (page) => {
+                  dispatch(actions.MaterialActions.setSelectedPage(page));
+                },
               }}
             />
           </Col>
@@ -433,11 +445,21 @@ const EnterCoupon: React.FC = () => {
                       </Col>
                       <Col span={24}>
                         <Form.Item label="Số điện thoại" name="PhoneProvider">
-                          <InputNumber
-                            min={0}
+                          <Input
+                            type="number"
                             name="PhoneProvider"
                             style={{ width: "100%" }}
-                          ></InputNumber>
+                            onKeyDown={(e) => {
+                              if (
+                                e.key === "-" ||
+                                e.key === "e" ||
+                                e.key === "+" ||
+                                e.key === "E"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                          ></Input>
                         </Form.Item>
                       </Col>
                     </Row>

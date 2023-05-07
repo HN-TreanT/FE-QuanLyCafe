@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Col,
-  Row,
-  Button,
-  Form,
-  Image,
-  Modal,
-  InputNumber,
-  Pagination,
-} from "antd";
+import { Col, Row, Button, Form, Image, Modal, Pagination, Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircle } from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../redux/useActions";
@@ -135,7 +126,20 @@ const TablePage: React.FC = () => {
           }}
         >
           <Form.Item label="Số bàn" name="Name">
-            <InputNumber style={{ width: "100%" }}></InputNumber>
+            <Input
+              type="number"
+              style={{ width: "100%" }}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "-" ||
+                  e.key === "e" ||
+                  e.key === "+" ||
+                  e.key === "E"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+            ></Input>
           </Form.Item>
         </Form>
       </Modal>

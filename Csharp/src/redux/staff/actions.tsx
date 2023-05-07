@@ -56,7 +56,7 @@ const action = {
       payload: { data },
     };
   },
-  searchValue: (data: any) => {
+  setSearchValue: (data: any) => {
     return {
       type: types.SEARCH_VALUE,
       payload: { data },

@@ -1,17 +1,7 @@
 import "./UpdateProductPage.scss";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import {
-  Form,
-  Row,
-  Col,
-  Input,
-  Select,
-  Upload,
-  Modal,
-  Button,
-  InputNumber,
-} from "antd";
+import { Form, Row, Col, Input, Select, Upload, Modal, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -236,10 +226,21 @@ const UpdateProductPage: React.FC = () => {
                       label="Giá bán"
                       initialValue={infoProduct?.Price}
                     >
-                      <InputNumber
+                      <Input
+                        type="number"
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -298,13 +299,35 @@ const UpdateProductPage: React.FC = () => {
                               <Form.Item
                                 name={`amount${selectedMaterial?.IdMaterial}`}
                                 initialValue={selectedMaterial?.Amount}
+                                rules={[
+                                  {
+                                    validator: async (_, value) => {
+                                      if (!value) {
+                                        throw new Error(
+                                          " Không được bỏ trống! "
+                                        );
+                                      }
+                                    },
+                                  },
+                                ]}
                               >
-                                <InputNumber
+                                <Input
+                                  type="number"
                                   addonAfter={
                                     selectedMaterial?.Unit
                                       ? selectedMaterial?.Unit
                                       : ""
                                   }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "-" ||
+                                      e.key === "e" ||
+                                      e.key === "+" ||
+                                      e.key === "E"
+                                    ) {
+                                      e.preventDefault();
+                                    }
+                                  }}
                                 />
                               </Form.Item>
                             </Col>

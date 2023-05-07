@@ -1,0 +1,37 @@
+.product{
+    .side-bar-poduct-order-page{
+        font-weight: 500;
+        height: 622px;
+        background-color: rgba(0, 0, 0, 0.173);
+        .side_bar_menu{
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+              display: none;               /* Chiều rộng vùng chứa scrollbar */
+             }
+            &::-webkit-scrollbar-track {
+               background: #ccc;        /* Màu nền ngoài của thanh scrollbar */
+             }
+            &::-webkit-scrollbar-thumb {
+               border-radius: 5px;
+               background-color: transparent;
+               
+             }
+            &::-webkit-scrollbar-thumb:hover { 
+               background-color:rgba(0, 0, 0, 0.142) ; /* Hiệu ứng di chuột đổi màu*/
+           }
+         }
+    }
+    .content-product-order-page{
+           display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        .search-product-order-page{
+            
+        }
+        .list-product-order-page{
+            height: 500px;
+        }
+        .pagination-proudct-order-page{}
+    }
+}

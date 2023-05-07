@@ -70,10 +70,6 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
             self.findIndex((item) => item.key === key) !== index;
           return !isDuplicate;
         });
-      console.log("pre selected", selectedMaterials.selectedRows);
-      console.log("check selected rows", selectedRows);
-      console.log("udpte", updateSelectedRows);
-
       dispatch(
         actions.MaterialActions.selectedMaterial({
           selectedRowKeys: updateSelectedRowsKey,

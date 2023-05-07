@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Modal, Select } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import React, { useState, useEffect } from "react";
 import { notification } from "../notification";
 import { customerServices } from "../../untils/networks/services/customerServices";
@@ -120,7 +120,20 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
           name="phoneNumber"
           label="Số điện thoại"
         >
-          <InputNumber style={{ width: "100%" }}></InputNumber>
+          <Input
+            type="number"
+            style={{ width: "100%" }}
+            onKeyDown={(e) => {
+              if (
+                e.key === "-" ||
+                e.key === "e" ||
+                e.key === "+" ||
+                e.key === "E"
+              ) {
+                e.preventDefault();
+              }
+            }}
+          ></Input>
         </Form.Item>
         <Form.Item
           rules={[

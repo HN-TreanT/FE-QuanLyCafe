@@ -40,13 +40,9 @@ function* saga_loadData() {
     );
     let selectedPage: any = _selectedPage;
     let _searchValue: Promise<any> = yield select(
-      (state: any) => state.staff.searchNameValue
+      (state: any) => state.staff.searchValue
     );
     let searchValue: any = _searchValue;
-
-    console.log("check page ", selectedPage);
-    console.log("check search", searchValue);
-
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield staffService.getAllStaff(
       selectedPage,

@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  Input,
-  Form,
-  Select,
-  DatePicker,
-  InputNumber,
-} from "antd";
+import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -190,11 +181,61 @@ const DetailStaffPage: React.FC = () => {
                       name="PhoneNumber"
                       label="Số điện thoai"
                       initialValue={detailStaff?.PhoneNumber}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập số điện thoại!",
+                        },
+                        {
+                          validator: async (_, value) => {
+                            if (value) {
+                              if (
+                                value.toString().length < 10 ||
+                                value.toString().length > 11
+                              ) {
+                                setIsDisabled(true);
+                                throw new Error(
+                                  "số điện thoại không  hợp lệ! "
+                                );
+                              } else {
+                                let res = await staffService.getStaffByPhone(
+                                  value
+                                );
+                                if (res?.Status) {
+                                  if (
+                                    !(
+                                      detailStaff?.PhoneNumber ===
+                                      res?.Data?.PhoneNumber
+                                    )
+                                  ) {
+                                    setIsDisabled(true);
+                                    throw new Error(
+                                      "số điện thoại đã tồn tại "
+                                    );
+                                  }
+                                }
+                              }
+                            }
+                          },
+                        },
+                      ]}
                     >
-                      <InputNumber
+                      <Input
+                        min={0}
+                        type="number"
                         style={{ width: "100%" }}
                         placeholder="Nhập số điện thoại"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={10}>
@@ -234,18 +275,29 @@ const DetailStaffPage: React.FC = () => {
                       rules={[
                         {
                           required: true,
-                          message: "Hãy nhập lương",
+                          message: "Hãy nhập lương!",
                         },
                       ]}
                       name="Salary"
                       label="Lương"
                       initialValue={detailStaff?.Salary}
                     >
-                      <InputNumber
+                      <Input
+                        type="number"
                         addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         placeholder="Nhập lương"
-                      ></InputNumber>
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === "-" ||
+                            e.key === "e" ||
+                            e.key === "+" ||
+                            e.key === "E"
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
+                      ></Input>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

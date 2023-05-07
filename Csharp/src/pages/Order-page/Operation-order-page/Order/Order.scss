@@ -1,0 +1,18 @@
+.order{
+    padding: 10px;
+    .content-tab-order{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+       
+        justify-content: space-around;
+        .list-order{
+            padding-left: 20px;
+         height: 440px;
+        margin-top: 30px;
+        }
+        .pagination-order-tab{
+           
+        }
+    }
+}

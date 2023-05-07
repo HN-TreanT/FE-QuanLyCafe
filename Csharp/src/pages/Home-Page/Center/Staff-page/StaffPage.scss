@@ -22,6 +22,9 @@
         background-color:white;
         box-shadow: 0px 0px 10px #e7e2e2;
         .header-staff-page{
+            .form-css{
+                margin-left: 20px;
+            }
                .input-search-staff{
                   width: 100%;
                   padding:5px;
@@ -41,5 +44,10 @@
            
         }
     
+    }
+}
+.icon-search{
+    &:hover{
+        color:rgb(64, 135, 217) ;
     }
 }

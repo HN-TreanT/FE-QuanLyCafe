@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, InputNumber, Modal, Select } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { Button, Form, Input, Modal, Select } from "antd";
+import { useDispatch } from "react-redux";
 import useAction from "../../redux/useActions";
 import { tableFoodService } from "../../untils/networks/services/tableFoodService";
 import { notification } from "../notification";
@@ -104,10 +104,21 @@ const ModalEditTable: React.FC<any> = ({ isOpen, data }) => {
     >
       <Form layout="horizontal" form={form}>
         <Form.Item initialValue={tableSeleted?.Name} label="Số bàn" name="Name">
-          <InputNumber
+          <Input
+            type="number"
             value={tableSeleted?.Name}
             style={{ width: "100%" }}
-          ></InputNumber>
+            onKeyDown={(e) => {
+              if (
+                e.key === "-" ||
+                e.key === "e" ||
+                e.key === "+" ||
+                e.key === "E"
+              ) {
+                e.preventDefault();
+              }
+            }}
+          ></Input>
         </Form.Item>
         <Form.Item
           initialValue={tableSeleted?.Status}
