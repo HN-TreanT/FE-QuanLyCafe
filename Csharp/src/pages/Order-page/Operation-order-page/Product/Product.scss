@@ -24,14 +24,33 @@
     .content-product-order-page{
            display: flex;
             flex-direction: column;
-            align-items: center;
+          
             justify-content: space-around;
         .search-product-order-page{
+         
+            width: 100%;
             
         }
         .list-product-order-page{
             height: 500px;
+            padding: 5px;
+            .empty-product{
+                display: flex;
+                flex-direction: column;
+                padding-left: 280px;
+                padding-top: 150px;
+                .icon-empty-product{
+                    font-size: 5rem;
+                    color: rgba(0, 0, 0, 0.414);
+                }
+                .title-empy-product{
+                    color: rgba(0, 0, 0, 0.47);
+                    font-weight: 500;
+                }
+            }
         }
-        .pagination-proudct-order-page{}
+        .pagination-proudct-order-page{
+            align-self: center;
+        }
     }
 }

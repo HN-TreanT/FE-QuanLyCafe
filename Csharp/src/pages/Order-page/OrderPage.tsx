@@ -1,6 +1,7 @@
 import React from "react";
 import { Col, Row } from "antd";
 import OperationOrderPage from "./Operation-order-page/OperationOrderPage";
+import OrderDetail from "./OrderDetail/OrderDetail";
 import "./OrderPage.scss";
 const OrderPage: React.FC = () => {
   return (
@@ -11,9 +12,10 @@ const OrderPage: React.FC = () => {
             <OperationOrderPage />
           </Col>
           <Col span={9}>
-            <div className="order-detail"></div>
+            <OrderDetail />
           </Col>
         </Row>
+        <div className="user-order-page">username</div>
       </div>
     </div>
   );

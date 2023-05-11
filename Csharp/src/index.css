@@ -27,4 +27,5 @@ code {
   --border-color:rgba(0, 0, 0, 0.164);
   --red-color:red;
   --item-color-topbar: rgba(0, 0, 0, 0.626);
+  --height-order-detail-page:627px;
 }

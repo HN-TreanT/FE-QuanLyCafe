@@ -9,7 +9,8 @@ const GetTop5Product = (time: any) => {
 const GetAllProduct = (
   selectedPage: Number,
   searchValue: any,
-  typeSearch: any
+  typeSearch: any,
+  pageSize: Number
 ) => {
   if (!searchValue) {
     searchValue = "";
@@ -18,13 +19,21 @@ const GetAllProduct = (
     typeSearch = "";
   }
   return api.makeAuthRequest({
-    url: `https://localhost:7066/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}`,
+    url: `https://localhost:7066/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}&pageSize=${pageSize}`,
     method: "GET",
   });
 };
-const GetAllProductByCategory = (Id: string) => {
+const GetAllProductByCategory = (
+  page: Number,
+  pageSize: Number,
+  Id: string,
+  searchValue: string
+) => {
+  if (!searchValue) {
+    searchValue = "";
+  }
   return api.makeAuthRequest({
-    url: `/api/Product/getAllProductByCategory/${Id}`,
+    url: `https://localhost:7066/api/Product/getAllProductByCategory?page=${page}&pageSize=${pageSize}&Id=${Id}&searchValue=${searchValue}`,
     method: "GET",
   });
 };

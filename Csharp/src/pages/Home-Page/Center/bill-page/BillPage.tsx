@@ -329,7 +329,7 @@ const BillPage: React.FC = () => {
                     dataSource={data}
                     pagination={{
                       total: orders?.TotalPage,
-                      pageSize: 5,
+                      pageSize: 6,
                       defaultCurrent: selectedPage,
                       showSizeChanger: false,
                       hideOnSinglePage: true,

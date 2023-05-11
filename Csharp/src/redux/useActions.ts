@@ -11,12 +11,13 @@ import { WorkshiftActions } from "./workshift/actions";
 import { CustomerActions } from "./cutomer/actions";
 import { TableFoodActions } from "./tableFood/actions";
 import { ImportGoodsActions } from "./importGoods/actions";
+import { OrderPageActions } from "./order-page/actions";
 
 const useAction = ()=>{
     const actions = {
     AuthActions,StateAction,OverviewAction,ProductActions,BillActions,
     OrderDetailActions,MaterialActions,CategoryActions,StaffActions,WorkshiftActions,
-    CustomerActions,TableFoodActions,ImportGoodsActions};
+    CustomerActions,TableFoodActions,ImportGoodsActions,OrderPageActions};
   return actions
 }
 export default useAction;

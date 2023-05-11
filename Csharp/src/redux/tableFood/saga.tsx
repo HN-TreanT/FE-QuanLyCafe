@@ -31,9 +31,12 @@ function* saga_loadData() {
     );
     let page: any = _page;
     yield put(stateActions.action.loadingState(true));
-    let _reponse: Promise<any> = yield tableFoodService.getAllTableFood(page);
+    let _reponse: Promise<any> = yield tableFoodService.getAllTableFood(
+      page,
+      "allTable",
+      null
+    );
     let response: any = _reponse;
-    console.log(response);
     if (response.Status) {
       yield put(actions.action.loadDataSuccess(response));
       yield put(stateActions.action.loadingState(false));

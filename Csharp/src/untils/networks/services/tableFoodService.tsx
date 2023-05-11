@@ -1,10 +1,21 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
-const getAllTableFood = (page: Number) => {
-  return api.makeAuthRequest({
-    url: `/api/TableFood/getAllTableFood?page=${page}`,
-    method: "GET",
-  });
+const getAllTableFood = (
+  page: Number,
+  stateTable: string,
+  numberTable: any
+) => {
+  if (numberTable) {
+    return api.makeAuthRequest({
+      url: `/api/TableFood/getAllTableFood?page=${page}&stateTable=${stateTable}&numberTable=${numberTable}`,
+      method: "GET",
+    });
+  } else {
+    return api.makeAuthRequest({
+      url: `/api/TableFood/getAllTableFood?page=${page}&stateTable=${stateTable}`,
+      method: "GET",
+    });
+  }
 };
 const getTableFoodById = (Id: string) => {
   return api.makeAuthRequest({

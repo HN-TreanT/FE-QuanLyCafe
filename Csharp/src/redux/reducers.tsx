@@ -11,6 +11,7 @@ import WorkshiftReducer from "./workshift/reducer";
 import CustomerReducer from "./cutomer/reducer";
 import TableFoodReducer from "./tableFood/reducer";
 import ImportGoodReducer from "./importGoods/reducer";
+import OrderPageReducer from "./order-page/reducer";
 const rootReducer = {
   auth: AuthReducer,
   state: StateReducer,
@@ -25,6 +26,7 @@ const rootReducer = {
   customer: CustomerReducer,
   tablefood: TableFoodReducer,
   importgoods: ImportGoodReducer,
+  orderpage: OrderPageReducer,
 };
 
 export default rootReducer;

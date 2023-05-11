@@ -13,6 +13,7 @@ import workShiftSaga from "./workshift/saga";
 import customerSaga from "./cutomer/saga";
 import tableFoodSaga from "./tableFood/saga";
 import importGoodSaga from "./importGoods/saga";
+import orderPageSaga from "./order-page/saga";
 export default function* rootSaga() {
   yield all([
     authSaga(),
@@ -28,5 +29,6 @@ export default function* rootSaga() {
     customerSaga(),
     tableFoodSaga(),
     importGoodSaga(),
+    orderPageSaga(),
   ]);
 }

@@ -9,10 +9,20 @@ import {
   Form,
   Input,
 } from "antd";
-import tableImage1 from "../../../../assets/dinning-table_0.png";
+import tableImage0 from "../../../../assets/dinning-table_0.png";
+import tableImage1 from "../../../../assets/dinning-table-1.png";
 import "./TableLocation.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faMagnifyingGlass,
+  faTable,
+} from "@fortawesome/free-solid-svg-icons";
+import useAction from "../../../../redux/useActions";
+import { useDispatch, useSelector } from "react-redux";
+import Spinn from "../../../../components/Spinning/Spinning";
+import useDebounce from "../../../../hooks/useDebounce";
+
 const items: MenuProps["items"] = [
   {
     label: "Tất cả bàn ăn",
@@ -34,14 +44,47 @@ for (var i = 0; i < 18; i++) {
 }
 
 const TableLocation: React.FC = () => {
+  const actions = useAction();
+  const dispatch = useDispatch();
+  const selectedPage = useSelector(
+    (state: any) => state.orderpage.selectedPageTable
+  );
+  const stateTable = useSelector((state: any) => state.orderpage.stateTable);
+  const tables = useSelector((state: any) => state.orderpage.tables);
+  const loading = useSelector((state: any) => state.state.loadingState);
+  const [searchValue, setSearchValue] = React.useState("");
+  const searchValueDebounce = useDebounce<string>(searchValue, 500);
+  React.useEffect(() => {
+    dispatch(actions.OrderPageActions.setSearchValueTable(searchValueDebounce));
+    dispatch(actions.OrderPageActions.loadTable());
+  }, [
+    actions.OrderPageActions,
+    dispatch,
+    selectedPage,
+    stateTable,
+    searchValueDebounce,
+  ]);
+
+  const handleSelectedStateTable = (e: any) => {
+    dispatch(actions.OrderPageActions.setSelectedPagetable(1));
+    dispatch(actions.OrderPageActions.setStateTable(e.key));
+  };
+  const handlSearchTableFood = (e: any) => {
+    dispatch(actions.OrderPageActions.setSelectedPagetable(1));
+    setSearchValue(e.target.value);
+  };
+  const handleChangePageTable = (e: any) => {
+    dispatch(actions.OrderPageActions.setSelectedPagetable(e));
+  };
   return (
     <div className="table-location">
+      {loading ? <Spinn /> : ""}
       <Row gutter={[15, 0]}>
         <Col span={24}>
           <Menu
             className="nav-bill-page"
-            // onClick={handleSeletected}
-            //selectedKeys={["allTable"]}
+            onClick={handleSelectedStateTable}
+            selectedKeys={[stateTable ? stateTable : "allTable"]}
             mode="horizontal"
             items={items}
           />
@@ -56,12 +99,13 @@ const TableLocation: React.FC = () => {
                     className="input-search-import-warehouse input-label-inline-border"
                   >
                     <label className="ant-form-item-label" htmlFor="">
-                      Nhập tên bàn ăn
+                      Nhập số bàn ăn
                     </label>
                     <Input
-                      // onChange={handlSearchTableFood}
+                      type="number"
+                      onChange={handlSearchTableFood}
                       bordered={false}
-                      placeholder="Nhập tên bàn ăn"
+                      placeholder="Nhập số bàn ăn"
                       prefix={
                         <FontAwesomeIcon
                           icon={faMagnifyingGlass}
@@ -104,32 +148,75 @@ const TableLocation: React.FC = () => {
           <div className="content-table-location">
             <div className="list-table">
               <Row gutter={[10, 30]}>
-                {data.map((item: any) => {
-                  return (
-                    <Col
-                      // onClick={() => handleClickItemTable(tableFood)}
-                      //key={tableFood?.IdTable}
-                      span={4}
-                      key={item}
-                    >
-                      <div className="item-table">
-                        <Image
-                          src={tableImage1}
-                          preview={false}
-                          style={{
-                            width: "90px",
-                            height: "70px",
-                          }}
-                        />
-                        <div>{`Bàn 1`}</div>
-                      </div>
-                    </Col>
-                  );
-                })}
+                {Array.isArray(tables?.Data) && tables?.Data.length ? (
+                  tables?.Data?.map((item: any) => {
+                    if (item?.Status === 0) {
+                      return (
+                        <Col
+                          // onClick={() => handleClickItemTable(tableFood)}
+                          //key={tableFood?.IdTable}
+                          span={4}
+                          key={item?.IdTable}
+                        >
+                          <div className="item-table">
+                            <Image
+                              src={tableImage0}
+                              preview={false}
+                              style={{
+                                width: "90px",
+                                height: "70px",
+                              }}
+                            />
+                            <div>{`${item?.Name}`}</div>
+                          </div>
+                        </Col>
+                      );
+                    } else {
+                      return (
+                        <Col
+                          // onClick={() => handleClickItemTable(tableFood)}
+                          //key={tableFood?.IdTable}
+                          span={4}
+                          key={item?.IdTable}
+                        >
+                          <div className="item-table">
+                            <Image
+                              src={tableImage1}
+                              preview={false}
+                              style={{
+                                width: "90px",
+                                height: "70px",
+                              }}
+                            />
+                            <div>{`Bàn ${item?.Name}`}</div>
+                          </div>
+                        </Col>
+                      );
+                    }
+                  })
+                ) : (
+                  <div className="empty-table">
+                    <FontAwesomeIcon
+                      icon={faTable}
+                      style={{
+                        fontSize: "5rem",
+                        color: "rgba(0, 0, 0, 0.407)",
+                      }}
+                    />
+                    <div style={{ color: "rgba(0, 0, 0, 0.600)" }}>
+                      không có bàn nào
+                    </div>
+                  </div>
+                )}
               </Row>
             </div>
             <div className="pagination-table-location">
-              <Pagination defaultCurrent={6} total={500} />
+              <Pagination
+                onChange={handleChangePageTable}
+                defaultCurrent={selectedPage ? selectedPage : 1}
+                total={tables.TotalPage ? tables.TotalPage : 1}
+                pageSize={18}
+              />
             </div>
           </div>
         </Col>

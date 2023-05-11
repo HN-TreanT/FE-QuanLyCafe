@@ -73,7 +73,8 @@ function* saga_loadData() {
     let _response: Promise<any> = yield productServices.GetAllProduct(
       selectedPage,
       searchValue,
-      typeSearch
+      typeSearch,
+      4
     );
     let response: any = _response;
     if (response.Status) {

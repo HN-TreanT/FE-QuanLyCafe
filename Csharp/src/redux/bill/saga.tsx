@@ -27,65 +27,67 @@ function* handleErr(err: any) {
 }
 
 function* saga_loadData() {
-  //type search
-  let _typeSearch: Promise<any> = yield select(
-    (state: any) => state.bill.typeSearch
-  );
-  let typeSearch: any = _typeSearch;
-  console.log("check type search", typeSearch);
-  //search value
-  let _seacrchValue: Promise<any> = yield select(
-    (state: any) => state.bill.searchValue
-  );
-  let searchValue: any = _seacrchValue;
-  // state bill
-  let _selectedStateBill: Promise<any> = yield select(
-    (state: any) => state.bill.selectedStateBill
-  );
-  let selectedStateBill: any = _selectedStateBill;
-  // page selected
-  let _selectedPage: Promise<any> = yield select(
-    (state: any) => state.bill.selectedPage
-  );
-  let selectedPage: any = _selectedPage;
-
-  yield put(stateActions.action.loadingState(true));
-  ///api
-  let _response: Promise<any> = yield billServices.getAllOrder(
-    typeSearch,
-    searchValue,
-    selectedStateBill,
-    selectedPage
-  );
-  let response: any = _response;
-  if (response.Status) {
-    const data: any[] = [];
-    const promises: Promise<any>[] = response.Data.map(async (res: any) => {
-      let _orderDetails: Promise<any> =
-        orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
-      let orderDetails: any = await _orderDetails;
-      let payments = orderDetails.Data?.reduce(function (
-        total: Number,
-        currentValue: any
-      ) {
-        return total + currentValue.Price;
-      },
-      0);
-      data.push({ ...res, payments: payments });
-      response.Data = data;
-    });
-    yield all(promises);
-    yield put(actions.action.loadDataSuccess(response));
-    yield put(stateActions.action.loadingState(false));
-  } else {
-    response.Data = [];
-    yield put(actions.action.loadDataSuccess(response));
-    yield put(stateActions.action.loadingState(false));
-    //yield handleFail("load data fail");
-  }
   try {
+    //type search
+    let _typeSearch: Promise<any> = yield select(
+      (state: any) => state.bill.typeSearch
+    );
+    let typeSearch: any = _typeSearch;
+    console.log("check type search", typeSearch);
+    //search value
+    let _seacrchValue: Promise<any> = yield select(
+      (state: any) => state.bill.searchValue
+    );
+    let searchValue: any = _seacrchValue;
+    // state bill
+    let _selectedStateBill: Promise<any> = yield select(
+      (state: any) => state.bill.selectedStateBill
+    );
+    let selectedStateBill: any = _selectedStateBill;
+    // page selected
+    let _selectedPage: Promise<any> = yield select(
+      (state: any) => state.bill.selectedPage
+    );
+    let selectedPage: any = _selectedPage;
+
+    yield put(stateActions.action.loadingState(true));
+    ///api
+    let _response: Promise<any> = yield billServices.getAllOrder(
+      typeSearch,
+      searchValue,
+      selectedStateBill,
+      selectedPage,
+      "",
+      ""
+    );
+    let response: any = _response;
+    if (response.Status) {
+      const data: any[] = [];
+      const promises: Promise<any>[] = response.Data.map(async (res: any) => {
+        let _orderDetails: Promise<any> =
+          orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
+        let orderDetails: any = await _orderDetails;
+        let payments = orderDetails.Data?.reduce(function (
+          total: Number,
+          currentValue: any
+        ) {
+          return total + currentValue.Price;
+        },
+        0);
+        data.push({ ...res, payments: payments });
+        response.Data = data;
+      });
+      yield all(promises);
+      yield put(actions.action.loadDataSuccess(response));
+      yield put(stateActions.action.loadingState(false));
+    } else {
+      response.Data = [];
+      yield put(actions.action.loadDataSuccess(response));
+      yield put(stateActions.action.loadingState(false));
+      //yield handleFail("load data fail");
+    }
   } catch (ex: any) {
-    yield handleErr(ex);
+    yield put(stateActions.action.loadingState(false));
   }
 }
 

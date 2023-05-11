@@ -1,0 +1,13 @@
+.card-image-product{
+    padding: 10px;
+     box-shadow: 0px 0px 10px #e7e2e2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    .image-card-image-product{}
+   &:hover{
+    box-shadow: 0px 0px 10px #e7e2e2;
+     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+    }
+}

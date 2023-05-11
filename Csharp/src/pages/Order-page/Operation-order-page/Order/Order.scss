@@ -3,15 +3,20 @@
     .content-tab-order{
         display: flex;
         flex-direction: column;
-        align-items: center;
+     //   align-items: center;
        
         justify-content: space-around;
         .list-order{
             padding-left: 20px;
          height: 440px;
         margin-top: 30px;
+        .empty-order-in-order-page{
+        padding-left: 373px;
+        padding-top: 60px
+        }
         }
         .pagination-order-tab{
+            align-self: center;
            
         }
     }

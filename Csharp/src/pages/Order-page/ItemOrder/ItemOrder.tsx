@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { DollarCircleFilled } from "@ant-design/icons";
 import "./ItemOrder.scss";
+import { Col, Row } from "antd";
 const ItemOrder: React.FC<any> = ({ data }) => {
   const handleClickItemOrder = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -20,6 +21,26 @@ const ItemOrder: React.FC<any> = ({ data }) => {
     });
     event.currentTarget.classList.add("click-item-order");
   };
+  const createdAt = new Date(data.CreatedAt);
+  const now = new Date();
+  let time = now.getTime() - createdAt.getTime();
+  let timeOrders;
+
+  if (time < 60000) {
+    timeOrders = 0;
+  }
+  if (time >= 60000 && time < 3600000) {
+    time = time / 60000;
+    timeOrders = `${Math.floor(time)} phút`;
+  }
+  if (time >= 3600000 && time < 86400000) {
+    time = time / 3600000;
+    timeOrders = `${Math.floor(time)} giờ`;
+  }
+  if (time >= 86400000) {
+    time = time / 86400000;
+    timeOrders = `${Math.floor(time)} ngày`;
+  }
   return (
     <div onClick={handleClickItemOrder} className="card-item-order">
       <div className="title-item-order">
@@ -38,17 +59,29 @@ const ItemOrder: React.FC<any> = ({ data }) => {
         </div>
       </div>
       <div className="content-item-order">
-        <div className="table-card-item-order">20</div>
+        <div className="table-card-item-order">{data?.NameTable}</div>
         <div className="side-bar-item-order">
           <div className="time-countcustomer">
-            <span style={{ paddingRight: "15px" }}>
-              <FontAwesomeIcon className="icon-time-customer" icon={faClock} />
-              6p
-            </span>
-            <span>
-              <FontAwesomeIcon className="icon-time-customer" icon={faUser} />
-              34
-            </span>
+            <Row gutter={[10, 10]}>
+              <Col span={16}>
+                <span style={{ paddingRight: "15px" }}>
+                  <FontAwesomeIcon
+                    className="icon-time-customer"
+                    icon={faClock}
+                  />
+                  {timeOrders}
+                </span>
+              </Col>
+              <Col span={8}>
+                <span>
+                  <FontAwesomeIcon
+                    className="icon-time-customer"
+                    icon={faUser}
+                  />
+                  {data?.Amount ? data?.Amount : ""}
+                </span>
+              </Col>
+            </Row>
           </div>
           <div className="price-item-order">
             <DollarCircleFilled
@@ -58,7 +91,10 @@ const ItemOrder: React.FC<any> = ({ data }) => {
                 fontSize: "1rem",
               }}
             />
-            <span style={{ fontWeight: "500" }}>84374 đ</span>
+            <span style={{ fontWeight: "500" }}>
+              {" "}
+              {`${data?.payments ? data.payments : 0} đ`}
+            </span>
           </div>
         </div>
       </div>

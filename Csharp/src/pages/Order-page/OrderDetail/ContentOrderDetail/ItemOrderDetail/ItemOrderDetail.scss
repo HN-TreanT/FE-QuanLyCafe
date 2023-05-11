@@ -1,0 +1,33 @@
+.item-order-detail{
+    width: 100%;
+    .content-item-order-detail{
+        width: 100%;
+        padding: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.137);
+        .icon-delete-order-detail{
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.396);
+            padding: 6px;
+            background-color:rgba(0, 0, 0, 0.066) ;
+            border-radius: 50px;
+            &:hover{
+                background-color:rgba(0, 0, 0, 0.122) ;
+            }
+        }
+        .name-product-order-detail{
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .ant-input{
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom-color: rgba(0, 0, 0, 0.515);
+        }
+       
+        &:hover{
+            border-radius: 10px;
+            border: 1px solid #1677ff7b;
+        }
+    }
+}

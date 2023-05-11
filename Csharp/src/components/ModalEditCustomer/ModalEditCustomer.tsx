@@ -1,8 +1,8 @@
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select } from "antd";
 import React, { useState, useEffect } from "react";
 import { notification } from "../notification";
 import { customerServices } from "../../untils/networks/services/customerServices";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useAction from "../../redux/useActions";
 const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
   const handleValueEditChange = () => {
     if (
       formEditCustomer.getFieldsValue().Fullname &&
-      formEditCustomer.getFieldsValue().phoneNumber &&
+      formEditCustomer.getFieldsValue().PhoneNumber &&
       formEditCustomer.getFieldsValue().gender
     ) {
       setIsDisabled(false);
@@ -116,9 +116,9 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
               message: "Số điện thoại khách hàng không được bỏ trống",
             },
           ]}
-          initialValue={customerDetail?.PhoneNumber}
-          name="phoneNumber"
+          name="PhoneNumber"
           label="Số điện thoại"
+          initialValue={customerDetail?.PhoneNumber}
         >
           <Input
             type="number"

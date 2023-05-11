@@ -1,0 +1,146 @@
+.content-order-detail{
+    width: 100%;
+    height: var(--height-order-detail-page);
+    background-color:white;   
+    margin-top: -16px;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+    .top-content-order-detail{ 
+        //padding-top: 10px;
+        padding: 10px;
+        width: 100%;
+        height: calc(var(--height-order-detail-page)*0.08);
+        background-color: white;
+        .select-table{
+            padding: 5px;
+            padding-left: 13px;
+            background-color: #1677ff57;
+            color:#1677ff ;
+            border-radius: 20px;
+            cursor: pointer;
+            &:hover{
+                background-color: #1677ff7b;
+            }
+           
+        }
+    }
+    .middle-content-order-detail{
+        padding: 10px;
+        width: 100%;
+        height: calc(var(--height-order-detail-page)*0.75);
+        overflow-y: auto;
+        overflow-y: scroll; 
+        &::-webkit-scrollbar {
+           width: 5px; 
+           height: 6px;    /* Chiều rộng vùng chứa scrollbar */
+        }
+        &::-webkit-scrollbar-track {
+          background-color: #e6e8ea;
+       }
+        &::-webkit-scrollbar-thumb {
+          background-color: #d4d3d3;
+          border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb:hover { 
+        background-color:rgba(0, 0, 0, 0.142) ; /* Hiệu ứng di chuột đổi màu*/
+        }
+
+    }
+    .footer-content-order-detail{
+        width: 100%;
+        background-color: #e6f0fa; 
+        height: calc(var(--height-order-detail-page)*0.17);
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        
+        .info-order-detail{
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .info-order-detail-left{
+              display: flex;   
+                .count-customer-order{
+                    margin-right: 10px;
+                    border-radius: 20px;
+                    padding: 5px 10px 5px 10px;
+                    background-color: #0008100A;
+                    cursor: pointer;
+                      .icon-customer-order{
+                        padding-right:5px;
+                        font-size: 1rem;
+                        color: rgba(0, 0, 0, 0.679);
+                    }
+                    &:hover{
+                        background-color:#0008101e ;
+                    }
+                   
+                }
+            }
+           
+            .control-table{
+                border-radius: 20px;
+                padding: 5px 10px 5px 10px;
+                background-color: #0008100A;
+                cursor: pointer;
+                .icon-control-table{
+                    padding-right:5px;
+                    font-size: 1rem;
+                    color: rgba(0, 0, 0, 0.679);
+                }
+                .title-controle-table{
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                }
+                &:hover{
+                    background-color:#0008101e ;
+                }
+            }
+            .total-price-order{
+                margin-right: 10px;
+                .title-total-price-order{
+                     padding-right: 10px;
+                     font-weight: 500;
+                }
+                .price-total{
+                    font-size: 1rem;
+                    font-weight: 600;
+
+                }
+            }
+        }
+        .button-control-order-detail{
+            .button-controler-order{
+                width: 100%;
+                height: 100%;
+                .icon-button{
+                    font-size: 1rem;
+                   padding-right: 7px;
+                }
+                .title-button{
+                    font-weight: 500;
+                    font-size: 1rem;
+                    padding-top: 7px;
+                    padding-bottom: 7px;
+                }
+            }
+        }
+    }
+}
+
+.icon-search-order-detail{
+    color: rgba(0, 0, 0, 0.389);
+    cursor: pointer;
+    &:hover{
+        color:#1677ff ;
+    }
+}
+
+.icon-add-customer-order-detail{
+    color: rgba(0, 0, 0, 0.34);
+    cursor: pointer;
+    font-size: 1.1rem;
+    &:hover{
+        color: #1677ff;
+    }
+}
