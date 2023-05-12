@@ -1,61 +1,99 @@
 import React from "react";
-import { Button, Col, Modal, Row, Radio, Select } from "antd";
+import { Button, Col, Modal, Row, Radio, Input, InputNumber } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquareCheck, faBan } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../../../redux/useActions";
+import SearchTable from "./SearchTable/SearchTable";
 import "./ModalSplitOrder.scss";
-import useDebounce from "../../../../../hooks/useDebounce";
-import { tableFoodService } from "../../../../../untils/networks/services/tableFoodService";
-const getTables = async (searchValue: any) => {
-  let data: any[] = [];
-  const tables = await tableFoodService.getAllTableFood(
-    1,
-    "allTable",
-    searchValue
-  );
-  if (Array.isArray(tables?.Data) && tables?.Data.length > 0) {
-    tables?.Data.map((table: any) => {
-      return {
-        key: table?.IdTable,
-        value: table?.IdTable,
-        label: `Bàn ${table?.Name}`,
-      };
-    });
-  }
-  return data;
-};
+import Table, { ColumnsType } from "antd/es/table";
+import { valueType } from "antd/es/statistic/utils";
+interface DataTypeGraftOrder {
+  IdOrder: string;
+  CountProdut: Number;
+  Price: Number;
+}
+interface DataTypeSplitOrder {
+  NameProduct: string;
+  Count: Number;
+  CountSplit: any;
+}
+let dataGraftSplit: any[] = [];
+for (var j = 0; j < 10; j++) {
+  dataGraftSplit.push({
+    key: j,
+    NameProduct: `sản phẩm ${j}`,
+    Count: j,
+    CountSplit: j - 1,
+  });
+}
+let dataGraftOrder: any[] = [];
+for (var i = 0; i < 10; i++) {
+  dataGraftOrder.push({
+    key: i,
+    IdOrder: `nfefnf-${i}`,
+    CountProduct: i,
+    Price: "nfehef",
+  });
+}
 const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
-  const [value, setValue] = React.useState();
-  const [valueSearchTable, setValueSearchTable] = React.useState<string>("");
-  const [options, setOptions] = React.useState<any[]>([]);
-  const searchValueDebounce = useDebounce<string>(valueSearchTable, 500);
-  React.useEffect(() => {
-    if (searchValueDebounce !== null && searchValueDebounce !== "") {
-      getTables(searchValueDebounce).then((res: any) => {
-        setOptions(res);
-      });
-    } else {
-      setOptions([]);
-    }
-  }, [searchValueDebounce]);
+  const columnsGraftOrder: ColumnsType<DataTypeGraftOrder> = [
+    {
+      title: "Mã tham chiếu",
+      dataIndex: "IdOrder",
+    },
+    {
+      title: "Số lượng mặt hàng",
+      dataIndex: "CountProduct",
+    },
+    {
+      title: "Tổng tiền",
+      dataIndex: "Price",
+    },
+  ];
+  const columnsSplitOrder: ColumnsType<DataTypeSplitOrder> = [
+    {
+      title: "Tên món ăn",
+      dataIndex: "NameProduct",
+    },
+    {
+      title: "Số lượng trên hóa đơn gốc",
+      dataIndex: "Count",
+    },
+    {
+      title: "Số lượng tách",
+      dataIndex: "CountSplit",
+      render: (text: any, record: DataTypeSplitOrder) => (
+        <InputNumber
+          defaultValue={0}
+          max={record?.Count as valueType | undefined}
+          min={0}
+          type="number"
+        ></InputNumber>
+      ),
+    },
+  ];
+  const actions = useAction();
+  const dispatch = useDispatch();
+  // const [valueRaido, setValueRadio] = React.useState();
+  const radioSplitGraftOrder = useSelector(
+    (state: any) => state.orderpage.radioSplitGraftOrder
+  );
+
   const onChangeRadio = (e: any) => {
-    console.log(e.target.value);
-    setValue(e.target.value);
+    dispatch(
+      actions.OrderPageActions.setRadioSelectSplitGraftOrder(e.target.value)
+    );
+    // setValueRadio(e.target.value);
   };
-  const onChangeSearchTable = (e: any) => {
-    setValueSearchTable(e);
-  };
+
   return (
     <Modal
       title="Tách ghép hóa đơn"
       width={700}
       onCancel={() => setIsOpenModal(false)}
       footer={[
-        <Button
-          //  disabled={isDisabled}
-          key="submit"
-          type="primary"
-          // onClick={handleUpdateCustomer}
-        >
+        <Button key="submit" type="primary">
           <FontAwesomeIcon
             style={{ paddingRight: "5px" }}
             icon={faSquareCheck}
@@ -80,7 +118,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
           <Col span={24}>
             <Radio.Group
               onChange={onChangeRadio}
-              value={value ? value : "graft"}
+              value={radioSplitGraftOrder ? radioSplitGraftOrder : "graft"}
             >
               <Radio value={"graft"}>Ghép đơn</Radio>
               <Radio value={"split"}>Tách đơn</Radio>
@@ -88,43 +126,40 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
           </Col>
           <Col span={24}>
             <span style={{ paddingRight: "10px", fontWeight: "500" }}>
-              Tách đến
+              {radioSplitGraftOrder === "split" ? "Tách đến" : "Ghép đến"}
             </span>
-            <Select
-              showSearch
-              style={{ width: 200 }}
-              placeholder="Nhập tên bàn"
-              optionFilterProp="children"
-              onSearch={onChangeSearchTable}
-              options={[
-                {
-                  value: "1",
-                  label: "Not Identified",
-                },
-                {
-                  value: "2",
-                  label: "Closed",
-                },
-                {
-                  value: "3",
-                  label: "Communicated",
-                },
-                {
-                  value: "4",
-                  label: "Identified",
-                },
-                {
-                  value: "5",
-                  label: "Resolved",
-                },
-                {
-                  value: "6",
-                  label: "Cancelled",
-                },
-              ]}
-            />
+
+            <SearchTable />
           </Col>
-          <Col span={24}></Col>
+          <Col span={24}>
+            <div style={{ marginLeft: "-20px" }}>
+              {radioSplitGraftOrder === "split" ? (
+                <Table
+                  //loading={loading}
+                  style={{ marginLeft: "20px" }}
+                  columns={columnsSplitOrder}
+                  dataSource={dataGraftSplit}
+                  pagination={{
+                    pageSize: 3,
+                    showSizeChanger: false,
+                    hideOnSinglePage: true,
+                  }}
+                />
+              ) : (
+                <Table
+                  //loading={loading}
+                  style={{ marginLeft: "20px" }}
+                  columns={columnsGraftOrder}
+                  dataSource={dataGraftOrder}
+                  pagination={{
+                    pageSize: 3,
+                    showSizeChanger: false,
+                    hideOnSinglePage: true,
+                  }}
+                />
+              )}
+            </div>
+          </Col>
         </Row>
       </div>
     </Modal>

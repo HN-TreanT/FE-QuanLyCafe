@@ -1,0 +1,29 @@
+.drawer-payment-sidebar{
+    .content-drawer-payment-sidebar{
+        
+        .info-order{
+           .info-customer{
+            padding-bottom: 20px;
+           }
+        }
+        .info-payment{
+            .item-infor-payment{               
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-bottom: 20px;
+                font-weight: 450;
+               .input-number{
+                width: 100px;
+               }
+            }
+        }
+    }
+}
+.button-payment{
+   background-color: rgb(27, 158, 27);
+   :hover{
+    background-color: rgb(18, 120, 18);
+   }
+    
+}

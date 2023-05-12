@@ -97,6 +97,20 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
           searchValueTable: action.payload.data,
         },
       };
+    case actions.types.SELECTED_TABLE_ON_SPLIT_ORDER:
+      return {
+        ...state,
+        ...{
+          selectedTableOnSplitOrder: action.payload.data,
+        },
+      };
+    case actions.types.RADIO_SELECT_SPLIT_GRAFT_ORDER:
+      return {
+        ...state,
+        ...{
+          radioSplitGraftOrder: action.payload.data,
+        },
+      };
     default:
       return state;
   }

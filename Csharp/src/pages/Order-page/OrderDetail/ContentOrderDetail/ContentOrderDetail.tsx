@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Row, Col, Button, AutoComplete, Modal } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,6 +15,7 @@ import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
 import useDebounce from "../../../../hooks/useDebounce";
 import { customerServices } from "../../../../untils/networks/services/customerServices";
 import ModalSplitOrder from "./ModalSplitOrder/ModalSplitOrder";
+import DrawerPayment from "./DrawerPayment/DrawerPayment";
 let data: any[] = [];
 for (var i = 1; i < 20; i++) {
   data.push(i);
@@ -50,10 +51,9 @@ const getCustomers = async (searchValue: any) => {
   return data;
 };
 const ContentOrderDetail: React.FC = () => {
-  const [isOpenModalCountCustomer, setIsOpenModalCountModal] =
-    React.useState(false);
-  const [isOpenModalSplitOrder, setIsOpenModalSplitOrder] =
-    React.useState(false);
+  const [isOpenModalCountCustomer, setIsOpenModalCountModal] = useState(false);
+  const [isOpenModalSplitOrder, setIsOpenModalSplitOrder] = useState(false);
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [searchCutomerValue, setSearchCustomerValue] = React.useState("");
   const [options, setOptions] = React.useState<any[]>([]);
   const searchValueDebounce = useDebounce<string>(searchCutomerValue, 500);
@@ -75,8 +75,13 @@ const ContentOrderDetail: React.FC = () => {
   const handlClickIconSplitOrder = () => {
     setIsOpenModalSplitOrder(true);
   };
+  const handleCLickOpenDrawerPayment = () => {
+    setIsOpenDrawer(true);
+  };
   return (
     <div className="content-order-detail">
+      {/* Drawer payment  */}
+      <DrawerPayment visible={isOpenDrawer} setVisible={setIsOpenDrawer} />
       {/* Modal edit count customer */}
       <Modal
         title="Thêm số lượng khách hàng"
@@ -217,6 +222,7 @@ const ContentOrderDetail: React.FC = () => {
                   <Button
                     style={{ color: "white", backgroundColor: "#28B44F" }}
                     className="button-controler-order"
+                    onClick={handleCLickOpenDrawerPayment}
                   >
                     <FontAwesomeIcon
                       className="icon-button"

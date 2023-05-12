@@ -14,6 +14,8 @@ const types = {
   STATE_TABLE: "/order-page/state-table",
   SELECTED_PAGE_TABLE: "/order-page/selected-page-table",
   SEARCH_VALUE_TABLE: "/order-page/search-value-table",
+  SELECTED_TABLE_ON_SPLIT_ORDER: "/order-page/selected-table-on-split-order",
+  RADIO_SELECT_SPLIT_GRAFT_ORDER: "order-page/radio-select-split-graft-order",
 };
 const action = {
   loadProduct: () => {
@@ -100,6 +102,18 @@ const action = {
   setSearchValueTable: (data: any) => {
     return {
       type: types.SEARCH_VALUE_TABLE,
+      payload: { data },
+    };
+  },
+  setSelectedTableOnSplitOrder: (data: any) => {
+    return {
+      type: types.SELECTED_TABLE_ON_SPLIT_ORDER,
+      payload: { data },
+    };
+  },
+  setRadioSelectSplitGraftOrder: (data: any) => {
+    return {
+      type: types.RADIO_SELECT_SPLIT_GRAFT_ORDER,
       payload: { data },
     };
   },
