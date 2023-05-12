@@ -37,7 +37,23 @@
     .user-order-page{
       position: fixed;
       top: 10px;
-      right: 10px;
+      right: 15px;
+      color: white;
+      display: flex;
+      .name-user-order-page{
+        padding: 5px;
+        padding-right: 5px;
+      }
+      .icon-user-order-page{
+        cursor: pointer;
+        //color: rgba(0, 0, 0, 0.626);
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 50px;
+        &:hover{
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
     }
 }
 .ant-tabs-tab.ant-tabs-tab-active {

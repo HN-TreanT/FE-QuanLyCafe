@@ -40,7 +40,6 @@ const deleteCustomer = (Id: string) => {
   });
 };
 const searchCustomerByName = (page: Number, name: string) => {
-  console.log(page, name);
   let url;
   if (name) {
     url = `/api/Customer/searchByName/?CustomerName=${name}&page=${page}`;
