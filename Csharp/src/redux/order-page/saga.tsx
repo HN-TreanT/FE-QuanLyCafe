@@ -1,4 +1,4 @@
-import { all, fork, put, select, takeEvery } from "redux-saga/effects";
+import { all, call, fork, put, select, takeEvery } from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
@@ -100,7 +100,10 @@ function* loadOrders() {
     yield put(stateActions.action.loadingState(true));
     //lấy time ngày hôm nay:
 
-    const timeEnd = moment().format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+    const timeEnd = moment()
+      .add(5, "minutes")
+      .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+
     const timeStart = moment()
       .subtract(1, "day")
       .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
@@ -156,7 +159,6 @@ function* loadTable() {
       (state: any) => state.orderpage.searchValueTable
     );
     let searchValue: any = _searchValue;
-    console.log(searchValue);
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield tableFoodService.getAllTableFood(
       selectedPage ? selectedPage : 1,
@@ -170,11 +172,27 @@ function* loadTable() {
     yield handleErr(e);
   }
 }
+function* saga_createOrder() {
+  try {
+    let _response: Promise<any> = yield billServices.createOrder({ Amount: 0 });
+    let response: any = _response;
+
+    if (response.Status) {
+      yield put(actions.action.setSelectedOrder(response.Data));
+      yield put(actions.action.setSelectedPageOrders(1));
+      yield put(actions.action.setPageOrderProductTable("allOrder"));
+      yield put(actions.action.loadOrders());
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 // function* saga
 function* listen() {
   yield takeEvery(actions.types.LOAD_PRODUCT, loadProduct);
   yield takeEvery(actions.types.LOAD_ORDERS, loadOrders);
   yield takeEvery(actions.types.LOAD_TABLE, loadTable);
+  yield takeEvery(actions.types.CREARTE_ORDER, saga_createOrder);
 }
 
 export default function* mainSaga() {

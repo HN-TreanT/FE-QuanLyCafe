@@ -6,6 +6,8 @@ import {
   faFileInvoiceDollar,
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../redux/useActions";
 import TableLocation from "./TableLocation/TableLocation";
 import Order from "./Order/Order";
 import Product from "./Product/Product";
@@ -42,12 +44,32 @@ const IconTab = ({ icon, label, children }: any) => (
   </div>
 );
 const OperationOrderPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const actions = useAction();
+  const selectedPage = useSelector(
+    (state: any) => state.orderpage.selectedPageOrderProductTable
+  );
+  React.useEffect(() => {
+    if (selectedPage === "allOrder") {
+      dispatch(actions.OrderPageActions.loadOrders());
+    }
+    if (selectedPage === "location") {
+      dispatch(actions.OrderPageActions.loadTable());
+    }
+    if (selectedPage === "product") {
+      dispatch(actions.OrderPageActions.loadProduct());
+    }
+  }, [actions.OrderPageActions, dispatch, selectedPage]);
+
   const onChange = (key: string) => {
-    console.log(key);
+    dispatch(actions.OrderPageActions.setPageOrderProductTable(key));
   };
   return (
     <div className="operation-order-page">
-      <Tabs onChange={onChange} defaultActiveKey="allOrder">
+      <Tabs
+        onChange={onChange}
+        defaultActiveKey={selectedPage ? selectedPage : "allOrder"}
+      >
         {items.map((item) => (
           <Tabs.TabPane
             tab={<IconTab icon={item.icon} label={item.label} />}

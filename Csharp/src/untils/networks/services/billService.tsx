@@ -24,6 +24,12 @@ const getAllOrder = (
     method: "GET",
   });
 };
+const getDetailOrder = (IdOrder: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/getOrderById/${IdOrder}`,
+    method: "GET",
+  });
+};
 
 const deleteOrder = (IdOrder: any) => {
   return api.makeAuthRequest({
@@ -31,4 +37,26 @@ const deleteOrder = (IdOrder: any) => {
     method: "DELETE",
   });
 };
-export const billServices = { getAllOrder, deleteOrder };
+
+const createOrder = (data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/creatOrder`,
+    method: "POST",
+    data,
+  });
+};
+const updateOrder = (IdOrder: string, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/updateOrder/${IdOrder}`,
+    method: "PUT",
+    data,
+  });
+};
+
+export const billServices = {
+  getAllOrder,
+  deleteOrder,
+  getDetailOrder,
+  createOrder,
+  updateOrder,
+};

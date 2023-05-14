@@ -6,6 +6,21 @@ const handleGetOrderByIdOrder = (IdOrder: any) => {
     method: "GET",
   });
 };
+const getOrderDetailById = (IdOrder: string) => {
+  return api.makeAuthRequest({
+    url: `/api/OrderDetails/getOrderDtById/${IdOrder}`,
+    method: "GET",
+  });
+};
+const createListOrderDetail = (data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/OrderDetails/createListOrderDt`,
+    method: "POST",
+    data,
+  });
+};
 export const orderDetailServices = {
   handleGetOrderByIdOrder,
+  getOrderDetailById,
+  createListOrderDetail,
 };

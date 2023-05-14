@@ -15,9 +15,19 @@ const types = {
   SELECTED_PAGE_TABLE: "/order-page/selected-page-table",
   SEARCH_VALUE_TABLE: "/order-page/search-value-table",
   SELECTED_TABLE_ON_SPLIT_ORDER: "/order-page/selected-table-on-split-order",
-  RADIO_SELECT_SPLIT_GRAFT_ORDER: "order-page/radio-select-split-graft-order",
+  RADIO_SELECT_SPLIT_GRAFT_ORDER: "/order-page/radio-select-split-graft-order",
+  SELECTED_PAGE_ORDER_PRODUCT_TABLE:
+    "/order-page/selected-page-order-product-table",
+  CREARTE_ORDER: "/order-page/create-order",
+  SELECTED_ORDER: "/order-page/selected-order",
 };
 const action = {
+  setPageOrderProductTable: (data: any) => {
+    return {
+      type: types.SELECTED_PAGE_ORDER_PRODUCT_TABLE,
+      payload: { data },
+    };
+  },
   loadProduct: () => {
     return {
       type: types.LOAD_PRODUCT,
@@ -114,6 +124,17 @@ const action = {
   setRadioSelectSplitGraftOrder: (data: any) => {
     return {
       type: types.RADIO_SELECT_SPLIT_GRAFT_ORDER,
+      payload: { data },
+    };
+  },
+  createOrder: () => {
+    return {
+      type: types.CREARTE_ORDER,
+    };
+  },
+  setSelectedOrder: (data: any) => {
+    return {
+      type: types.SELECTED_ORDER,
       payload: { data },
     };
   },

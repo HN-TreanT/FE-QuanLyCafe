@@ -8,10 +8,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import useDebounce from "../../../../hooks/useDebounce";
 import useAction from "../../../../redux/useActions";
-import ItemOrder from "../../ItemOrder/ItemOrder";
 import "./Order.scss";
 import Spinn from "../../../../components/Spinning/Spinning";
-import emptyOrder from "../../../../assets/empty-bill.svg";
+import ContentOrder from "./ContentOrder";
 const Order: React.FC = () => {
   //let data: any[] = [];
   const dispatch = useDispatch();
@@ -23,21 +22,7 @@ const Order: React.FC = () => {
   const selectedPageOrders = useSelector(
     (state: any) => state.orderpage.selectedPageOrders
   );
-  // if (Array.isArray(orders?.Data)) {
-  //   data = orders?.Data?.map((order: any) => {
-  //     const date = new Date(order?.TimePay);
-  //     const formattedDate = date.toLocaleDateString("vi-VN");
-  //     return {
-  //       key: order?.IdOrder,
-  //       timepay: order.TimePay ? formattedDate : "Chưa thanh toán",
-  //       Id: order?.IdOrder,
-  //       table: order?.NameTable ? `Bàn ${order?.NameTable}` : "Đã xóa",
-  //       customer: order?.Fullname,
-  //       money: order?.payments ? order.payments : 0,
-  //       phonenumber: order?.PhoneNumber,
-  //     };
-  //   });
-  // }
+
   useEffect(() => {
     dispatch(actions.OrderPageActions.setSearchValueOrder(searchValueDebounce));
     dispatch(actions.OrderPageActions.loadOrders());
@@ -62,9 +47,6 @@ const Order: React.FC = () => {
     dispatch(actions.OrderPageActions.setTypeSearchValueOrder("tableFood"));
     dispatch(actions.OrderPageActions.setSelectedPageOrders(1));
     setSearchValue(e.target.value);
-  };
-  const handleChangePag = (e: any) => {
-    dispatch(actions.OrderPageActions.setSelectedPageOrders(e));
   };
   return (
     <div className="order">
@@ -163,36 +145,7 @@ const Order: React.FC = () => {
           ></div>
         </Col>
         <Col span={24}>
-          <div className="content-tab-order">
-            <div className="list-order">
-              <Row gutter={[40, 35]}>
-                {Array.isArray(orders?.Data) && orders?.Data.length > 0 ? (
-                  orders?.Data.map((item: any) => {
-                    return (
-                      <Col key={item?.IdOrder} span={8}>
-                        <ItemOrder data={item} />
-                      </Col>
-                    );
-                  })
-                ) : (
-                  <div className="empty-order-in-order-page">
-                    <Image src={emptyOrder} preview={false} />
-                    <div style={{ fontWeight: "600", paddingLeft: "20px" }}>
-                      Không có hóa đơn nào
-                    </div>
-                  </div>
-                )}
-              </Row>
-            </div>
-            <div className="pagination-order-tab">
-              <Pagination
-                onChange={handleChangePag}
-                defaultCurrent={selectedPageOrders ? selectedPageOrders : 1}
-                total={orders?.TotalPage ? orders?.TotalPage : 1}
-                pageSize={6}
-              />
-            </div>
-          </div>
+          <ContentOrder data={orders} />
         </Col>
       </Row>
     </div>

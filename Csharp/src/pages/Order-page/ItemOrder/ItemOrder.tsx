@@ -9,7 +9,7 @@ import {
 import { DollarCircleFilled } from "@ant-design/icons";
 import "./ItemOrder.scss";
 import { Col, Row } from "antd";
-const ItemOrder: React.FC<any> = ({ data }) => {
+const ItemOrder: React.FC<any> = ({ style, data }) => {
   const handleClickItemOrder = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -42,7 +42,7 @@ const ItemOrder: React.FC<any> = ({ data }) => {
     timeOrders = `${Math.floor(time)} ngày`;
   }
   return (
-    <div onClick={handleClickItemOrder} className="card-item-order">
+    <div onClick={handleClickItemOrder} className={`card-item-order ${style}`}>
       <div className="title-item-order">
         <div style={{ marginLeft: "15px" }}>
           <FontAwesomeIcon

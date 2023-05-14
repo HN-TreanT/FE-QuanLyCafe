@@ -111,6 +111,22 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
           radioSplitGraftOrder: action.payload.data,
         },
       };
+    case actions.types.SELECTED_PAGE_ORDER_PRODUCT_TABLE:
+      return {
+        ...state,
+        ...{
+          selectedPageOrderProductTable: action.payload.data,
+        },
+      };
+    case actions.types.CREARTE_ORDER:
+      return {
+        ...state,
+      };
+    case actions.types.SELECTED_ORDER:
+      return {
+        ...state,
+        selectedOrder: action.payload.data,
+      };
     default:
       return state;
   }
