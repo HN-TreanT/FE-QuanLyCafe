@@ -1,74 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Input, Row, Col, Button, AutoComplete, Modal } from "antd";
+import React, { useState } from "react";
+import { Input, Row, Col, Button, Modal, Image } from "antd";
+import { useSelector } from "react-redux";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTable,
-  faMagnifyingGlass,
-  faPlusCircle,
   faUsers,
   faFileLines,
   faMoneyBill1Wave,
   faFloppyDisk,
+  faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
-import useDebounce from "../../../../hooks/useDebounce";
-import { customerServices } from "../../../../untils/networks/services/customerServices";
 import ModalSplitOrder from "./ModalSplitOrder/ModalSplitOrder";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
+import SearchCustomer from "./SearchCustomer";
+import emptyProduct from "../../../../assets/empty-data.jpg";
 let data: any[] = [];
 for (var i = 1; i < 20; i++) {
   data.push(i);
 }
-const getCustomers = async (searchValue: any) => {
-  let data: any[] = [];
-  const handleClickSelectCustomer = (value: any) => {
-    //handle add customer to order
-    console.log(value);
-  };
-  const renderItem = (key: string, value: any) => ({
-    key: key,
-    value: `${value?.Fullname}`,
-    label: (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-        onClick={() => handleClickSelectCustomer(value)}
-      >
-        <span>{value?.Fullname}</span>
-        <span>{value?.PhoneNumber}</span>
-      </div>
-    ),
-  });
-  let response = await customerServices.getAllCustomer(1, searchValue);
-  if (Array.isArray(response?.Data) && response?.Data.length > 0) {
-    data = response?.Data.map((item: any) => {
-      return renderItem(item?.IdCustomer, item);
-    });
-  }
-  return data;
-};
 const ContentOrderDetail: React.FC = () => {
+  const selectedOrder = useSelector(
+    (state: any) => state.orderpage.selectedOrder
+  );
+
   const [isOpenModalCountCustomer, setIsOpenModalCountModal] = useState(false);
   const [isOpenModalSplitOrder, setIsOpenModalSplitOrder] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [searchCutomerValue, setSearchCustomerValue] = React.useState("");
-  const [options, setOptions] = React.useState<any[]>([]);
-  const searchValueDebounce = useDebounce<string>(searchCutomerValue, 500);
-  useEffect(() => {
-    if (searchValueDebounce !== null && searchValueDebounce !== "") {
-      getCustomers(searchValueDebounce).then((res: any) => {
-        setOptions(res);
-      });
-    } else {
-      setOptions([]);
-    }
-  }, [searchValueDebounce]);
-  const handleSearchCustomer = (e: any) => {
-    setSearchCustomerValue(e);
-  };
   const handleClickIconCustomerOrder = () => {
     setIsOpenModalCountModal(true);
   };
@@ -131,49 +90,50 @@ const ContentOrderDetail: React.FC = () => {
       <div>
         <div className="top-content-order-detail">
           <Row gutter={[5, 0]}>
-            <Col span={4}>
+            <Col span={5}>
               {" "}
               <div className="select-table">
                 <FontAwesomeIcon
                   style={{ paddingRight: "5px" }}
                   icon={faTable}
                 />
-                bàn 1
+                {/* bàn 1 */}
+                {selectedOrder?.IdTableNavigation
+                  ? `Bàn ${selectedOrder?.IdTableNavigation?.Name} `
+                  : "Chọn bàn"}
               </div>
             </Col>
-            <Col span={12}>
-              <AutoComplete
-                popupClassName="certain-category-search-dropdown"
-                dropdownMatchSelectWidth={250}
-                style={{ width: 250 }}
-                options={options}
-                onChange={handleSearchCustomer}
-              >
-                <Input
-                  className="input-search-order-detail"
-                  placeholder="Tìm khách hàng"
-                  suffix={
-                    <FontAwesomeIcon
-                      className="icon-add-customer-order-detail"
-                      icon={faPlusCircle}
-                    />
-                  }
-                  prefix={
-                    <FontAwesomeIcon
-                      className="icon-search-order-detail"
-                      icon={faMagnifyingGlass}
-                    />
-                  }
-                />
-              </AutoComplete>
-              {/* <SearchCutomer /> */}
+            <Col span={19}>
+              <SearchCustomer />
             </Col>
           </Row>
         </div>
         <div className="middle-content-order-detail">
-          {data.map((item: any) => (
-            <ItemOrderDetail key={item} />
-          ))}
+          {Array.isArray(selectedOrder?.OrderDetails) &&
+          selectedOrder?.OrderDetails.length > 0 ? (
+            selectedOrder?.OrderDetails.map((item: any) => (
+              <ItemOrderDetail key={item?.IdOrderDetail} />
+            ))
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingTop: "200px",
+              }}
+            >
+              <FontAwesomeIcon
+                style={{ fontSize: "3rem", color: " rgba(0, 0, 0, 0.414)" }}
+                icon={faUtensils}
+              />
+              <div
+                style={{ fontWeight: "500", color: " rgba(0, 0, 0, 0.414)" }}
+              >
+                Chưa thêm món ăn nào
+              </div>
+            </div>
+          )}
         </div>
         <div className="footer-content-order-detail">
           <div className="info-order-detail">
@@ -186,7 +146,7 @@ const ContentOrderDetail: React.FC = () => {
                   className="icon-customer-order"
                   icon={faUsers}
                 />
-                <span>0</span>
+                <span>{selectedOrder?.Amount ? selectedOrder?.Amount : 0}</span>
               </div>
               <div onClick={handlClickIconSplitOrder} className="control-table">
                 <FontAwesomeIcon
@@ -198,7 +158,9 @@ const ContentOrderDetail: React.FC = () => {
             </div>
             <div className="total-price-order">
               <span className="title-total-price-order">Tổng tiền:</span>
-              <span className="price-total">394838732đ</span>
+              <span className="price-total">
+                {selectedOrder?.Price ? `${selectedOrder?.Price} đ` : `0 đ`}
+              </span>
             </div>
           </div>
           <div className="button-control-order-detail">

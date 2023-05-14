@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Row, Col, Image, Pagination } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
@@ -13,12 +13,6 @@ const ContentOrder: React.FC<any> = ({ data }) => {
   const selectedOrder = useSelector(
     (state: any) => state.orderpage.selectedOrder
   );
-  console.log("order selected", selectedOrder);
-
-  // const [valueOrders, setValueOrders] = useState(data);
-  // useEffect(() => {
-  //   setValueOrders(data);
-  // }, [data]);
   const handleChangePag = (e: any) => {
     dispatch(actions.OrderPageActions.setSelectedPageOrders(e));
   };

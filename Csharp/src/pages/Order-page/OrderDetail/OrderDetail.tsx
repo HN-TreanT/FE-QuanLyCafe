@@ -13,6 +13,20 @@ const OrderDetail: React.FC = () => {
   const dispatch = useDispatch();
   const actions = useAction();
   const [items, setItems] = useState(initialItems);
+  const selectedOrder = useSelector(
+    (state: any) => state.orderpage.selectedOrder
+  );
+  React.useEffect(() => {
+    setItems([
+      {
+        label: selectedOrder?.IdOrder
+          ? `Đơn #${selectedOrder?.IdOrder}`
+          : "new order",
+        children: <ContentOrderDetail />,
+        key: "1",
+      },
+    ]);
+  }, [selectedOrder?.IdOrder]);
   const onChange = (key: string) => {
     //console.log(key);
   };

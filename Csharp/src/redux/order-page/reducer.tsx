@@ -12,6 +12,7 @@ const initAuth = {
   stateTable: "",
   selectedPageTable: "",
   searchValueTable: undefined,
+  selectedOrder: {},
 };
 const OrderPageReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {

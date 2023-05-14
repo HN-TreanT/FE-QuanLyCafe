@@ -13,7 +13,7 @@
         background-color: white;
         .select-table{
             padding: 5px;
-            padding-left: 13px;
+            padding-left: 15px;      
             background-color: #1677ff57;
             color:#1677ff ;
             border-radius: 20px;
@@ -128,18 +128,12 @@
     }
 }
 
-.icon-search-order-detail{
-    color: rgba(0, 0, 0, 0.389);
-    cursor: pointer;
-    &:hover{
-        color:#1677ff ;
-    }
-}
+
 
 .icon-add-customer-order-detail{
     color: rgba(0, 0, 0, 0.34);
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     &:hover{
         color: #1677ff;
     }

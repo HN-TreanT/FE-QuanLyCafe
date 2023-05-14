@@ -7,10 +7,15 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { DollarCircleFilled } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../redux/useActions";
 import "./ItemOrder.scss";
 import { Col, Row } from "antd";
+import { billServices } from "../../../untils/networks/services/billService";
 const ItemOrder: React.FC<any> = ({ style, data }) => {
-  const handleClickItemOrder = (
+  const actions = useAction();
+  const dispatch = useDispatch();
+  const handleClickItemOrder = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     const allCards = document.querySelectorAll(".card-item-order");
@@ -20,6 +25,22 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
       }
     });
     event.currentTarget.classList.add("click-item-order");
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      const order = await billServices.getDetailOrder(data?.IdOrder);
+      console.log(order);
+      if (order?.Status) {
+        dispatch(actions.StateAction.loadingState(true));
+        const order = await billServices.getDetailOrder(data?.IdOrder);
+        dispatch(actions.OrderPageActions.setSelectedOrder(order?.Data));
+        dispatch(actions.StateAction.loadingState(false));
+      } else {
+        dispatch(actions.StateAction.loadingState(false));
+      }
+    } catch (err: any) {
+      console.log(err);
+    }
+    // console.log(data?.IdOrder);
   };
   const createdAt = new Date(data.CreatedAt);
   const now = new Date();
