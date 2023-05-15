@@ -187,12 +187,87 @@ function* saga_createOrder() {
     yield handleErr(err);
   }
 }
+function* saga_updateOrder() {
+  try {
+    let data: any = {};
+    let _selectedOrder: Promise<any> = yield select(
+      (state: any) => state.orderpage.selectedOrder
+    );
+    let selectedOrder: any = _selectedOrder;
+    let _infoUpdateOrder: Promise<any> = yield select(
+      (state: any) => state.orderpage.infoUpdateOrder
+    );
+    let infoUpdate: any = _infoUpdateOrder;
+    if (infoUpdate?.IdTableNavigation) {
+      data = { ...infoUpdate, IdTable: infoUpdate.IdTableNavigation.IdTable };
+      delete data["IdTableNavigation"];
+    } else {
+      data = { ...infoUpdate };
+    }
+    yield put(stateActions.action.loadingState(true));
+    let _response: Promise<any> = yield billServices.updateOrder(
+      selectedOrder?.IdOrder,
+      data
+    );
+    let response: any = _response;
+    if (response?.Status) {
+      yield put(actions.action.setSelectedPageOrders(1));
+      yield put(actions.action.setPageOrderProductTable("allOrder"));
+      yield put(actions.action.loadOrders());
+      yield put(stateActions.action.loadingState(true));
+      yield put(actions.action.setInfoUpdateOrder({}));
+      notification({
+        message: "Cập nhật thành công",
+        title: "Thông báo",
+        position: "top-right",
+        type: "success",
+      });
+    } else {
+      yield handleFail(response.Message);
+      yield put(actions.action.setInfoUpdateOrder({}));
+    }
+  } catch (e: any) {
+    yield handleErr(e);
+  }
+}
+function* saga_deleteOrder() {
+  try {
+    let _selectedOrder: Promise<any> = yield select(
+      (state: any) => state.orderpage.selectedOrder
+    );
+    let selectedOrder: any = _selectedOrder;
+    yield put(stateActions.action.loadingState(true));
+    let _res: Promise<any> = yield billServices.deleteOrder(
+      selectedOrder?.IdOrder
+    );
+    let res: any = _res;
+    if (res?.Status) {
+      yield put(actions.action.setSelectedOrder({}));
+      yield put(actions.action.setSelectedPageOrders(1));
+      yield put(actions.action.setPageOrderProductTable("allOrder"));
+      yield put(actions.action.loadOrders());
+      yield put(stateActions.action.loadingState(false));
+      notification({
+        message: "Xóa thành công",
+        title: "Thông báo",
+        position: "top-right",
+        type: "success",
+      });
+    } else {
+      yield handleFail(res?.Message);
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 // function* saga
 function* listen() {
   yield takeEvery(actions.types.LOAD_PRODUCT, loadProduct);
   yield takeEvery(actions.types.LOAD_ORDERS, loadOrders);
   yield takeEvery(actions.types.LOAD_TABLE, loadTable);
   yield takeEvery(actions.types.CREARTE_ORDER, saga_createOrder);
+  yield takeEvery(actions.types.UPDATE_ORDER, saga_updateOrder);
+  yield takeEvery(actions.types.DELETE_ORDER, saga_deleteOrder);
 }
 
 export default function* mainSaga() {

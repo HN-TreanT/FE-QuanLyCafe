@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Tabs } from "antd";
 import ContentOrderDetail from "./ContentOrderDetail/ContentOrderDetail";
-import { billServices } from "../../../untils/networks/services/billService";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../redux/useActions";
 

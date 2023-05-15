@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Select, Space, Tooltip } from "antd";
 import type { SelectProps } from "antd";
 import { customerServices } from "../../../../untils/networks/services/customerServices";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import useAction from "../../../../redux/useActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
@@ -36,8 +37,13 @@ const fetch = (value: string, callback: Function) => {
 };
 
 const SearchCustomer: React.FC = () => {
+  const actions = useAction();
+  const dispatch = useDispatch();
   const selectedOrder = useSelector(
     (state: any) => state.orderpage.selectedOrder
+  );
+  const infoUpdateOrder = useSelector(
+    (state: any) => state.orderpage.infoUpdateOrder
   );
   const [data, setData] = useState<SelectProps["options"]>([]);
   const [value, setValue] = useState<string>(
@@ -54,6 +60,12 @@ const SearchCustomer: React.FC = () => {
 
   const handleSelect = (value: string, options: any) => {
     setValue(value);
+    dispatch(
+      actions.OrderPageActions.setInfoUpdateOrder({
+        ...infoUpdateOrder,
+        IdCustomer: value,
+      })
+    );
   };
 
   return (

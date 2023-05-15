@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Input, Row, Col, Button, Modal, Image } from "antd";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { Input, Row, Col, Button, Modal, Tooltip, Form } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,24 +9,44 @@ import {
   faMoneyBill1Wave,
   faFloppyDisk,
   faUtensils,
+  faSquareCheck,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../../redux/useActions";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
 import ModalSplitOrder from "./ModalSplitOrder/ModalSplitOrder";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import SearchCustomer from "./SearchCustomer";
-import emptyProduct from "../../../../assets/empty-data.jpg";
-let data: any[] = [];
-for (var i = 1; i < 20; i++) {
-  data.push(i);
-}
+import ModalTable from "./ModalTable/ModalTable";
 const ContentOrderDetail: React.FC = () => {
+  const [formAmountCustomer] = Form.useForm();
+  const dispatch = useDispatch();
+  const actions = useAction();
   const selectedOrder = useSelector(
     (state: any) => state.orderpage.selectedOrder
   );
-
+  const infoUpdateOrder = useSelector(
+    (state: any) => state.orderpage.infoUpdateOrder
+  );
+  const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
+  const [isOpenModalTable, setIsOpenModalTable] = useState(false);
   const [isOpenModalCountCustomer, setIsOpenModalCountModal] = useState(false);
   const [isOpenModalSplitOrder, setIsOpenModalSplitOrder] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [amountCustomer, setAmountCustomer] = useState();
+  const [order, setOrder] = useState({
+    ...selectedOrder,
+    IdTableNavigation: selectedOrder?.IdTableNavigation,
+    IdCustomerNavigation: selectedOrder?.IdCustomerNavigation,
+  });
+  useEffect(() => {
+    setOrder({
+      ...selectedOrder,
+      IdTableNavigation: selectedOrder?.IdTableNavigation,
+      IdCustomerNavigation: selectedOrder?.IdCustomerNavigation,
+    });
+  }, [selectedOrder]);
   const handleClickIconCustomerOrder = () => {
     setIsOpenModalCountModal(true);
   };
@@ -36,6 +55,16 @@ const ContentOrderDetail: React.FC = () => {
   };
   const handleCLickOpenDrawerPayment = () => {
     setIsOpenDrawer(true);
+  };
+  const handleUpdateOrder = () => {
+    dispatch(actions.OrderPageActions.updateOrder());
+  };
+  const handleClickSelectTable = () => {
+    setIsOpenModalTable(true);
+  };
+  const handleCancleOrder = () => {
+    dispatch(actions.OrderPageActions.deleteOrder());
+    setIsOpenCancleOrder(false);
   };
   return (
     <div className="content-order-detail">
@@ -51,7 +80,7 @@ const ContentOrderDetail: React.FC = () => {
             key="cancle"
             onClick={() => {
               setIsOpenModalCountModal(false);
-              // formAddCustomer.resetFields();
+              formAmountCustomer.resetFields();
             }}
           >
             Hủy
@@ -60,46 +89,97 @@ const ContentOrderDetail: React.FC = () => {
             //  disabled={isDisabled}
             key="submit"
             type="primary"
-            // onClick={handleUpdateCustomer}
+            onClick={() => {
+              setOrder({ ...order, Amount: amountCustomer });
+              setIsOpenModalCountModal(false);
+              formAmountCustomer.resetFields();
+              dispatch(
+                actions.OrderPageActions.setInfoUpdateOrder({
+                  ...infoUpdateOrder,
+                  Amount: amountCustomer,
+                })
+              );
+            }}
           >
             Lưu
           </Button>,
         ]}
       >
-        <Input
-          onKeyDown={(e) => {
-            if (
-              e.key === "-" ||
-              e.key === "e" ||
-              e.key === "+" ||
-              e.key === "E"
-            ) {
-              e.preventDefault();
-            }
-          }}
-          min={0}
-          placeholder="Nhập số lượng khách hàng"
-          type="number"
-        ></Input>
+        <Form form={formAmountCustomer}>
+          <Form.Item
+            name="amountCustomer"
+            initialValue={order?.Amount ? order?.Amount : 0}
+          >
+            <Input
+              onChange={(e: any) => setAmountCustomer(e.target.value)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "-" ||
+                  e.key === "e" ||
+                  e.key === "+" ||
+                  e.key === "E"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              min={0}
+              placeholder="Nhập số lượng khách hàng"
+              type="number"
+            ></Input>
+          </Form.Item>
+        </Form>
       </Modal>
       {/* Modal split order */}
       <ModalSplitOrder
         visible={isOpenModalSplitOrder}
         setIsOpenModal={setIsOpenModalSplitOrder}
       />
+      {/* Modal select table */}
+      <ModalTable
+        visible={isOpenModalTable}
+        setVisible={setIsOpenModalTable}
+        order={order}
+        setOrder={setOrder}
+      />
+      {/* Modal announce cancle order */}
+      <Modal
+        open={isOpenModalCancleOrder}
+        title="Thông báo"
+        onCancel={() => setIsOpenCancleOrder(false)}
+        footer={[
+          <Button onClick={handleCancleOrder} danger key="submit">
+            <FontAwesomeIcon
+              style={{ paddingRight: "5px" }}
+              icon={faSquareCheck}
+            />
+            <span> Đồng ý</span>
+          </Button>,
+          <Button
+            key="back"
+            onClick={() => {
+              setIsOpenCancleOrder(false);
+            }}
+          >
+            <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faBan} />
+            <span> Bỏ qua</span>
+          </Button>,
+        ]}
+      >
+        {" "}
+        <div>Bạn có chắc muốn hủy đơn!</div>
+      </Modal>
       <div>
         <div className="top-content-order-detail">
           <Row gutter={[5, 0]}>
             <Col span={5}>
               {" "}
-              <div className="select-table">
+              <div onClick={handleClickSelectTable} className="select-table">
                 <FontAwesomeIcon
                   style={{ paddingRight: "5px" }}
                   icon={faTable}
                 />
-                {/* bàn 1 */}
-                {selectedOrder?.IdTableNavigation
-                  ? `Bàn ${selectedOrder?.IdTableNavigation?.Name} `
+                {order?.IdTableNavigation
+                  ? `Bàn ${order?.IdTableNavigation?.Name} `
                   : "Chọn bàn"}
               </div>
             </Col>
@@ -109,9 +189,9 @@ const ContentOrderDetail: React.FC = () => {
           </Row>
         </div>
         <div className="middle-content-order-detail">
-          {Array.isArray(selectedOrder?.OrderDetails) &&
-          selectedOrder?.OrderDetails.length > 0 ? (
-            selectedOrder?.OrderDetails.map((item: any) => (
+          {Array.isArray(order?.OrderDetails) &&
+          order?.OrderDetails.length > 0 ? (
+            order?.OrderDetails.map((item: any) => (
               <ItemOrderDetail key={item?.IdOrderDetail} />
             ))
           ) : (
@@ -138,16 +218,18 @@ const ContentOrderDetail: React.FC = () => {
         <div className="footer-content-order-detail">
           <div className="info-order-detail">
             <div className="info-order-detail-left">
-              <div
-                onClick={handleClickIconCustomerOrder}
-                className="count-customer-order"
-              >
-                <FontAwesomeIcon
-                  className="icon-customer-order"
-                  icon={faUsers}
-                />
-                <span>{selectedOrder?.Amount ? selectedOrder?.Amount : 0}</span>
-              </div>
+              <Tooltip placement="top" title="Số lượng khách hàng">
+                <div
+                  onClick={handleClickIconCustomerOrder}
+                  className="count-customer-order"
+                >
+                  <FontAwesomeIcon
+                    className="icon-customer-order"
+                    icon={faUsers}
+                  />
+                  <span>{order?.Amount ? order?.Amount : 0}</span>
+                </div>
+              </Tooltip>
               <div onClick={handlClickIconSplitOrder} className="control-table">
                 <FontAwesomeIcon
                   className="icon-control-table"
@@ -159,7 +241,7 @@ const ContentOrderDetail: React.FC = () => {
             <div className="total-price-order">
               <span className="title-total-price-order">Tổng tiền:</span>
               <span className="price-total">
-                {selectedOrder?.Price ? `${selectedOrder?.Price} đ` : `0 đ`}
+                {order?.Price ? `${order?.Price} đ` : `0 đ`}
               </span>
             </div>
           </div>
@@ -167,12 +249,20 @@ const ContentOrderDetail: React.FC = () => {
             <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
               <Row gutter={[20, 10]}>
                 <Col span={6}>
-                  <Button danger className="button-controler-order">
-                    <span className="title-button">Hủy</span>
+                  <Button
+                    onClick={() => setIsOpenCancleOrder(true)}
+                    danger
+                    className="button-controler-order"
+                  >
+                    <span className="title-button">Hủy Đơn</span>
                   </Button>
                 </Col>
                 <Col span={9}>
-                  <Button type="primary" className="button-controler-order">
+                  <Button
+                    onClick={handleUpdateOrder}
+                    type="primary"
+                    className="button-controler-order"
+                  >
                     <FontAwesomeIcon
                       className="icon-button"
                       icon={faFloppyDisk}

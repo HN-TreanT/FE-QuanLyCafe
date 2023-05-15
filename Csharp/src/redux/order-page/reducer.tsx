@@ -13,6 +13,7 @@ const initAuth = {
   selectedPageTable: "",
   searchValueTable: undefined,
   selectedOrder: {},
+  infoUpdateOrder: {},
 };
 const OrderPageReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {
@@ -127,6 +128,21 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
       return {
         ...state,
         selectedOrder: action.payload.data,
+      };
+    case actions.types.UPDATE_ORDER:
+      return {
+        ...state,
+      };
+    case actions.types.INFO_UPDATE_ORDER:
+      return {
+        ...state,
+        ...{
+          infoUpdateOrder: action.payload.data,
+        },
+      };
+    case actions.types.DELETE_ORDER:
+      return {
+        ...state,
       };
     default:
       return state;

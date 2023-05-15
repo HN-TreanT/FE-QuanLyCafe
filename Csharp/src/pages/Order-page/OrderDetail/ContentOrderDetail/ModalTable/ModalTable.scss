@@ -1,0 +1,37 @@
+.table-modal{
+    padding: 10px;
+
+    .content-table-modal{     
+        display: flex;
+        flex-direction: column;
+       // align-items: center;
+        justify-content: space-around;
+        .list-table{
+           height: 400px;
+           .empty-table{
+            padding-left: 410px;
+            display: flex;
+            flex-direction: column;
+           padding-top: 170px;
+           }
+           .item-table{
+            display: flex;      
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 140px;   
+            color:  #7facfa;
+            box-shadow:1px 1px 5px #7c7a783a;
+            
+            cursor: pointer;
+             &:hover{
+                background-color: rgba(0, 0, 0, 0.084);
+             }
+          }
+          
+        }
+        .pagination-table-modal{
+            align-self: center;   
+        }
+    }
+}

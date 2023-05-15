@@ -28,7 +28,6 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
     try {
       dispatch(actions.StateAction.loadingState(true));
       const order = await billServices.getDetailOrder(data?.IdOrder);
-      console.log(order);
       if (order?.Status) {
         dispatch(actions.StateAction.loadingState(true));
         const order = await billServices.getDetailOrder(data?.IdOrder);

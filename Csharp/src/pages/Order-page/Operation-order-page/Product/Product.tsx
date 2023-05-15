@@ -54,6 +54,7 @@ const Product: React.FC = () => {
     dispatch(actions.OrderPageActions.setSelectedPageProduct(e));
   };
   const handleChangeCategory = (e: any) => {
+    dispatch(actions.OrderPageActions.setSelectedPageProduct(1));
     dispatch(actions.OrderPageActions.setSelectedCategory(e.key));
   };
   const handleSearchNameProduct = (e: any) => {
@@ -136,7 +137,7 @@ const Product: React.FC = () => {
             <div className="pagination-proudct-order-page">
               <Pagination
                 onChange={handleSelectedPageProduct}
-                defaultCurrent={selectedPageProduct ? selectedPageProduct : 1}
+                current={selectedPageProduct ? selectedPageProduct : 1}
                 total={products?.TotalPage}
                 pageSize={12}
               />

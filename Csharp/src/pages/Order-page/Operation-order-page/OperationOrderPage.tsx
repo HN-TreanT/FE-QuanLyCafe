@@ -19,12 +19,12 @@ const items = [
     children: <Order />,
     icon: faFileInvoiceDollar,
   },
-  {
-    label: "Vị trí",
-    key: "location",
-    children: <TableLocation />,
-    icon: faLocationDot,
-  },
+  // {
+  //   label: "Vị trí",
+  //   key: "location",
+  //   children: <TableLocation />,
+  //   icon: faLocationDot,
+  // },
   {
     label: "Mặt hàng",
     key: "product",
@@ -53,9 +53,9 @@ const OperationOrderPage: React.FC = () => {
     if (selectedPage === "allOrder") {
       dispatch(actions.OrderPageActions.loadOrders());
     }
-    if (selectedPage === "location") {
-      dispatch(actions.OrderPageActions.loadTable());
-    }
+    // if (selectedPage === "location") {
+    //   dispatch(actions.OrderPageActions.loadTable());
+    // }
     if (selectedPage === "product") {
       dispatch(actions.OrderPageActions.loadProduct());
     }
@@ -68,7 +68,8 @@ const OperationOrderPage: React.FC = () => {
     <div className="operation-order-page">
       <Tabs
         onChange={onChange}
-        defaultActiveKey={selectedPage ? selectedPage : "allOrder"}
+        // defaultActiveKey={selectedPage ? selectedPage : "allOrder"}
+        activeKey={selectedPage ? selectedPage : "allOrder"}
       >
         {items.map((item) => (
           <Tabs.TabPane

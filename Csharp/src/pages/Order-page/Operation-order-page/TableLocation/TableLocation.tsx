@@ -8,6 +8,7 @@ import {
   Image,
   Form,
   Input,
+  Modal,
 } from "antd";
 import tableImage0 from "../../../../assets/dinning-table_0.png";
 import tableImage1 from "../../../../assets/dinning-table-1.png";
@@ -49,6 +50,9 @@ const TableLocation: React.FC = () => {
   const selectedPage = useSelector(
     (state: any) => state.orderpage.selectedPageTable
   );
+  const infoUpdateOrder = useSelector(
+    (state: any) => state.orderpage.infoUpdateOrder
+  );
   const stateTable = useSelector((state: any) => state.orderpage.stateTable);
   const tables = useSelector((state: any) => state.orderpage.tables);
   const loading = useSelector((state: any) => state.state.loadingState);
@@ -75,6 +79,14 @@ const TableLocation: React.FC = () => {
   };
   const handleChangePageTable = (e: any) => {
     dispatch(actions.OrderPageActions.setSelectedPagetable(e));
+  };
+  const handleClickItemTable = (tableFood: any) => {
+    dispatch(
+      actions.OrderPageActions.setInfoUpdateOrder({
+        ...infoUpdateOrder,
+        IdTableNavigation: tableFood,
+      })
+    );
   };
   return (
     <div className="table-location">
@@ -153,7 +165,7 @@ const TableLocation: React.FC = () => {
                     if (item?.Status === 0) {
                       return (
                         <Col
-                          // onClick={() => handleClickItemTable(tableFood)}
+                          onClick={() => handleClickItemTable(item)}
                           //key={tableFood?.IdTable}
                           span={4}
                           key={item?.IdTable}
