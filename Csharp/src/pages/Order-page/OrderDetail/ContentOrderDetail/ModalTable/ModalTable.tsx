@@ -10,26 +10,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../../redux/useActions";
 import { useDispatch, useSelector } from "react-redux";
-import Spinn from "../../../../../components/Spinning/Spinning";
 import useDebounce from "../../../../../hooks/useDebounce";
 
-const ModalTable: React.FC<any> = ({
-  visible,
-  setVisible,
-  order,
-  setOrder,
-}) => {
+const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
   const actions = useAction();
   const dispatch = useDispatch();
   const selectedPage = useSelector(
     (state: any) => state.orderpage.selectedPageTable
   );
-  const infoUpdateOrder = useSelector(
-    (state: any) => state.orderpage.infoUpdateOrder
+  const selectedOrder = useSelector(
+    (state: any) => state.orderpage.selectedOrder
   );
   const stateTable = useSelector((state: any) => state.orderpage.stateTable);
   const tables = useSelector((state: any) => state.orderpage.tables);
-  const loading = useSelector((state: any) => state.state.loadingState);
   const [searchValue, setSearchValue] = React.useState("");
   const searchValueDebounce = useDebounce<string>(searchValue, 500);
   React.useEffect(() => {
@@ -52,14 +45,16 @@ const ModalTable: React.FC<any> = ({
     dispatch(actions.OrderPageActions.setSelectedPagetable(e));
   };
   const handleClickItemTable = (tableFood: any) => {
-    setOrder({ ...order, IdTableNavigation: tableFood });
+    if (tableFood?.IdTable) {
+      dispatch(
+        actions.OrderPageActions.setInfoUpdateOrder({
+          IdOrder: selectedOrder?.IdOrder,
+          IdTable: tableFood?.IdTable,
+        })
+      );
+    }
+    dispatch(actions.OrderPageActions.updateOrder());
     setVisible(false);
-    dispatch(
-      actions.OrderPageActions.setInfoUpdateOrder({
-        ...infoUpdateOrder,
-        IdTableNavigation: tableFood,
-      })
-    );
   };
   return (
     <Modal
@@ -69,8 +64,6 @@ const ModalTable: React.FC<any> = ({
       footer={false}
     >
       <div className="table-modal">
-        {loading ? <Spinn /> : ""}
-
         <Row gutter={[15, 0]}>
           <Col span={24}>
             <div className="search-table">

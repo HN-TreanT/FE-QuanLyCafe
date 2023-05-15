@@ -19,15 +19,13 @@ import ModalSplitOrder from "./ModalSplitOrder/ModalSplitOrder";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import SearchCustomer from "./SearchCustomer";
 import ModalTable from "./ModalTable/ModalTable";
+
 const ContentOrderDetail: React.FC = () => {
   const [formAmountCustomer] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
   const selectedOrder = useSelector(
     (state: any) => state.orderpage.selectedOrder
-  );
-  const infoUpdateOrder = useSelector(
-    (state: any) => state.orderpage.infoUpdateOrder
   );
   const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
   const [isOpenModalTable, setIsOpenModalTable] = useState(false);
@@ -56,9 +54,7 @@ const ContentOrderDetail: React.FC = () => {
   const handleCLickOpenDrawerPayment = () => {
     setIsOpenDrawer(true);
   };
-  const handleUpdateOrder = () => {
-    dispatch(actions.OrderPageActions.updateOrder());
-  };
+
   const handleClickSelectTable = () => {
     setIsOpenModalTable(true);
   };
@@ -90,15 +86,14 @@ const ContentOrderDetail: React.FC = () => {
             key="submit"
             type="primary"
             onClick={() => {
-              setOrder({ ...order, Amount: amountCustomer });
-              setIsOpenModalCountModal(false);
-              formAmountCustomer.resetFields();
               dispatch(
                 actions.OrderPageActions.setInfoUpdateOrder({
-                  ...infoUpdateOrder,
+                  IdOrder: selectedOrder?.IdOrder,
                   Amount: amountCustomer,
                 })
               );
+              dispatch(actions.OrderPageActions.updateOrder());
+              setIsOpenModalCountModal(false);
             }}
           >
             Lưu
@@ -192,7 +187,7 @@ const ContentOrderDetail: React.FC = () => {
           {Array.isArray(order?.OrderDetails) &&
           order?.OrderDetails.length > 0 ? (
             order?.OrderDetails.map((item: any) => (
-              <ItemOrderDetail key={item?.IdOrderDetail} />
+              <ItemOrderDetail data={item} key={item?.IdOrderDetail} />
             ))
           ) : (
             <div
@@ -258,11 +253,7 @@ const ContentOrderDetail: React.FC = () => {
                   </Button>
                 </Col>
                 <Col span={9}>
-                  <Button
-                    onClick={handleUpdateOrder}
-                    type="primary"
-                    className="button-controler-order"
-                  >
+                  <Button type="primary" className="button-controler-order">
                     <FontAwesomeIcon
                       className="icon-button"
                       icon={faFloppyDisk}

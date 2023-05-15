@@ -189,33 +189,25 @@ function* saga_createOrder() {
 }
 function* saga_updateOrder() {
   try {
-    let data: any = {};
-    let _selectedOrder: Promise<any> = yield select(
-      (state: any) => state.orderpage.selectedOrder
-    );
-    let selectedOrder: any = _selectedOrder;
     let _infoUpdateOrder: Promise<any> = yield select(
       (state: any) => state.orderpage.infoUpdateOrder
     );
     let infoUpdate: any = _infoUpdateOrder;
-    if (infoUpdate?.IdTableNavigation) {
-      data = { ...infoUpdate, IdTable: infoUpdate.IdTableNavigation.IdTable };
-      delete data["IdTableNavigation"];
-    } else {
-      data = { ...infoUpdate };
-    }
+    console.log(infoUpdate);
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield billServices.updateOrder(
-      selectedOrder?.IdOrder,
-      data
+      infoUpdate?.IdOrder,
+      infoUpdate
     );
     let response: any = _response;
     if (response?.Status) {
       yield put(actions.action.setSelectedPageOrders(1));
       yield put(actions.action.setPageOrderProductTable("allOrder"));
       yield put(actions.action.loadOrders());
-      yield put(stateActions.action.loadingState(true));
+      yield put(actions.action.loadTable());
+      yield put(actions.action.loadSelectedOrder());
       yield put(actions.action.setInfoUpdateOrder({}));
+      yield put(stateActions.action.loadingState(true));
       notification({
         message: "Cập nhật thành công",
         title: "Thông báo",
@@ -260,6 +252,39 @@ function* saga_deleteOrder() {
     yield handleErr(err);
   }
 }
+function* saga_loadSelectedOrder() {
+  try {
+    let _selectedOrder: Promise<any> = yield select(
+      (state: any) => state.orderpage.selectedOrder
+    );
+    let selectedOrder: any = _selectedOrder;
+    yield put(stateActions.action.loadingState(true));
+    let _order: Promise<any> = yield billServices.getDetailOrder(
+      selectedOrder?.IdOrder
+    );
+    let order: any = _order;
+    if (order?.Status) {
+      let _listOrderDetail: Promise<any> =
+        yield orderDetailServices.handleGetOrderByIdOrder(
+          selectedOrder?.IdOrder
+        );
+      let ListOrderDetail: any = _listOrderDetail;
+      yield put(
+        actions.action.setSelectedOrder({
+          ...order?.Data,
+          OrderDetails: ListOrderDetail?.Data ? ListOrderDetail?.Data : [],
+        })
+      );
+      yield put(actions.action.setInfoUpdateOrder({}));
+      yield put(stateActions.action.loadingState(false));
+    } else {
+      yield put(actions.action.setInfoUpdateOrder({}));
+      yield handleErr(order?.Message);
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 // function* saga
 function* listen() {
   yield takeEvery(actions.types.LOAD_PRODUCT, loadProduct);
@@ -268,6 +293,7 @@ function* listen() {
   yield takeEvery(actions.types.CREARTE_ORDER, saga_createOrder);
   yield takeEvery(actions.types.UPDATE_ORDER, saga_updateOrder);
   yield takeEvery(actions.types.DELETE_ORDER, saga_deleteOrder);
+  yield takeEvery(actions.types.LOAD_SELECTED_ORDER, saga_loadSelectedOrder);
 }
 
 export default function* mainSaga() {

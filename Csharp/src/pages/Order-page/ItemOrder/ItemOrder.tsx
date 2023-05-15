@@ -12,6 +12,7 @@ import useAction from "../../../redux/useActions";
 import "./ItemOrder.scss";
 import { Col, Row } from "antd";
 import { billServices } from "../../../untils/networks/services/billService";
+import { orderDetailServices } from "../../../untils/networks/services/OrderDetailService";
 const ItemOrder: React.FC<any> = ({ style, data }) => {
   const actions = useAction();
   const dispatch = useDispatch();
@@ -30,8 +31,19 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
       const order = await billServices.getDetailOrder(data?.IdOrder);
       if (order?.Status) {
         dispatch(actions.StateAction.loadingState(true));
-        const order = await billServices.getDetailOrder(data?.IdOrder);
-        dispatch(actions.OrderPageActions.setSelectedOrder(order?.Data));
+        const ListOrderDetail =
+          await orderDetailServices.handleGetOrderByIdOrder(data?.IdOrder);
+        dispatch(
+          actions.OrderPageActions.setSelectedOrder({
+            ...order?.Data,
+            OrderDetails: ListOrderDetail?.Data ? ListOrderDetail?.Data : [],
+          })
+        );
+        dispatch(
+          actions.OrderPageActions.setInfoUpdateOrder({
+            IdOrder: order?.Data.IdOrder,
+          })
+        );
         dispatch(actions.StateAction.loadingState(false));
       } else {
         dispatch(actions.StateAction.loadingState(false));

@@ -144,6 +144,10 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
       return {
         ...state,
       };
+    case actions.types.LOAD_SELECTED_ORDER:
+      return {
+        ...state,
+      };
     default:
       return state;
   }

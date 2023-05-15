@@ -23,6 +23,7 @@ const types = {
   UPDATE_ORDER: "/order-page/update-order",
   INFO_UPDATE_ORDER: "/order-page/info-update-prder",
   DELETE_ORDER: "/order-page/delete-order",
+  LOAD_SELECTED_ORDER: "/order-page/load-selected-order",
 };
 const action = {
   setPageOrderProductTable: (data: any) => {
@@ -155,6 +156,11 @@ const action = {
   deleteOrder: () => {
     return {
       type: types.DELETE_ORDER,
+    };
+  },
+  loadSelectedOrder: () => {
+    return {
+      type: types.LOAD_SELECTED_ORDER,
     };
   },
 };

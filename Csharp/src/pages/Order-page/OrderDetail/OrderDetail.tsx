@@ -25,7 +25,8 @@ const OrderDetail: React.FC = () => {
         key: "1",
       },
     ]);
-  }, [selectedOrder?.IdOrder]);
+    dispatch(actions.OrderPageActions.loadSelectedOrder());
+  }, [selectedOrder?.IdOrder, actions.OrderPageActions, dispatch]);
   const onChange = (key: string) => {
     //console.log(key);
   };

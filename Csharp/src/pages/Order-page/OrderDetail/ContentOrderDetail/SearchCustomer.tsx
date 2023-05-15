@@ -36,14 +36,11 @@ const fetch = (value: string, callback: Function) => {
   }
 };
 
-const SearchCustomer: React.FC = () => {
+const SearchCustomer: React.FC<any> = () => {
   const actions = useAction();
   const dispatch = useDispatch();
   const selectedOrder = useSelector(
     (state: any) => state.orderpage.selectedOrder
-  );
-  const infoUpdateOrder = useSelector(
-    (state: any) => state.orderpage.infoUpdateOrder
   );
   const [data, setData] = useState<SelectProps["options"]>([]);
   const [value, setValue] = useState<string>(
@@ -62,10 +59,11 @@ const SearchCustomer: React.FC = () => {
     setValue(value);
     dispatch(
       actions.OrderPageActions.setInfoUpdateOrder({
-        ...infoUpdateOrder,
+        IdOrder: selectedOrder?.IdOrder,
         IdCustomer: value,
       })
     );
+    dispatch(actions.OrderPageActions.updateOrder());
   };
 
   return (
