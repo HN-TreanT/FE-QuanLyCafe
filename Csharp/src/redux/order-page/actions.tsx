@@ -24,6 +24,7 @@ const types = {
   INFO_UPDATE_ORDER: "/order-page/info-update-prder",
   DELETE_ORDER: "/order-page/delete-order",
   LOAD_SELECTED_ORDER: "/order-page/load-selected-order",
+  ORDER_DETAILS: "/order-page/order-details",
 };
 const action = {
   setPageOrderProductTable: (data: any) => {
@@ -163,6 +164,12 @@ const action = {
       type: types.LOAD_SELECTED_ORDER,
     };
   },
+  // setOrderDetails: (data: any) => {
+  //   return {
+  //     type: types.ORDER_DETAILS,
+  //     payload: { data },
+  //   };
+  // },
 };
 
 const actions = {

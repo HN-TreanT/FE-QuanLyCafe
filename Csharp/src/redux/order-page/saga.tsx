@@ -193,7 +193,6 @@ function* saga_updateOrder() {
       (state: any) => state.orderpage.infoUpdateOrder
     );
     let infoUpdate: any = _infoUpdateOrder;
-    console.log(infoUpdate);
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield billServices.updateOrder(
       infoUpdate?.IdOrder,
@@ -258,7 +257,7 @@ function* saga_loadSelectedOrder() {
       (state: any) => state.orderpage.selectedOrder
     );
     let selectedOrder: any = _selectedOrder;
-    yield put(stateActions.action.loadingState(true));
+    // yield put(stateActions.action.loadingState(true));
     let _order: Promise<any> = yield billServices.getDetailOrder(
       selectedOrder?.IdOrder
     );

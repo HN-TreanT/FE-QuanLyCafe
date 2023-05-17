@@ -110,7 +110,7 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
                     className="icon-time-customer"
                     icon={faUser}
                   />
-                  {data?.Amount ? data?.Amount : ""}
+                  {data?.Amount ? data?.Amount : 0}
                 </span>
               </Col>
             </Row>
@@ -125,7 +125,13 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
             />
             <span style={{ fontWeight: "500" }}>
               {" "}
-              {`${data?.payments ? data.payments : 0} đ`}
+              {data?.payments < 1000000
+                ? `${data?.payments ? data.payments : 0} đ`
+                : ` ${
+                    data?.payments
+                      ? Math.round(data?.payments / 10000) / 100
+                      : 0
+                  } tr(VNĐ)`}
             </span>
           </div>
         </div>

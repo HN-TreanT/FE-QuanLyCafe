@@ -148,6 +148,11 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
       return {
         ...state,
       };
+    // case actions.types.ORDER_DETAILS:
+    //   return {
+    //     ...state,
+    //     orderDetails: action.payload.data,
+    //   };
     default:
       return state;
   }

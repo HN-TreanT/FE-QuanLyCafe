@@ -17,6 +17,7 @@
         .name-product-order-detail{
             font-size: 1rem;
             font-weight: 500;
+            
         }
         .ant-input{
             border-top: none;
@@ -24,10 +25,20 @@
             border-right: none;
             border-bottom-color: rgba(0, 0, 0, 0.515);
         }
-       
+        .icon-control-amount{
+                font-size: 1.3rem;
+        }
+       //color: #1677ff42;
         &:hover{
             border-radius: 10px;
             border: 1px solid #1677ff7b;
+        }
+        .icon-control-amount{
+            color: rgba(0, 0, 0, 0.356);
+            cursor: pointer;
+            &:hover{
+                color:rgba(0, 0, 0, 0.556) ;
+            }
         }
     }
 }

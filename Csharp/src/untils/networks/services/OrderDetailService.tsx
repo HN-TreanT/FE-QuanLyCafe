@@ -19,8 +19,31 @@ const createListOrderDetail = (data: any) => {
     data,
   });
 };
+const createOrderDetail = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/OrderDetails/createOrderDetail",
+    method: "POST",
+    data,
+  });
+};
+const updateOrderDetail = (IdOrderDetail: string, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/OrderDetails/updateOrderDt/${IdOrderDetail}`,
+    method: "PUT",
+    data,
+  });
+};
+const deleteOrderDetail = (IdOrderDetail: string) => {
+  return api.makeAuthRequest({
+    url: `/api/OrderDetails/deleteOrderDt/${IdOrderDetail}`,
+    method: "DELETE",
+  });
+};
 export const orderDetailServices = {
   handleGetOrderByIdOrder,
   getOrderDetailById,
   createListOrderDetail,
+  createOrderDetail,
+  updateOrderDetail,
+  deleteOrderDetail,
 };

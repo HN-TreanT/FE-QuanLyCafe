@@ -1,12 +1,19 @@
 import React from "react";
 import { Col, MenuProps, Row, Dropdown } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
 import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import useAction from "../../redux/useActions";
 import OperationOrderPage from "./Operation-order-page/OperationOrderPage";
 import OrderDetail from "./OrderDetail/OrderDetail";
 import "./OrderPage.scss";
 
 const OrderPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const actions = useAction();
+  const handleLogout = () => {
+    dispatch(actions.AuthActions.logout());
+  };
   const items: MenuProps["items"] = [
     {
       label: (
@@ -31,6 +38,7 @@ const OrderPage: React.FC = () => {
         </div>
       ),
       key: "logout",
+      onClick: handleLogout,
     },
   ];
   return (

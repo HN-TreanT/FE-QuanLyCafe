@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Tabs } from "antd";
 import ContentOrderDetail from "./ContentOrderDetail/ContentOrderDetail";
 import { useDispatch, useSelector } from "react-redux";
