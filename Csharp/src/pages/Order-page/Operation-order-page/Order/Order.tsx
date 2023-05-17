@@ -88,7 +88,7 @@ const Order: React.FC = () => {
                   <Input
                     onChange={handleSearchPhoneCustomer}
                     bordered={false}
-                    placeholder="Nhập tên nguyên liệu"
+                    placeholder="Nhập tên số điện thoại khách hàng "
                     prefix={
                       <FontAwesomeIcon
                         icon={faMagnifyingGlass}

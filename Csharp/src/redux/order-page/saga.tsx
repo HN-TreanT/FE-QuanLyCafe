@@ -278,7 +278,7 @@ function* saga_loadSelectedOrder() {
       yield put(stateActions.action.loadingState(false));
     } else {
       yield put(actions.action.setInfoUpdateOrder({}));
-      yield handleErr(order?.Message);
+      //  yield handleErr(order?.Message);
     }
   } catch (err: any) {
     yield handleErr(err);

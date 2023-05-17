@@ -53,10 +53,18 @@ const updateOrder = (IdOrder: string, data: any) => {
   });
 };
 
+const graftOrder = (IdOldOrder: any, IdNewOrder: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/graftOrder?IdOldOrder=${IdOldOrder}&IdNewOrder=${IdNewOrder}`,
+    method: "POST",
+  });
+};
+
 export const billServices = {
   getAllOrder,
   deleteOrder,
   getDetailOrder,
   createOrder,
   updateOrder,
+  graftOrder,
 };

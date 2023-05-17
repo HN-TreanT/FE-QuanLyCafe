@@ -8,6 +8,8 @@ import SearchTable from "./SearchTable/SearchTable";
 import "./ModalSplitOrder.scss";
 import Table, { ColumnsType } from "antd/es/table";
 import { valueType } from "antd/es/statistic/utils";
+import { billServices } from "../../../../../untils/networks/services/billService";
+import { notification } from "../../../../../components/notification";
 interface DataTypeGraftOrder {
   IdOrder: string;
   CountProdut: Number;
@@ -28,14 +30,14 @@ for (var j = 0; j < 10; j++) {
   });
 }
 let dataGraftOrder: any[] = [];
-for (var i = 0; i < 10; i++) {
-  dataGraftOrder.push({
-    key: i,
-    IdOrder: `nfefnf-${i}`,
-    CountProduct: i,
-    Price: "nfehef",
-  });
-}
+// for (var i = 0; i < 10; i++) {
+//   dataGraftOrder.push({
+//     key: i,
+//     IdOrder: `nfefnf-${i}`,
+//     CountProduct: i,
+//     Price: "nfehef",
+//   });
+// }
 const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
   const columnsGraftOrder: ColumnsType<DataTypeGraftOrder> = [
     {
@@ -73,9 +75,30 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
       ),
     },
   ];
+
   const actions = useAction();
   const dispatch = useDispatch();
   // const [valueRaido, setValueRadio] = React.useState();
+  const selectedOrder = useSelector(
+    (state: any) => state.orderpage.selectedOrder
+  );
+  //new selectedTable graft or split
+  const selectedTable = useSelector(
+    (state: any) => state.orderpage.selectedTableOnSplitOrder
+  );
+  // console.log(selectedOrder);
+  if (selectedOrder) {
+    // dataGraftOrder.push();
+    dataGraftOrder = [
+      {
+        key: selectedOrder?.IdOrder,
+        IdOrder: selectedOrder?.IdOrder,
+        CountProduct: selectedOrder?.OrderDetails?.length,
+        Price: selectedOrder?.Price ? selectedOrder?.Price : 0,
+      },
+    ];
+  }
+
   const radioSplitGraftOrder = useSelector(
     (state: any) => state.orderpage.radioSplitGraftOrder
   );
@@ -86,14 +109,46 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
     );
     // setValueRadio(e.target.value);
   };
+  const handleGraftOrder = async () => {
+    try {
+      let response = await billServices.graftOrder(
+        selectedOrder?.IdOrder,
+        selectedTable?.value
+      );
+      if (response?.Status) {
+        dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
+        dispatch(actions.OrderPageActions.loadOrders());
+        dispatch(actions.OrderPageActions.loadSelectedOrder());
+        notification({
+          message: "Gộp hóa đơn thành công",
+          title: "Thông báo",
+          position: "top-right",
+          type: "success",
+        });
+        setIsOpenModal(false);
+      } else {
+        notification({
+          message: response.Message,
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+      }
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
 
   return (
     <Modal
       title="Tách ghép hóa đơn"
       width={700}
-      onCancel={() => setIsOpenModal(false)}
+      onCancel={() => {
+        setIsOpenModal(false);
+        dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
+      }}
       footer={[
-        <Button key="submit" type="primary">
+        <Button onClick={handleGraftOrder} key="submit" type="primary">
           <FontAwesomeIcon
             style={{ paddingRight: "5px" }}
             icon={faSquareCheck}
@@ -104,6 +159,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
           key="cancle"
           onClick={() => {
             setIsOpenModal(false);
+            dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
             // formAddCustomer.resetFields();
           }}
         >

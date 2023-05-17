@@ -14,7 +14,7 @@ import Product from "./Product/Product";
 
 const items = [
   {
-    label: "Hóa đơn",
+    label: "Phiếu yêu cầu",
     key: "allOrder",
     children: <Order />,
     icon: faFileInvoiceDollar,
