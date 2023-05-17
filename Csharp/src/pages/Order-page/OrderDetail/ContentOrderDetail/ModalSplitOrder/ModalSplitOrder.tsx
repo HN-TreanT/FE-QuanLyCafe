@@ -117,6 +117,12 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
       );
       if (response?.Status) {
         dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
+        dispatch(
+          actions.OrderPageActions.setSelectedOrder({
+            IdOrder: selectedTable?.value,
+          })
+        );
+        dispatch(actions.OrderPageActions.loadTable());
         dispatch(actions.OrderPageActions.loadOrders());
         dispatch(actions.OrderPageActions.loadSelectedOrder());
         notification({
