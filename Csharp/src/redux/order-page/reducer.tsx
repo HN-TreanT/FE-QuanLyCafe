@@ -14,6 +14,7 @@ const initAuth = {
   searchValueTable: undefined,
   selectedOrder: {},
   infoUpdateOrder: {},
+  orderSplit: {},
 };
 const OrderPageReducer = (state: any = initAuth, action: any) => {
   switch (action.type) {
@@ -153,6 +154,15 @@ const OrderPageReducer = (state: any = initAuth, action: any) => {
     //     ...state,
     //     orderDetails: action.payload.data,
     //   };
+    case actions.types.ORDER_SPLIT:
+      return {
+        ...state,
+        orderSplit: action.payload.data,
+      };
+    case actions.types.HANLDE_SPLIT_ORDER:
+      return {
+        ...state,
+      };
     default:
       return state;
   }

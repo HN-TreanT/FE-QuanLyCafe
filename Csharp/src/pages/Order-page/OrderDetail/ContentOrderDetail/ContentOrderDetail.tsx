@@ -49,6 +49,7 @@ const ContentOrderDetail: React.FC = () => {
     setIsOpenModalCountModal(true);
   };
   const handlClickIconSplitOrder = () => {
+    dispatch(actions.OrderPageActions.loadSelectedOrder());
     setIsOpenModalSplitOrder(true);
   };
   const handleCLickOpenDrawerPayment = () => {

@@ -71,19 +71,6 @@ const SearchCustomer: React.FC<any> = () => {
     );
     dispatch(actions.OrderPageActions.updateOrder());
   };
-  // const handleClear = async (data: any) => {
-  //   try {
-  //     let res = await billServices.updateOrder(data?.IdOrder, {
-  //       IdCustomer: "",
-  //     });
-  //     console.log("check res", res);
-  //     if (res?.Status) {
-  //       dispatch(actions.OrderPageActions.loadSelectedOrder());
-  //     }
-  //   } catch (err: any) {
-  //     console.log(err);
-  //   }
-  // };
   const handleClickAddCustomer = () => {
     setIsOpenModal(true);
   };

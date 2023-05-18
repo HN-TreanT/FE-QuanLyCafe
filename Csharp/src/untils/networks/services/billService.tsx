@@ -59,6 +59,13 @@ const graftOrder = (IdOldOrder: any, IdNewOrder: any) => {
     method: "POST",
   });
 };
+const splitOrder = (IdOldOrder: any, IdNewOrder: any, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/Order/splitOrder?IdOldOrder=${IdOldOrder}&IdNewOrder=${IdNewOrder}`,
+    method: "POST",
+    data,
+  });
+};
 
 export const billServices = {
   getAllOrder,
@@ -67,4 +74,5 @@ export const billServices = {
   createOrder,
   updateOrder,
   graftOrder,
+  splitOrder,
 };

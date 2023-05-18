@@ -25,6 +25,8 @@ const types = {
   DELETE_ORDER: "/order-page/delete-order",
   LOAD_SELECTED_ORDER: "/order-page/load-selected-order",
   ORDER_DETAILS: "/order-page/order-details",
+  ORDER_SPLIT: "/order-page/order-split",
+  HANLDE_SPLIT_ORDER: "/order-page/handle-split-order",
 };
 const action = {
   setPageOrderProductTable: (data: any) => {
@@ -170,6 +172,17 @@ const action = {
   //     payload: { data },
   //   };
   // },
+  setOrderSplit: (data: any) => {
+    return {
+      type: types.ORDER_SPLIT,
+      payload: { data },
+    };
+  },
+  handleSplitOrder: () => {
+    return {
+      type: types.HANLDE_SPLIT_ORDER,
+    };
+  },
 };
 
 const actions = {

@@ -1,4 +1,12 @@
-import { all, call, fork, put, select, takeEvery } from "redux-saga/effects";
+import {
+  all,
+  call,
+  fork,
+  put,
+  select,
+  take,
+  takeEvery,
+} from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
@@ -284,6 +292,62 @@ function* saga_loadSelectedOrder() {
     yield handleErr(err);
   }
 }
+function* saga_handleSplitOrder() {
+  try {
+    let _orderSplit: Promise<any> = yield select(
+      (state: any) => state.orderpage.orderSplit
+    );
+    let orderSplit: any = _orderSplit;
+    let _selectedOrder: Promise<any> = yield select(
+      (state: any) => state.orderpage.selectedOrder
+    );
+    let selectedOrder: any = _selectedOrder;
+    console.log("check order split", orderSplit);
+    if (
+      !orderSplit?.typeSplitOrder ||
+      orderSplit?.typeSplitOrder === "createNewOrder"
+    ) {
+      console.log("createNewOrder");
+    } else {
+      let data: any[] = [];
+      if (Array.isArray(orderSplit?.dataSplitOrder)) {
+        data = orderSplit?.dataSplitOrder.map((item: any) => {
+          return {
+            OrderDetail: item?.key,
+            IdProduct: item?.IdProduct,
+            CountSplit: item?.CountSplit,
+          };
+        });
+      }
+      yield put(stateActions.action.loadingState(true));
+      let _response: Promise<any> = yield billServices.splitOrder(
+        selectedOrder?.IdOrder,
+        orderSplit?.graftTable,
+        data
+      );
+      let response: any = _response;
+
+      if (response?.Status) {
+        // yield put(actions.action.setSelectedOrder({}));
+        yield put(actions.action.setOrderSplit({}));
+        yield put(stateActions.action.loadingState(false));
+        yield put(actions.action.loadOrders());
+        yield put(actions.action.loadSelectedOrder());
+        notification({
+          message: "Tách bán thành công",
+          title: "Thông báo",
+          position: "top-right",
+          type: "success",
+        });
+      } else {
+        yield put(stateActions.action.loadingState(false));
+        yield handleFail(response?.Message);
+      }
+    }
+  } catch (err: any) {
+    yield handleErr(err);
+  }
+}
 // function* saga
 function* listen() {
   yield takeEvery(actions.types.LOAD_PRODUCT, loadProduct);
@@ -293,6 +357,7 @@ function* listen() {
   yield takeEvery(actions.types.UPDATE_ORDER, saga_updateOrder);
   yield takeEvery(actions.types.DELETE_ORDER, saga_deleteOrder);
   yield takeEvery(actions.types.LOAD_SELECTED_ORDER, saga_loadSelectedOrder);
+  yield takeEvery(actions.types.HANLDE_SPLIT_ORDER, saga_handleSplitOrder);
 }
 
 export default function* mainSaga() {
