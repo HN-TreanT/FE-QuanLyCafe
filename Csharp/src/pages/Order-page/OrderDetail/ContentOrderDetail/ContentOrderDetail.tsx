@@ -267,6 +267,7 @@ const ContentOrderDetail: React.FC = () => {
                     style={{ color: "white", backgroundColor: "#28B44F" }}
                     className="button-controler-order"
                     onClick={handleCLickOpenDrawerPayment}
+                    disabled={selectedOrder.IdOrder ? false : true}
                   >
                     <FontAwesomeIcon
                       className="icon-button"

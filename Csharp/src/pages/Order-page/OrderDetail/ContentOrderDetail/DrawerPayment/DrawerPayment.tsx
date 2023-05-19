@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Drawer, Row, Col, Table, Form } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import actions from "../../../../../redux/auth/actions";
 import "./DrawerPayment.scss";
 import { ColumnsType } from "antd/es/table";
 import { faDollar } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import useAction from "../../../../../redux/useActions";
+import { useReactToPrint } from "react-to-print";
+import { billServices } from "../../../../../untils/networks/services/billService";
+import { notification } from "../../../../../components/notification";
 
 interface DataType {
   key: string;
@@ -18,6 +20,12 @@ interface DataType {
 }
 let data: any[] = [];
 const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
+  const componentRef = React.useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "PrintReceipt",
+  });
+  const [hidden, setHidden] = useState(true);
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
@@ -36,6 +44,9 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
       };
     });
   }
+  useEffect(() => {
+    setValue(0);
+  }, [visible]);
   const columns: ColumnsType<DataType> = [
     {
       title: "Tên món ăn",
@@ -51,10 +62,11 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
       render: (text: any) => <div style={{ color: "#1677ff " }}>{text}</div>,
     },
   ];
-  const onClickCloseDrawer = () => {
+  const onClickCloseDrawer = async () => {
     setValue(0);
     setVisible(false);
   };
+
   //const date = new Date(selectedOrder?.CreatedAt);
   const formattedDate = moment(selectedOrder?.CreatedAt)
     .utcOffset("+07:00")
@@ -68,6 +80,49 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
     }
   };
   const handleValueChange = () => {};
+  const onClickPayOrder = async () => {
+    try {
+      dispatch(actions.StateAction.loadingState(true));
+      setHidden(false);
+      const response = await billServices.updateOrder(selectedOrder?.IdOrder, {
+        Status: 1,
+      });
+      if (response.Status) {
+        await handlePrint();
+        dispatch(actions.OrderPageActions.setSelectedOrder({}));
+        dispatch(actions.OrderPageActions.setPageOrderProductTable("allOrder"));
+        dispatch(actions.OrderPageActions.loadSelectedOrder());
+        dispatch(actions.OrderPageActions.loadTable());
+        dispatch(actions.OrderPageActions.loadOrders());
+        dispatch(actions.StateAction.loadingState(false));
+        // setVisible(false);
+        // setHidden(true);
+        notification({
+          message: "Thanh toán thành công",
+          title: "Thông báo",
+          position: "top-right",
+          type: "success",
+        });
+      } else {
+        notification({
+          message: response?.Message,
+          title: "Thông báo",
+          position: "top-right",
+          type: "danger",
+        });
+        dispatch(actions.StateAction.loadingState(false));
+      }
+
+      setVisible(false);
+      setHidden(true);
+    } catch (err: any) {
+      console.log(err);
+      dispatch(actions.StateAction.loadingState(false));
+
+      setVisible(false);
+      setHidden(true);
+    }
+  };
   return (
     <Drawer
       open={visible}
@@ -77,14 +132,14 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
           : ""
       }`}
       onClose={onClickCloseDrawer}
-      width={900}
+      width={600}
       bodyStyle={{ paddingBottom: 80 }}
       footer={
         <div style={{ textAlign: "right" }}>
           <Button
             disabled={disabled}
             className="button-payment"
-            onClick={onClickCloseDrawer}
+            onClick={onClickPayOrder}
             type="primary"
           >
             <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faDollar} />
@@ -93,11 +148,51 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
         </div>
       }
     >
-      <div className="drawer-payment-sidebar">
+      <div ref={componentRef} className="drawer-payment-sidebar">
         <div className="content-drawer-payment-sidebar">
+          <div
+            style={hidden ? { display: "none" } : {}}
+            className={`header-info-cafe`}
+          >
+            <div className="name-cafe">MTA-COFFEE</div>
+            <div className="address-cafe">
+              236,Hoàng Quốc Việt,Cổ Nhuế 1 ,Bắc Từ Liêm, Hà Nội
+            </div>
+            <div className="title-info-order">
+              <div className="title">HÓA ĐƠN THANH TOÁN</div>
+              <div className="id-order">{`Mã hóa đơn: ${selectedOrder?.IdOrder}`}</div>
+              <div className="date-order">{`Ngày: ${moment(
+                selectedOrder?.CreatedAt
+              )
+                .utcOffset("+07:00")
+                .format(" DD-MM-YYYY")}`}</div>
+            </div>
+          </div>
           <Row gutter={[24, 10]}>
-            <Col span={14}>
+            <Col span={24}>
               <div className="info-order">
+                <div className={`time-in-out ${hidden ? "hidden" : ""}`}>
+                  <div>
+                    <span
+                      style={{ fontWeight: "500", fontSize: "1rem" }}
+                    >{`Giờ vào: `}</span>{" "}
+                    <span>
+                      {moment(selectedOrder?.CreatedAt)
+                        .utcOffset("+07:00")
+                        .format("HH:mm, DD-MM-YYYY")}
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      style={{ fontWeight: "500", fontSize: "1rem" }}
+                    >{`Giờ ra: `}</span>{" "}
+                    <span>
+                      {moment(selectedOrder?.TimePay)
+                        .utcOffset("+07:00")
+                        .format("HH:mm, DD-MM-YYYY")}
+                    </span>
+                  </div>
+                </div>
                 <div className="info-customer">
                   <FontAwesomeIcon
                     style={{
@@ -126,7 +221,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                 />
               </div>
             </Col>
-            <Col span={10}>
+            <Col span={24}>
               <div className="info-payment">
                 <div
                   style={{
@@ -139,7 +234,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   <span style={{ fontSize: "1rem" }}>{formattedDate}</span>
                 </div>
                 <div className="item-infor-payment">
-                  <div>Tổng tiền hàng</div>
+                  <div style={{ fontWeight: "500" }}>Tổng tiền hàng</div>
                   <span>
                     {selectedOrder?.Price < 1000000
                       ? `${selectedOrder?.Price ? selectedOrder?.Price : 0} đ`
@@ -180,7 +275,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   </span>
                 </div>
                 <div className="item-infor-payment">
-                  <div>Khách thanh toán</div>
+                  <div style={{ fontWeight: "500" }}>Khách thanh toán</div>
                   <Form form={form} onValuesChange={handleValueChange}>
                     <Form.Item
                       rules={[
@@ -212,7 +307,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   </Form>
                 </div>
                 <div className="item-infor-payment">
-                  <div>Tiền thừa trả khách</div>
+                  <div style={{ fontWeight: "500" }}>Tiền thừa trả khách</div>
                   <span style={{ fontWeight: "500" }}>
                     {value - selectedOrder?.Price < 1000000
                       ? `${
