@@ -302,12 +302,60 @@ function* saga_handleSplitOrder() {
       (state: any) => state.orderpage.selectedOrder
     );
     let selectedOrder: any = _selectedOrder;
-    console.log("check order split", orderSplit);
     if (
       !orderSplit?.typeSplitOrder ||
       orderSplit?.typeSplitOrder === "createNewOrder"
     ) {
-      console.log("createNewOrder");
+      yield put(stateActions.action.loadingState(true));
+      let _response: Promise<any> = yield billServices.createOrder({
+        Amount: 0,
+        IdTable: orderSplit?.graftTable,
+      });
+      let response: any = _response;
+      if (response?.Status) {
+        let data: any[] = [];
+        if (Array.isArray(orderSplit?.dataSplitOrder)) {
+          data = orderSplit?.dataSplitOrder
+            .map((item: any) => {
+              if (item?.CountSplit > 0) {
+                return {
+                  OrderDetail: item?.key,
+                  IdProduct: item?.IdProduct,
+                  CountSplit: item?.CountSplit,
+                };
+              } else {
+                return null;
+              }
+            })
+            .filter((item: any) => item !== null);
+        }
+        let _res: Promise<any> = yield billServices.splitOrder(
+          selectedOrder?.IdOrder,
+          response?.Data?.IdOrder,
+          data
+        );
+        let res: any = _res;
+        if (res?.Status) {
+          // yield put(actions.action.setSelectedOrder({}));
+          yield put(actions.action.setOrderSplit({}));
+          yield put(stateActions.action.loadingState(false));
+          yield put(actions.action.loadOrders());
+          yield put(actions.action.loadSelectedOrder());
+          notification({
+            message: "Tách bàn thành công",
+            title: "Thông báo",
+            position: "top-right",
+            type: "success",
+          });
+        } else {
+          yield handleFail(res.Message);
+        }
+      } else {
+        let message: Promise<any> = billServices.deleteOrder(
+          response?.Data.IdOrder
+        );
+        yield handleFail(response.Message);
+      }
     } else {
       let data: any[] = [];
       if (Array.isArray(orderSplit?.dataSplitOrder)) {
@@ -334,7 +382,7 @@ function* saga_handleSplitOrder() {
         yield put(actions.action.loadOrders());
         yield put(actions.action.loadSelectedOrder());
         notification({
-          message: "Tách bán thành công",
+          message: "Tách bàn thành công",
           title: "Thông báo",
           position: "top-right",
           type: "success",

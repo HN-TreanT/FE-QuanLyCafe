@@ -83,6 +83,8 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
   );
   const orderSplit = useSelector((state: any) => state.orderpage.orderSplit);
 
+  const [disabled, setDisabled] = useState(true);
+
   //new selectedTable graft or split
   const selectedTable = useSelector(
     (state: any) => state.orderpage.selectedTableOnSplitOrder
@@ -136,6 +138,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
       );
       dispatch(actions.OrderPageActions.handleSplitOrder());
       dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
+      setIsOpenModal(false);
     }
     if (radioSplitGraftOrder === "graft" || !radioSplitGraftOrder) {
       try {
@@ -219,7 +222,12 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
         dispatch(actions.OrderPageActions.setOrderSplit({}));
       }}
       footer={[
-        <Button onClick={handleGraftOrder} key="submit" type="primary">
+        <Button
+          //   disabled={radioSplitGraftOrder === "split" && disabled}
+          onClick={handleGraftOrder}
+          key="submit"
+          type="primary"
+        >
           <FontAwesomeIcon
             style={{ paddingRight: "5px" }}
             icon={faSquareCheck}

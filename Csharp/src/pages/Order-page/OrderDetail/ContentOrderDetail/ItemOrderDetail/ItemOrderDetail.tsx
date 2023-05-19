@@ -37,7 +37,7 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
       );
       if (res?.Status) {
         dispatch(actions.OrderPageActions.loadSelectedOrder());
-        // dispatch(actions.OrderPageActions.loadOrders());
+        dispatch(actions.OrderPageActions.loadOrders());
       }
     } catch (err: any) {
       console.log(err);
@@ -56,7 +56,7 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
         );
         if (res?.Status) {
           dispatch(actions.OrderPageActions.loadSelectedOrder());
-          //dispatch(actions.OrderPageActions.loadOrders());
+          dispatch(actions.OrderPageActions.loadOrders());
         }
       }
     } catch (err: any) {

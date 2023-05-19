@@ -14,7 +14,21 @@
                 padding-bottom: 20px;
                 font-weight: 450;
                .input-number{
-                width: 100px;
+                padding: 5px;
+                outline: 0;
+                font-size: 1rem;
+                border: none;  border-bottom: 2px solid rgba(0, 0, 0, 0.188);
+                &:focus{
+                    border-top: none !important;
+                    border-left: none !important;
+                    border-right: none !important;
+                
+                }
+                &:hover {
+                    border-color: rgb(88, 151, 234);
+                   
+                }
+            
                }
             }
         }
@@ -22,8 +36,8 @@
 }
 .button-payment{
    background-color: rgb(27, 158, 27);
-   :hover{
-    background-color: rgb(18, 120, 18);
-   }
+//    :hover{
+//     background-color: rgb(18, 120, 18);
+//    }
     
 }
