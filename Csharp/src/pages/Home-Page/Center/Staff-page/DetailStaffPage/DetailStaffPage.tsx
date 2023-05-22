@@ -58,8 +58,14 @@ const DetailStaffPage: React.FC = () => {
     navigate(RouterLinks.STAFF_PAGE);
   };
   const handleUpdateStaff = async () => {
-    await dispatch(actions.StaffActions.handleUpdateStaff());
-    navigate(RouterLinks.STAFF_PAGE);
+    dispatch(
+      actions.StateAction.redirect({
+        navigate: navigate,
+        path: RouterLinks.STAFF_PAGE,
+      })
+    );
+    dispatch(actions.StaffActions.handleUpdateStaff());
+    // navigate(RouterLinks.STAFF_PAGE);
   };
   const handleCancleStaff = () => {
     navigate(RouterLinks.STAFF_PAGE);

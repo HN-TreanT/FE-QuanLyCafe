@@ -188,7 +188,7 @@ function* saga_createOrder() {
     if (response.Status) {
       yield put(actions.action.setSelectedOrder(response.Data));
       yield put(actions.action.setSelectedPageOrders(1));
-      yield put(actions.action.setPageOrderProductTable("allOrder"));
+      yield put(actions.action.setPageOrderProductTable("product"));
       yield put(actions.action.loadOrders());
     }
   } catch (err: any) {
@@ -209,7 +209,7 @@ function* saga_updateOrder() {
     let response: any = _response;
     if (response?.Status) {
       yield put(actions.action.setSelectedPageOrders(1));
-      yield put(actions.action.setPageOrderProductTable("allOrder"));
+      // yield put(actions.action.setPageOrderProductTable("allOrder"));
       yield put(actions.action.loadOrders());
       yield put(actions.action.loadTable());
       yield put(actions.action.loadSelectedOrder());

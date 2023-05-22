@@ -321,6 +321,7 @@ const AddProductPage: React.FC = () => {
                                 ]}
                               >
                                 <Input
+                                  min={0}
                                   type="number"
                                   addonAfter={
                                     selectedMaterial?.Unit

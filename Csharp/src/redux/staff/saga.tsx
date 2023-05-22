@@ -3,6 +3,7 @@ import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
 import { staffService } from "../../untils/networks/services/staffService";
+import { redirect } from "react-router-dom";
 function* handleFail(message: any) {
   yield put(stateActions.action.loadingState(false));
   notification({
@@ -53,7 +54,9 @@ function* saga_loadData() {
       yield put(actions.action.loadDataSuccess(response));
       yield put(stateActions.action.loadingState(false));
     } else {
-      yield handleFail("get staff error");
+      response.Data = [];
+      yield put(actions.action.loadDataSuccess(response));
+      yield put(stateActions.action.loadingState(false));
     }
   } catch (err: any) {
     yield handleErr(err);
@@ -83,12 +86,19 @@ function* saga_createStaff() {
       });
       yield saga_Redirect();
     } else {
-      yield handleFail(response?.Message);
+      yield put(stateActions.action.loadingState(false));
+      notification({
+        message: response.Message,
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
     }
   } catch (err: any) {
     yield handleErr(err);
   }
 }
+
 function* saga_updateStaff() {
   try {
     let _detailStaff: Promise<any> = yield select(
@@ -114,8 +124,15 @@ function* saga_updateStaff() {
         position: "top-right",
         type: "success",
       });
+      yield saga_Redirect();
     } else {
-      handleFail("update staff fail");
+      yield put(stateActions.action.loadingState(false));
+      notification({
+        message: reponse.Message,
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
     }
   } catch (err: any) {
     yield handleErr(err);

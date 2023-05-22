@@ -192,7 +192,11 @@ const UpdateProductPage: React.FC = () => {
                       <Form.Item
                         name="Description"
                         label="Mô tả về mặt hàng"
-                        initialValue={infoProduct?.Description}
+                        initialValue={
+                          infoProduct?.Description
+                            ? infoProduct?.Description
+                            : " "
+                        }
                       >
                         <Input placeholder="Nhập mô tả"></Input>
                       </Form.Item>
@@ -227,6 +231,7 @@ const UpdateProductPage: React.FC = () => {
                       initialValue={infoProduct?.Price}
                     >
                       <Input
+                        addonAfter={"VNĐ"}
                         type="number"
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
@@ -312,6 +317,7 @@ const UpdateProductPage: React.FC = () => {
                                 ]}
                               >
                                 <Input
+                                  min={0}
                                   type="number"
                                   addonAfter={
                                     selectedMaterial?.Unit

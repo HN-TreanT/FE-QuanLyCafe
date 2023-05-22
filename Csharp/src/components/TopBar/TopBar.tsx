@@ -3,13 +3,11 @@ import {
   DownOutlined,
   BellOutlined,
   UserOutlined,
-  ReadOutlined,
   DollarCircleOutlined,
-  SecurityScanOutlined,
-  QuestionCircleOutlined,
   LogoutOutlined,
   GlobalOutlined,
   InboxOutlined,
+  ArrowRightOutlined,
 } from "@ant-design/icons";
 import { Avatar, Dropdown, MenuProps, Space } from "antd";
 import "./TopBar.scss";
@@ -17,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../redux/useActions";
 
-import { RouterLinks } from "../../const";
+import { RouterLinks, serverConfig } from "../../const";
 
 const TopBar: React.FC = () => {
   const dispatch = useDispatch();
@@ -41,57 +39,70 @@ const TopBar: React.FC = () => {
       icon: <UserOutlined style={{ fontSize: "1.2rem" }} />,
     },
     {
-      key: "package-service",
+      key: "order-page",
       label: (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.aliyun.com"
+          href={`http://localhost:3000/order-page`}
         >
-          Gói dịch vụ
+          Chuyển đến yêu cầu
         </a>
       ),
-      icon: <DollarCircleOutlined style={{ fontSize: "1.2rem" }} />,
+      icon: <ArrowRightOutlined style={{ fontSize: "1.2rem" }} />,
     },
-    {
-      key: "service",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Điều khoản dịch vụ
-        </a>
-      ),
-      icon: <ReadOutlined style={{ fontSize: "1.2rem" }} />,
-    },
-    {
-      key: "security",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Chính sách bảo mật
-        </a>
-      ),
-      icon: <SecurityScanOutlined style={{ fontSize: "1.2rem" }} />,
-    },
-    {
-      key: "supply",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Hỗ trợ
-        </a>
-      ),
-      icon: <QuestionCircleOutlined style={{ fontSize: "1.2rem" }} />,
-    },
+    // {
+    //   key: "package-service",
+    //   label: (
+    //     <a
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       href="https://www.aliyun.com"
+    //     >
+    //       Gói dịch vụ
+    //     </a>
+    //   ),
+    //   icon: <DollarCircleOutlined style={{ fontSize: "1.2rem" }} />,
+    // },
+    // {
+    //   key: "service",
+    //   label: (
+    //     <a
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       href="https://www.aliyun.com"
+    //     >
+    //       Điều khoản dịch vụ
+    //     </a>
+    //   ),
+    //   icon: <ReadOutlined style={{ fontSize: "1.2rem" }} />,
+    // },
+    // {
+    //   key: "security",
+    //   label: (
+    //     <a
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       href="https://www.aliyun.com"
+    //     >
+    //       Chính sách bảo mật
+    //     </a>
+    //   ),
+    //   icon: <SecurityScanOutlined style={{ fontSize: "1.2rem" }} />,
+    // },
+    // {
+    //   key: "supply",
+    //   label: (
+    //     <a
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       href="https://www.aliyun.com"
+    //     >
+    //       Hỗ trợ
+    //     </a>
+    //   ),
+    //   icon: <QuestionCircleOutlined style={{ fontSize: "1.2rem" }} />,
+    // },
     {
       key: "logout",
       label: "Đăng xuất",

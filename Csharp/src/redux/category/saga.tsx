@@ -42,7 +42,9 @@ function* saga_loadData() {
       yield put(actions.action.loadDataSuccess(res.Data));
       yield put(stateActions.action.loadingState(false));
     } else {
-      yield handleFail("load category fail");
+      res.Data = [];
+      yield put(actions.action.loadDataSuccess(res.Data));
+      yield put(stateActions.action.loadingState(false));
     }
   } catch (err: any) {
     yield handleErr(err);

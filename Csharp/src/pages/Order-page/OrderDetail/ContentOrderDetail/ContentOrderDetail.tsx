@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input, Row, Col, Button, Modal, Tooltip, Form } from "antd";
+import { Row, Col, Button, Modal, Tooltip } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,9 +19,9 @@ import ModalSplitOrder from "./ModalSplitOrder/ModalSplitOrder";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import SearchCustomer from "./SearchCustomer";
 import ModalTable from "./ModalTable/ModalTable";
+import ModalAcountCustomer from "./ModalAcountCustomer/ModalAcountCustomer";
 
 const ContentOrderDetail: React.FC = () => {
-  const [formAmountCustomer] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
   const selectedOrder = useSelector(
@@ -32,12 +32,13 @@ const ContentOrderDetail: React.FC = () => {
   const [isOpenModalCountCustomer, setIsOpenModalCountModal] = useState(false);
   const [isOpenModalSplitOrder, setIsOpenModalSplitOrder] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [amountCustomer, setAmountCustomer] = useState();
+
   const [order, setOrder] = useState({
     ...selectedOrder,
     IdTableNavigation: selectedOrder?.IdTableNavigation,
     IdCustomerNavigation: selectedOrder?.IdCustomerNavigation,
   });
+
   useEffect(() => {
     setOrder({
       ...selectedOrder,
@@ -68,63 +69,11 @@ const ContentOrderDetail: React.FC = () => {
       {/* Drawer payment  */}
       <DrawerPayment visible={isOpenDrawer} setVisible={setIsOpenDrawer} />
       {/* Modal edit count customer */}
-      <Modal
-        title="Thêm số lượng khách hàng"
-        open={isOpenModalCountCustomer}
-        onCancel={() => setIsOpenModalCountModal(false)}
-        footer={[
-          <Button
-            key="cancle"
-            onClick={() => {
-              setIsOpenModalCountModal(false);
-              formAmountCustomer.resetFields();
-            }}
-          >
-            Hủy
-          </Button>,
-          <Button
-            //  disabled={isDisabled}
-            key="submit"
-            type="primary"
-            onClick={() => {
-              dispatch(
-                actions.OrderPageActions.setInfoUpdateOrder({
-                  IdOrder: selectedOrder?.IdOrder,
-                  Amount: amountCustomer,
-                })
-              );
-              dispatch(actions.OrderPageActions.updateOrder());
-              setIsOpenModalCountModal(false);
-            }}
-          >
-            Lưu
-          </Button>,
-        ]}
-      >
-        <Form form={formAmountCustomer}>
-          <Form.Item
-            name="amountCustomer"
-            initialValue={order?.Amount ? order?.Amount : 0}
-          >
-            <Input
-              onChange={(e: any) => setAmountCustomer(e.target.value)}
-              onKeyDown={(e) => {
-                if (
-                  e.key === "-" ||
-                  e.key === "e" ||
-                  e.key === "+" ||
-                  e.key === "E"
-                ) {
-                  e.preventDefault();
-                }
-              }}
-              min={0}
-              placeholder="Nhập số lượng khách hàng"
-              type="number"
-            ></Input>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <ModalAcountCustomer
+        isOpenModalCountCustomer={isOpenModalCountCustomer}
+        setIsOpenModalCountModal={setIsOpenModalCountModal}
+        value={selectedOrder?.Amount}
+      />
       {/* Modal split order */}
       <ModalSplitOrder
         visible={isOpenModalSplitOrder}
