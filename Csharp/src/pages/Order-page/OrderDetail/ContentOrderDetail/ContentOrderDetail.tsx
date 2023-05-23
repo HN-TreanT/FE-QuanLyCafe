@@ -58,6 +58,7 @@ const ContentOrderDetail: React.FC = () => {
   };
 
   const handleClickSelectTable = () => {
+    dispatch(actions.OrderPageActions.loadTable());
     setIsOpenModalTable(true);
   };
   const handleCancleOrder = () => {
@@ -193,7 +194,7 @@ const ContentOrderDetail: React.FC = () => {
           <div className="button-control-order-detail">
             <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
               <Row gutter={[20, 10]}>
-                <Col span={6}>
+                <Col span={12}>
                   <Button
                     onClick={() => setIsOpenCancleOrder(true)}
                     danger
@@ -202,16 +203,7 @@ const ContentOrderDetail: React.FC = () => {
                     <span className="title-button">Hủy Đơn</span>
                   </Button>
                 </Col>
-                <Col span={9}>
-                  <Button type="primary" className="button-controler-order">
-                    <FontAwesomeIcon
-                      className="icon-button"
-                      icon={faFloppyDisk}
-                    />
-                    <span className="title-button">Lưu</span>
-                  </Button>
-                </Col>
-                <Col span={9}>
+                <Col span={12}>
                   <Button
                     style={{ color: "white", backgroundColor: "#28B44F" }}
                     className="button-controler-order"

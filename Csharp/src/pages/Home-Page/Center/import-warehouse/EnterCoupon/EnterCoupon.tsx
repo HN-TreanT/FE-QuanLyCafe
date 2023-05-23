@@ -17,6 +17,7 @@ interface DataType {
   IdMaterial: string;
   NameMaterial: string;
   Amount: Number;
+  Unit: string;
 }
 interface DataType2 {
   key: string;
@@ -24,6 +25,7 @@ interface DataType2 {
   IdMaterial: string;
   Amount: string;
   Price: string;
+  Unit: string;
   NameProvider: string;
   PhoneProvider: Number;
 }
@@ -58,6 +60,8 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Amount",
       render: (text, record) => (
         <InputNumber
+          addonAfter={record?.Unit}
+          min={0}
           className="input-number"
           required={true}
           value={text}
@@ -81,6 +85,7 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Price",
       render: (text, record) => (
         <InputNumber
+          min={0}
           addonAfter="VNĐ"
           className="input-number"
           required={true}
@@ -158,10 +163,12 @@ const EnterCoupon: React.FC = () => {
           IdMaterial: material?.key ? material?.key : "",
           Amount: 0,
           Price: 0,
+          Unit: material?.Unit,
           NameProvider: "",
           PhoneProvider: "",
         };
       });
+
       const filteredSelectedMaterials = data.filter((material) => {
         return !valueSelectedMaterials.some((selectedMaterial: any) => {
           return selectedMaterial.key === material.key;
@@ -291,6 +298,7 @@ const EnterCoupon: React.FC = () => {
                           ? material?.NameMaterial
                           : "",
                         Amount: material?.Amount ? material?.Amount : 0,
+                        Unit: material?.Unit ? material?.Unit : "",
                       };
                     }).sort((a: { key: any }, b: { key: any }) => {
                       const aIsSelected = selectedRowKeys.includes(a.key);
@@ -446,6 +454,7 @@ const EnterCoupon: React.FC = () => {
                       <Col span={24}>
                         <Form.Item label="Số điện thoại" name="PhoneProvider">
                           <Input
+                            min={0}
                             type="number"
                             name="PhoneProvider"
                             style={{ width: "100%" }}

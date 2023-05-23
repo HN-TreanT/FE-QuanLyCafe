@@ -11,6 +11,7 @@ import {
 import useAction from "../../../../../redux/useActions";
 import { useDispatch, useSelector } from "react-redux";
 import useDebounce from "../../../../../hooks/useDebounce";
+import { billServices } from "../../../../../untils/networks/services/billService";
 
 const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
   const actions = useAction();
@@ -44,17 +45,35 @@ const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
   const handleChangePageTable = (e: any) => {
     dispatch(actions.OrderPageActions.setSelectedPagetable(e));
   };
-  const handleClickItemTable = (tableFood: any) => {
-    if (tableFood?.IdTable) {
-      dispatch(
-        actions.OrderPageActions.setInfoUpdateOrder({
-          IdOrder: selectedOrder?.IdOrder,
-          IdTable: tableFood?.IdTable,
-        })
-      );
+  const handleClickItemTable = async (tableFood: any) => {
+    if (selectedOrder.IdOrder) {
+      if (tableFood?.IdTable) {
+        dispatch(
+          actions.OrderPageActions.setInfoUpdateOrder({
+            IdOrder: selectedOrder?.IdOrder,
+            IdTable: tableFood?.IdTable,
+          })
+        );
+      }
+      dispatch(actions.OrderPageActions.updateOrder());
+      setVisible(false);
+    } else {
+      let _response = await billServices.createOrder({
+        Amount: 0,
+      });
+      let response: any = _response;
+      if (response.Status) {
+        dispatch(actions.OrderPageActions.setSelectedOrder(response?.Data));
+        dispatch(
+          actions.OrderPageActions.setInfoUpdateOrder({
+            IdOrder: response?.Data?.IdOrder,
+            IdTable: tableFood?.IdTable,
+          })
+        );
+        dispatch(actions.OrderPageActions.updateOrder());
+        setVisible(false);
+      }
     }
-    dispatch(actions.OrderPageActions.updateOrder());
-    setVisible(false);
   };
   return (
     <Modal

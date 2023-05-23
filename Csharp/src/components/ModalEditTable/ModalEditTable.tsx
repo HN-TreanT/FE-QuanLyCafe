@@ -57,7 +57,9 @@ const ModalEditTable: React.FC<any> = ({ isOpen, data }) => {
       dispatch(actions.StateAction.loadingState(true));
       let response = await tableFoodService.updateTabelFodd(
         tableSeleted.IdTable,
-        form.getFieldsValue()
+        {
+          Status: form.getFieldsValue().Status,
+        }
       );
       if (response.Status) {
         dispatch(actions.TableFoodActions.loadData());

@@ -61,15 +61,35 @@ const SearchCustomer: React.FC<any> = () => {
     fetch(newValue, setData);
   };
 
-  const handleSelect = (value: string, options: any) => {
+  const handleSelect = async (value: string, options: any) => {
     setValue(value);
-    dispatch(
-      actions.OrderPageActions.setInfoUpdateOrder({
-        IdOrder: selectedOrder?.IdOrder,
-        IdCustomer: value,
-      })
-    );
-    dispatch(actions.OrderPageActions.updateOrder());
+
+    if (selectedOrder?.IdOrder) {
+      dispatch(
+        actions.OrderPageActions.setInfoUpdateOrder({
+          IdOrder: selectedOrder?.IdOrder,
+          IdCustomer: value,
+        })
+      );
+      dispatch(actions.OrderPageActions.updateOrder());
+    } else {
+      let _response = await billServices.createOrder({
+        Amount: 0,
+      });
+      let response: any = _response;
+      if (response.Status) {
+        dispatch(
+          actions.OrderPageActions.setInfoUpdateOrder({
+            IdOrder: response?.Data?.IdOrder,
+            IdCustomer: value,
+          })
+        );
+        dispatch(actions.OrderPageActions.setSelectedOrder(response?.Data));
+        dispatch(actions.OrderPageActions.updateOrder());
+      } else {
+        actions.OrderPageActions.setInfoUpdateOrder({});
+      }
+    }
   };
   const handleClickAddCustomer = () => {
     setIsOpenModal(true);
@@ -81,9 +101,27 @@ const SearchCustomer: React.FC<any> = () => {
         form.getFieldsValue()
       );
       if (response.Status) {
-        let res = await billServices.updateOrder(selectedOrder?.IdOrder, {
-          IdCustomer: response?.Data?.IdCustomer,
-        });
+        let res: any;
+        if (selectedOrder?.IdOrder) {
+          res = await billServices.updateOrder(selectedOrder?.IdOrder, {
+            IdCustomer: response?.Data?.IdCustomer,
+          });
+        } else {
+          let newOrder = await billServices.createOrder({ Amount: 0 });
+
+          if (newOrder.Status) {
+            dispatch(
+              actions.OrderPageActions.setSelectedOrder(
+                newOrder?.Data ? newOrder?.Data : {}
+              )
+            );
+            res = await billServices.updateOrder(newOrder?.Data?.IdOrder, {
+              IdCustomer: response?.Data?.IdCustomer,
+            });
+            dispatch(actions.OrderPageActions.loadOrders());
+          }
+        }
+
         if (res?.Status) {
           dispatch(actions.OrderPageActions.loadSelectedOrder());
           dispatch(actions.StateAction.loadingState(false));

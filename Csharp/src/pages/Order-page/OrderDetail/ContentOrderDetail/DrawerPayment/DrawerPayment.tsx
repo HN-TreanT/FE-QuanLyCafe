@@ -214,7 +214,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   columns={columns}
                   dataSource={data}
                   pagination={{
-                    pageSize: 5,
+                    pageSize: 100,
                     showSizeChanger: false,
                     hideOnSinglePage: true,
                   }}

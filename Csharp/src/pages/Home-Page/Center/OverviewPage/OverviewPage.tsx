@@ -120,7 +120,7 @@ const OverviewPage: React.FC = () => {
           icon={<WalletFilled style={iconReport} />}
         />
         <OverVReportItem
-          price="0"
+          price={0}
           title="Hoàn hủy"
           icon={<CloseCircleFilled style={iconReport} />}
         />
