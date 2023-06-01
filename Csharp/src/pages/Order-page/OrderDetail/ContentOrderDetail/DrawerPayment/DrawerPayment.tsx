@@ -29,9 +29,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
-  const selectedOrder = useSelector(
-    (state: any) => state.orderpage.selectedOrder
-  );
+  const selectedOrder = useSelector((state: any) => state.orderpage.selectedOrder);
   const [disabled, setDisabled] = React.useState(true);
   const [value, setValue] = React.useState<any>();
   if (Array.isArray(selectedOrder?.OrderDetails)) {
@@ -127,9 +125,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
     <Drawer
       open={visible}
       title={`Thanh toán đơn #${selectedOrder?.IdOrder} ${
-        selectedOrder?.IdTableNavigation
-          ? `- Bàn ${selectedOrder?.IdTableNavigation?.Name}`
-          : ""
+        selectedOrder?.IdTableNavigation ? `- Bàn ${selectedOrder?.IdTableNavigation?.Name}` : ""
       }`}
       onClose={onClickCloseDrawer}
       width={600}
@@ -150,20 +146,13 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
     >
       <div ref={componentRef} className="drawer-payment-sidebar">
         <div className="content-drawer-payment-sidebar">
-          <div
-            style={hidden ? { display: "none" } : {}}
-            className={`header-info-cafe`}
-          >
+          <div style={hidden ? { display: "none" } : {}} className={`header-info-cafe`}>
             <div className="name-cafe">MTA-COFFEE</div>
-            <div className="address-cafe">
-              236,Hoàng Quốc Việt,Cổ Nhuế 1 ,Bắc Từ Liêm, Hà Nội
-            </div>
+            <div className="address-cafe">236,Hoàng Quốc Việt,Cổ Nhuế 1 ,Bắc Từ Liêm, Hà Nội</div>
             <div className="title-info-order">
               <div className="title">HÓA ĐƠN THANH TOÁN</div>
               <div className="id-order">{`Mã hóa đơn: ${selectedOrder?.IdOrder}`}</div>
-              <div className="date-order">{`Ngày: ${moment(
-                selectedOrder?.CreatedAt
-              )
+              <div className="date-order">{`Ngày: ${moment(selectedOrder?.CreatedAt)
                 .utcOffset("+07:00")
                 .format(" DD-MM-YYYY")}`}</div>
             </div>
@@ -173,9 +162,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
               <div className="info-order">
                 <div className={`time-in-out ${hidden ? "hidden" : ""}`}>
                   <div>
-                    <span
-                      style={{ fontWeight: "500", fontSize: "1rem" }}
-                    >{`Giờ vào: `}</span>{" "}
+                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>{`Giờ vào: `}</span>{" "}
                     <span>
                       {moment(selectedOrder?.CreatedAt)
                         .utcOffset("+07:00")
@@ -183,9 +170,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                     </span>
                   </div>
                   <div>
-                    <span
-                      style={{ fontWeight: "500", fontSize: "1rem" }}
-                    >{`Giờ ra: `}</span>{" "}
+                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>{`Giờ ra: `}</span>{" "}
                     <span>
                       {moment(selectedOrder?.TimePay)
                         .utcOffset("+07:00")
@@ -239,9 +224,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                     {selectedOrder?.Price < 1000000
                       ? `${selectedOrder?.Price ? selectedOrder?.Price : 0} đ`
                       : ` ${
-                          selectedOrder?.Price
-                            ? Math.round(selectedOrder?.Price / 10000) / 100
-                            : 0
+                          selectedOrder?.Price ? Math.round(selectedOrder?.Price / 10000) / 100 : 0
                         } tr(VNĐ)`}
                   </span>
                 </div>
@@ -254,9 +237,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   ></Input>
                 </div> */}
                 <div className="item-infor-payment">
-                  <div style={{ fontWeight: "500", fontSize: "1rem" }}>
-                    Khách cần trả
-                  </div>
+                  <div style={{ fontWeight: "500", fontSize: "1rem" }}>Khách cần trả</div>
                   <span
                     style={{
                       fontSize: "1.1rem",
@@ -268,9 +249,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                     {selectedOrder?.Price < 1000000
                       ? `${selectedOrder?.Price ? selectedOrder?.Price : 0} đ`
                       : ` ${
-                          selectedOrder?.Price
-                            ? Math.round(selectedOrder?.Price / 10000) / 100
-                            : 0
+                          selectedOrder?.Price ? Math.round(selectedOrder?.Price / 10000) / 100 : 0
                         } tr(VNĐ)`}
                   </span>
                 </div>
@@ -292,12 +271,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                         className="input-number"
                         min="0"
                         onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                             e.preventDefault();
                           }
                         }}
@@ -310,16 +284,10 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   <div style={{ fontWeight: "500" }}>Tiền thừa trả khách</div>
                   <span style={{ fontWeight: "500" }}>
                     {value - selectedOrder?.Price < 1000000
-                      ? `${
-                          selectedOrder?.Price
-                            ? value - selectedOrder?.Price
-                            : 0
-                        } đ`
+                      ? `${selectedOrder?.Price ? value - selectedOrder?.Price : 0} đ`
                       : ` ${
                           value - selectedOrder?.Price
-                            ? Math.round(
-                                (value - selectedOrder?.Price) / 10000
-                              ) / 100
+                            ? Math.round((value - selectedOrder?.Price) / 10000) / 100
                             : 0
                         } tr(VNĐ)`}
                   </span>

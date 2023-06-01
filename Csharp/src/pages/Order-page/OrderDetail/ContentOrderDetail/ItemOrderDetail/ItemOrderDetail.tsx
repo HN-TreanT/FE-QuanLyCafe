@@ -13,9 +13,7 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
   const handleDeleteOrderDetail = async (data: any) => {
     try {
       dispatch(actions.StateAction.loadingState(true));
-      const res = await orderDetailServices.deleteOrderDetail(
-        data?.IdOrderDetail
-      );
+      const res = await orderDetailServices.deleteOrderDetail(data?.IdOrderDetail);
       if (res?.Status) {
         dispatch(actions.OrderPageActions.loadOrders());
         dispatch(actions.OrderPageActions.loadSelectedOrder());
@@ -29,12 +27,9 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
   };
   const handleIncreaseAmount = async (data: any) => {
     try {
-      const res = await orderDetailServices.updateOrderDetail(
-        data?.IdOrderDetail,
-        {
-          Amount: data?.Amout ? data?.Amout + 1 : 1,
-        }
-      );
+      const res = await orderDetailServices.updateOrderDetail(data?.IdOrderDetail, {
+        Amount: data?.Amout ? data?.Amout + 1 : 1,
+      });
       if (res?.Status) {
         dispatch(actions.OrderPageActions.loadSelectedOrder());
         dispatch(actions.OrderPageActions.loadOrders());
@@ -48,12 +43,9 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
       if (data.Amout - 1 === 0) {
         handleDeleteOrderDetail(data);
       } else {
-        const res = await orderDetailServices.updateOrderDetail(
-          data?.IdOrderDetail,
-          {
-            Amount: data?.Amout ? data?.Amout - 1 : 1,
-          }
-        );
+        const res = await orderDetailServices.updateOrderDetail(data?.IdOrderDetail, {
+          Amount: data?.Amout ? data?.Amout - 1 : 1,
+        });
         if (res?.Status) {
           dispatch(actions.OrderPageActions.loadSelectedOrder());
           dispatch(actions.OrderPageActions.loadOrders());
@@ -106,9 +98,7 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
             </div>
           </Col>
           <Col span={4}>
-            <span style={{ fontWeight: "500" }}>{`${
-              data?.Price ? data?.Price : 0
-            }`}</span>
+            <span style={{ fontWeight: "500" }}>{`${data?.Price ? data?.Price : 0}`}</span>
           </Col>
           <Col span={1}>
             <FontAwesomeIcon

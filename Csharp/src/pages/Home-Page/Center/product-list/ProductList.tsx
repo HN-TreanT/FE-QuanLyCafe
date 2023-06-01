@@ -10,9 +10,11 @@ import { RouterLinks, serverConfig } from "../../../../const";
 import { useNavigate } from "react-router-dom";
 import ContenProductList from "../../../../components/ContentProductList/ContentProductList";
 import useDebounce from "../../../../hooks/useDebounce";
+import * as XLSX from "xlsx";
+import * as FileSaver from "file-saver";
 const items: MenuProps["items"] = [
   {
-    label: "Tất cả nhân viên",
+    label: "Tất cả mặt hàng",
     key: "listProduct",
   },
 ];
@@ -66,6 +68,16 @@ const ProductList: React.FC = () => {
     dispatch(actions.ProductActions.setTypeSeacrch("category"));
     setSearchValue(e.target.value);
   };
+  const handleExport = () => {
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const ws = XLSX.utils.json_to_sheet(valueProducts);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, "mysheet" + fileExtension);
+  };
   return (
     <div className="product-page">
       <Row gutter={[0, 15]}>
@@ -80,6 +92,7 @@ const ProductList: React.FC = () => {
               <FontAwesomeIcon icon={faPlus} />
               <span> Thêm mặt hàng</span>
             </Button>
+            <Button onClick={handleExport}>Export</Button>
           </div>
         </Col>
         <Col span={24}>
@@ -87,11 +100,7 @@ const ProductList: React.FC = () => {
             <div className="header-product-page">
               <Row>
                 <Col span={24}>
-                  <Menu
-                    selectedKeys={["listProduct"]}
-                    mode="horizontal"
-                    items={items}
-                  />
+                  <Menu selectedKeys={["listProduct"]} mode="horizontal" items={items} />
                 </Col>
                 <Col span={24}>
                   <div
@@ -118,10 +127,7 @@ const ProductList: React.FC = () => {
                             placeholder="Nhập tên mặt hàng"
                             onChange={handleChangeNameProduct}
                             prefix={
-                              <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="icon-search"
-                              />
+                              <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                             }
                           />
                         </Form.Item>
@@ -139,10 +145,7 @@ const ProductList: React.FC = () => {
                             bordered={false}
                             placeholder="Nhập tên danh mục"
                             prefix={
-                              <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="icon-search"
-                              />
+                              <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                             }
                           />
                         </Form.Item>
@@ -152,10 +155,7 @@ const ProductList: React.FC = () => {
                 </Col>
               </Row>
             </div>
-            <ContenProductList
-              value={valueProducts}
-              total={products.TotalPage}
-            />
+            <ContenProductList value={valueProducts} total={products.TotalPage} />
           </div>
         </Col>
       </Row>
