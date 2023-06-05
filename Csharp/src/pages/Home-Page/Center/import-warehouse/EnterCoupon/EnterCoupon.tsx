@@ -109,6 +109,7 @@ const EnterCoupon: React.FC = () => {
       ),
     },
   ];
+
   const [formProvider] = Form.useForm();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -118,6 +119,7 @@ const EnterCoupon: React.FC = () => {
   const [selectedmaterials, setSelectedMaterials] = useState<any>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
   const [valueSelectedMaterials, setValueSelectedMaterials] = useState<any>([]);
+  console.log(valueSelectedMaterials);
   const materials = useSelector((state: any) => state.material.materials);
   const loading = useSelector((state: any) => state.state.loadingState);
   const [searchValue, setSearchValue] = useState("");

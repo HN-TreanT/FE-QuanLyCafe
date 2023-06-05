@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Form, Button, Input, Table, MenuProps, Menu, DatePicker } from "antd";
+import { Row, Col, Form, Button, Input, Table, MenuProps, Menu, DatePicker, Upload } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
 import "./ImportWarehouse.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus, faCloudArrowUp, faL } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { RouterLinks } from "../../../../const";
 import { notification } from "../../../../components/notification";
 import { importGoodService } from "../../../../untils/networks/services/importGoodsService";
 import dayjs from "dayjs";
 import { VND } from "../../../../const/convertVND";
+import * as XLSX from "xlsx";
 interface DataType {
   key: string;
   CreatedAt: Date;
@@ -78,6 +79,7 @@ const ImportWarehouse: React.FC = () => {
       ),
     },
   ];
+  const inputRef: any = React.useRef(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -189,20 +191,91 @@ const ImportWarehouse: React.FC = () => {
   const handleClickSearchId = async () => {
     dispatch(actions.ImportGoodsActions.getImportGoodsById());
   };
+  const handleImportExcel = async (e: any) => {
+    const files = e.target.files;
+
+    if (files.length) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = async (e: any) => {
+        const wb = XLSX.read(e.target.result);
+        const sheet = wb.SheetNames;
+        if (sheet.length) {
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheet[0]]);
+          // console.log(rows);
+          if (Array.isArray(rows)) {
+            let data = rows.map((item: any) => {
+              return {
+                IdMaterial: item?.IdMaterial ? item.IdMaterial : "",
+                NameMaterial: item?.NameMaterial ? item.NameMaterial : "",
+                Amount: item?.Amount ? item.Amount : 0,
+                Price: item?.Price && item.Amount ? item.Price * item.Amount : 0,
+                NameProvider: item?.NameProvider ? item.NameProvider : "không có",
+                PhoneProvider: item?.PhoneProvider ? item.PhoneProvider.toString() : "",
+              };
+            });
+            dispatch(actions.StateAction.loadingState(true));
+            let response = await importGoodService.createListImportGoods(data);
+            if (response.Status) {
+              dispatch(actions.StateAction.loadingState(false));
+              dispatch(actions.ImportGoodsActions.loadData());
+              notification({
+                message: "Nhập mặt hàng thành công",
+                title: "Thông báo",
+                position: "top-right",
+                type: "success",
+              });
+              inputRef.current.value = null;
+            } else {
+              notification({
+                message: "Nhập mặt hàng thất bại",
+                title: "Thông báo",
+                position: "top-right",
+                type: "danger",
+              });
+              inputRef.current.value = null;
+            }
+          }
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  };
   return (
     <div className="import-warehouse-page">
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-import-warehouse-page">
             <div className="title-import-warehouse-page">Danh sách phiếu nhập</div>
-            <Button
-              onClick={handleClickButtonAddCoupon}
-              type="primary"
-              className="button-add-import-warehouse"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-              <span> Nhập mặt hàng</span>
-            </Button>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Button
+                onClick={handleClickButtonAddCoupon}
+                type="primary"
+                className="button-add-import-warehouse"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                <span> Nhập mặt hàng</span>
+              </Button>
+              <div className="uploadFileImportExcel">
+                <div className="custom-file">
+                  <input
+                    ref={inputRef}
+                    hidden
+                    type="file"
+                    name="file"
+                    className="custom-file-input"
+                    id="inputGroupFile"
+                    required
+                    onChange={handleImportExcel}
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  />
+                  <label className="custom-file-label" htmlFor="inputGroupFile">
+                    <FontAwesomeIcon icon={faCloudArrowUp} />
+                    <span style={{ marginLeft: "5px" }}>Nhập danh sách</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </Col>
         <Col span={24}>

@@ -13,6 +13,16 @@
                 padding-left: 5px;
             }
     
+           
+        }
+        .uploadFileImportExcel{
+            margin-left: 10px;
+            color: rgba(0, 0, 0, 0.633);
+           &:hover{
+            color: rgb(64, 135, 217);
+            cursor: pointer;
+          
+           }
         }
     }
     .container-import-warehouse-page{

@@ -75,18 +75,48 @@ const OverviewPage: React.FC = () => {
     const prevoiusDay = today.subtract(timeState, "days");
     const formatPrevoiusDay = prevoiusDay.format("DD/MM/YYYY");
     let data: any[] = [];
-    console.log(overviewData);
-    // const workbook = XLSX.utils.book_new();
-    // const headerTitle = `Tổng quan từ ${formatPrevoiusDay} đến ${formatToday} `;
-    // //sheet1
-    // const sheet = XLSX.utils.json_to_sheet([{}], {
-    //   header: [headerTitle],
-    // });
-    // const columnWidths = [{ wch: 20 }, { wch: 30 }, { wch: 20 }, { wch: 20 }];
-    // const ws = XLSX.utils.sheet_add_json(sheet, data, { origin: "A3" });
-    // ws["!cols"] = columnWidths;
-    // XLSX.utils.book_append_sheet(workbook, sheet);
-    // XLSX.writeFile(workbook, `BaocaoTongQuan-${formatToday}.xls`);
+    if (overviewData) {
+      data.push({
+        "Tiền hàng": overviewData?.MoneyProduct ? VND.format(overviewData.MoneyProduct) : 0,
+        "Hoàn hủy": 0,
+        "Giảm giá": 0,
+        "Tiền nhập": overviewData?.MoneyMaterial ? VND.format(overviewData.MoneyMaterial) : 0,
+        "Doanh thu": overviewData?.Revenue ? VND.format(overviewData.Revenue) : 0,
+        "Số khách hàng": overviewData?.CustomerNumber ? overviewData?.CustomerNumber : 0,
+        "Số hóa đơn": overviewData?.OrderNumber ? overviewData?.OrderNumber : 0,
+        "TB mặt hàng/hóa đơn": `${
+          overviewData.OrderNumber === 0
+            ? "0"
+            : (overviewData.ProductNumber / overviewData.OrderNumber).toFixed(2)
+        }`,
+        "TB doanh thu/hóa đơn": `${
+          overviewData.OrderNumber === 0
+            ? "0"
+            : VND.format(overviewData.Revenue / overviewData.OrderNumber)
+        }`,
+      });
+    }
+    const workbook = XLSX.utils.book_new();
+    const headerTitle = `Tổng quan từ ${formatPrevoiusDay} đến ${formatToday} `;
+    //sheet1
+    const sheet = XLSX.utils.json_to_sheet([{}], {
+      header: [headerTitle],
+    });
+    const columnWidths = [
+      { wch: 15 },
+      { wch: 7 },
+      { wch: 7 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 15 },
+    ];
+    const ws = XLSX.utils.sheet_add_json(sheet, data, { origin: "A3" });
+    ws["!cols"] = columnWidths;
+    XLSX.utils.book_append_sheet(workbook, sheet);
+    XLSX.writeFile(workbook, `BaocaoTongQuan-${formatToday}.xls`);
   };
   return (
     <div id="overview_page">
@@ -104,7 +134,10 @@ const OverviewPage: React.FC = () => {
           />
         </Space>
         <div className="support">
-          <Button style={{ marginLeft: "20px", color: "green" }} onClick={handleExportExcel}>
+          <Button
+            style={{ marginLeft: "20px", color: "green", border: "1px solid green" }}
+            onClick={handleExportExcel}
+          >
             <FontAwesomeIcon icon={faFileExcel} fontSize={20} style={{ paddingRight: "5px" }} />
             Báo cáo
           </Button>

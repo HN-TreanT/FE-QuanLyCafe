@@ -124,7 +124,10 @@ const ProductList: React.FC = () => {
                 <FontAwesomeIcon icon={faPlus} />
                 <span> Thêm mặt hàng</span>
               </Button>
-              <Button style={{ marginLeft: "20px", color: "green" }} onClick={handleExport}>
+              <Button
+                style={{ marginLeft: "20px", color: "green", border: "1px solid green" }}
+                onClick={handleExport}
+              >
                 <FontAwesomeIcon icon={faFileExcel} fontSize={20} style={{ paddingRight: "5px" }} />
                 Báo cáo
               </Button>

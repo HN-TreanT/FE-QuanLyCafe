@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Table, Modal, Button, Form, Input, Select, Row, Col, Menu, MenuProps } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Modal, Button, Form, Input, Select, Row, Col, Menu, MenuProps } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCloudArrowUp, faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
 import "./ListWarehouse.scss";
 import ContentListWareHouse from "./ContentListWarehouse/ContentListWareHouse";
 import dayjs from "dayjs";
 import "dayjs/locale/vi"; // nếu muốn sử dụng ngôn ngữ tiếng Việt
-import removeAccents from "../../../../const/RemoveAccent";
 import { notification } from "../../../../components/notification";
 import { materialService } from "../../../../untils/networks/services/materialService";
 import useDebounce from "../../../../hooks/useDebounce";
+import * as XLSX from "xlsx";
 
 const items: MenuProps["items"] = [
   {
@@ -21,6 +21,7 @@ const items: MenuProps["items"] = [
 ];
 
 const ListWarehouse: React.FC = () => {
+  const inputRef: any = useRef(null);
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
@@ -94,7 +95,50 @@ const ListWarehouse: React.FC = () => {
     dispatch(actions.MaterialActions.setSelectedPage(1));
     setSearchValue(e.target.value);
   };
-
+  const handleImportExcel = async (e: any) => {
+    const files = e.target.files;
+    if (files.length) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = async (e: any) => {
+        const wb = XLSX.read(e.target.result);
+        const sheet = wb.SheetNames;
+        if (sheet.length) {
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheet[0]]);
+          if (Array.isArray(rows)) {
+            const createManyMaterial = rows.map((item: any) =>
+              materialService.createMaterial(item)
+            );
+            try {
+              dispatch(actions.StateAction.loadingState(true));
+              const result = await Promise.all(createManyMaterial);
+              if (result.length > 0) {
+                notification({
+                  message: "Thêm nguyên liệu thành công",
+                  title: "Thông báo",
+                  position: "top-right",
+                  type: "success",
+                });
+              }
+              dispatch(actions.StateAction.loadingState(false));
+              dispatch(actions.MaterialActions.loadData());
+              inputRef.current.value = null;
+            } catch {
+              dispatch(actions.StateAction.loadingState(false));
+              notification({
+                message: "Nhập nguyên liệu thất bại",
+                title: "Thông báo",
+                position: "top-right",
+                type: "danger",
+              });
+              inputRef.current.value = null;
+            }
+          }
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  };
   return (
     <div className="listWarehouse-page">
       <Modal
@@ -184,14 +228,35 @@ const ListWarehouse: React.FC = () => {
         <Col span={24}>
           <div className="title-button-listWarehouse-page">
             <div className="title-listWarehouse-page">Nguyên liệu</div>
-            <Button
-              onClick={handleClickButtonAddMaterial}
-              type="primary"
-              className="button-add-listWarehouse"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-              <span>Thêm nguyên liệu</span>
-            </Button>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Button
+                onClick={handleClickButtonAddMaterial}
+                type="primary"
+                className="button-add-listWarehouse"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                <span>Thêm nguyên liệu</span>
+              </Button>
+              <div className="uploadFileImportExcel">
+                <div className="custom-file">
+                  <input
+                    ref={inputRef}
+                    hidden
+                    type="file"
+                    name="file"
+                    className="custom-file-input"
+                    id="inputGroupFile"
+                    required
+                    onChange={handleImportExcel}
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  />
+                  <label className="custom-file-label" htmlFor="inputGroupFile">
+                    <FontAwesomeIcon icon={faCloudArrowUp} />
+                    <span style={{ marginLeft: "5px" }}>Nhập danh sách</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </Col>
         <Col span={24}>
