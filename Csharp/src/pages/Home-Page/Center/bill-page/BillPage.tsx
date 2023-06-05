@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Table,
-  Form,
-  Modal,
-  MenuProps,
-  Menu,
-  Button,
-  Input,
-} from "antd";
+import { Row, Col, Table, Form, Modal, MenuProps, Menu, Button, Input } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { TableRowSelection } from "antd/es/table/interface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,7 +10,7 @@ import { orderDetailServices } from "../../../../untils/networks/services/OrderD
 import ItemOrderDetail from "../../../../components/ItemDetailOrder/ItemDetailOrder";
 import "./BillPage.scss";
 import useDebounce from "../../../../hooks/useDebounce";
-
+import { VND } from "../../../../const/convertVND";
 interface DataType {
   key: string;
   timepay: string;
@@ -51,7 +41,7 @@ const columns: ColumnsType<DataType> = [
   {
     title: "Tổng tiền",
     dataIndex: "money",
-    render: (text) => <div>{`${text} đ`}</div>,
+    render: (text) => <div>{`${text}`}</div>,
   },
 ];
 const items: MenuProps["items"] = [
@@ -73,12 +63,8 @@ const BillPage: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedStateBill = useSelector(
-    (state: any) => state.bill.selectedStateBill
-  );
-  const selectedRowKeys = useSelector(
-    (state: any) => state.bill.selectedRowKeys
-  );
+  const selectedStateBill = useSelector((state: any) => state.bill.selectedStateBill);
+  const selectedRowKeys = useSelector((state: any) => state.bill.selectedRowKeys);
   const [rowClickKey, setRowClickKey] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [orderDts, setOrderDts] = useState([]);
@@ -95,7 +81,7 @@ const BillPage: React.FC = () => {
       Id: order?.IdOrder,
       table: order?.NameTable ? `Bàn ${order?.NameTable}` : "Đã xóa",
       customer: order?.Fullname,
-      money: order?.payments ? order.payments : 0,
+      money: order?.payments ? VND.format(order.payments) : 0,
       phonenumber: order?.PhoneNumber,
     };
   });
@@ -103,13 +89,7 @@ const BillPage: React.FC = () => {
   useEffect(() => {
     dispatch(actions.BillActions.setSearchValue(searchValueDebounce));
     dispatch(actions.BillActions.loadData());
-  }, [
-    actions.BillActions,
-    dispatch,
-    selectedStateBill,
-    selectedPage,
-    searchValueDebounce,
-  ]);
+  }, [actions.BillActions, dispatch, selectedStateBill, selectedPage, searchValueDebounce]);
   const handleSeletected = (e: any) => {
     dispatch(actions.BillActions.selectedStateBill(e.key));
   };
@@ -160,9 +140,7 @@ const BillPage: React.FC = () => {
   const handleRowClick = async (record: DataType) => {
     setRowClickKey(record.key);
     setIsOpenModal(true);
-    const OrderDetails = await orderDetailServices.handleGetOrderByIdOrder(
-      record.key
-    );
+    const OrderDetails = await orderDetailServices.handleGetOrderByIdOrder(record.key);
     if (OrderDetails.Status) {
       setOrderDts(OrderDetails.Data);
     }
@@ -220,11 +198,7 @@ const BillPage: React.FC = () => {
                   onCancel={() => setIsOpenModal(false)}
                 >
                   <Row>
-                    <ItemOrderDetail
-                      NameProduct="Tên món"
-                      Amount="Số lượng"
-                      Price="Giá thành"
-                    />
+                    <ItemOrderDetail NameProduct="Tên món" Amount="Số lượng" Price="Giá thành" />
                     {orderDts.map((orderDetail: any) => {
                       return (
                         <ItemOrderDetail
@@ -275,10 +249,7 @@ const BillPage: React.FC = () => {
                             bordered={false}
                             placeholder="Nhập tên nguyên liệu"
                             prefix={
-                              <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="icon-search"
-                              />
+                              <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                             }
                           />
                         </Form.Item>
@@ -296,25 +267,14 @@ const BillPage: React.FC = () => {
                             bordered={false}
                             placeholder="Nhập tên bàn ăn"
                             prefix={
-                              <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="icon-search"
-                              />
+                              <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                             }
                           />
                         </Form.Item>
                       </Col>
                       <Col span={6}>
-                        <Button
-                          className="button-delete-bill"
-                          danger
-                          onClick={hanldeClickDelete}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            beat
-                            className="icon-delete-bill"
-                          />
+                        <Button className="button-delete-bill" danger onClick={hanldeClickDelete}>
+                          <FontAwesomeIcon icon={faTrash} beat className="icon-delete-bill" />
                           Delete
                         </Button>
                       </Col>

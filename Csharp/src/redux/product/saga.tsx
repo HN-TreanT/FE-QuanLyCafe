@@ -27,9 +27,7 @@ function* handleErr(err: any) {
 }
 function* saga_Redirect() {
   //action.type.
-  let _navigate: Promise<any> = yield select(
-    (state: any) => state.state.navigate
-  );
+  let _navigate: Promise<any> = yield select((state: any) => state.state.navigate);
   let navigate: any = _navigate;
   if (navigate.navigate && navigate.path) {
     navigate.navigate(navigate.path);
@@ -37,9 +35,7 @@ function* saga_Redirect() {
 }
 function* saga_GetTopSellProduct() {
   try {
-    let _time: Promise<any> = yield select(
-      (state: any) => state.overview.timeState
-    );
+    let _time: Promise<any> = yield select((state: any) => state.overview.timeState);
     let time: any = _time;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield productServices.GetTop5Product(time);
@@ -57,17 +53,11 @@ function* saga_GetTopSellProduct() {
 
 function* saga_loadData() {
   try {
-    let _selectedPage: Promise<any> = yield select(
-      (state: any) => state.product.selectedPage
-    );
+    let _selectedPage: Promise<any> = yield select((state: any) => state.product.selectedPage);
     let selectedPage: any = _selectedPage;
-    let _searchValue: Promise<any> = yield select(
-      (state: any) => state.product.searchValue
-    );
+    let _searchValue: Promise<any> = yield select((state: any) => state.product.searchValue);
     let searchValue: any = _searchValue;
-    let _typeSearch: Promise<any> = yield select(
-      (state: any) => state.product.typeSearch
-    );
+    let _typeSearch: Promise<any> = yield select((state: any) => state.product.typeSearch);
     let typeSearch: any = _typeSearch;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield productServices.GetAllProduct(
@@ -90,9 +80,7 @@ function* saga_loadData() {
 
 function* saga_AddProduct() {
   try {
-    let _infoProduct: Promise<any> = yield select(
-      (state: any) => state.product.infoProduct
-    );
+    let _infoProduct: Promise<any> = yield select((state: any) => state.product.infoProduct);
     let infoProduct: any = _infoProduct;
     let _infoUseMaterial: Promise<any> = yield select(
       (state: any) => state.material.infoUseMaterials
@@ -100,9 +88,7 @@ function* saga_AddProduct() {
     let infoUseMaterial: any = _infoUseMaterial;
     console.log(infoUseMaterial);
     yield put(stateActions.action.loadingState(true));
-    let _newProduct: Promise<any> = yield productServices.CreateProduct(
-      infoProduct
-    );
+    let _newProduct: Promise<any> = yield productServices.CreateProduct(infoProduct);
     let newProduct: any = _newProduct;
     if (newProduct.Status) {
       let data: any[] = [];
@@ -112,9 +98,7 @@ function* saga_AddProduct() {
           IdProduct: newProduct.Data.IdProduct,
         };
       });
-      let _res: Promise<any> = yield materialService.createManyUseMaterial(
-        data
-      );
+      let _res: Promise<any> = yield materialService.createManyUseMaterial(data);
       let res: any = _res;
       if (!res.Status) {
         yield handleFail("Mặt hàng tồn tại");
@@ -143,9 +127,7 @@ function* saga_AddProduct() {
 }
 
 function* saga_deleteProduct() {
-  let _productId: Promise<any> = yield select(
-    (state: any) => state.product.productId
-  );
+  let _productId: Promise<any> = yield select((state: any) => state.product.productId);
   let productId: any = _productId;
   yield put(stateActions.action.loadingState(true));
   let _response: Promise<any> = yield productServices.DeleteProduct(productId);
@@ -170,24 +152,23 @@ function* saga_deleteProduct() {
 
 function* saga_updateProduct() {
   try {
-    let _productId: Promise<any> = yield select(
-      (state: any) => state.product.Id_product
-    );
+    let _productId: Promise<any> = yield select((state: any) => state.product.Id_product);
     let productId: any = _productId;
     yield put(stateActions.action.loadingState(true));
-    let _infoUpdateProduct: Promise<any> = yield select(
-      (state: any) => state.product.infoProduct
-    );
+    let _infoUpdateProduct: Promise<any> = yield select((state: any) => state.product.infoProduct);
     let infoUpdateProduct: any = _infoUpdateProduct;
     let _infoMaterials: Promise<any> = yield select(
       (state: any) => state.material.infoUseMaterials
     );
     let infoMaterials: any = _infoMaterials;
-    let _responseUpdateProduct: Promise<any> =
-      yield productServices.updateProduct(productId, infoUpdateProduct);
+    let _responseUpdateProduct: Promise<any> = yield productServices.updateProduct(
+      productId,
+      infoUpdateProduct
+    );
     let responseUpdateProduct: any = _responseUpdateProduct;
-    let _responseDeleteUM: Promise<any> =
-      yield materialService.deleteAllUseMaterialByIdProduct(productId);
+    let _responseDeleteUM: Promise<any> = yield materialService.deleteAllUseMaterialByIdProduct(
+      productId
+    );
     let reponseDeleteUM: any = _responseDeleteUM;
     let data: any[] = [];
     data = infoMaterials.map((info: any) => {
@@ -196,14 +177,9 @@ function* saga_updateProduct() {
         IdProduct: productId,
       };
     });
-    let _resCreateUM: Promise<any> =
-      yield materialService.createManyUseMaterial(data);
+    let _resCreateUM: Promise<any> = yield materialService.createManyUseMaterial(data);
     let resCreatUM: any = _resCreateUM;
-    if (
-      reponseDeleteUM.Status &&
-      responseUpdateProduct.Status &&
-      resCreatUM.Status
-    ) {
+    if (reponseDeleteUM.Status && responseUpdateProduct.Status && resCreatUM.Status) {
       yield put(stateActions.action.loadingState(false));
       yield put(actions.action.loadData());
       notification({

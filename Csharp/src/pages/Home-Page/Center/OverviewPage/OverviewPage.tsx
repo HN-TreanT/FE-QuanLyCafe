@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Space, Select, Row, Col, Modal } from "antd";
+import { Space, Select, Row, Col, Modal, Button } from "antd";
 import {
-  ExclamationCircleFilled,
   CloseCircleFilled,
   ContainerFilled,
   DollarCircleFilled,
   GiftFilled,
   WalletFilled,
 } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import "./OverviewPage.scss";
 import {
   OverVReportItem,
@@ -17,7 +18,10 @@ import {
 } from "../../../../components/OverviewReport";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
-import axios from "axios";
+
+import { VND } from "../../../../const/convertVND";
+import * as XLSX from "xlsx";
+import moment from "moment";
 const reports = [
   {
     value: "today",
@@ -43,12 +47,9 @@ const iconReport = {
 const OverviewPage: React.FC = () => {
   const dispatch = useDispatch();
   const actions = useAction();
-  const [isOpenModal, setIsOpenModal] = useState(false);
   const timeState = useSelector((state: any) => state.overview.timeState);
   const overviewData = useSelector((state: any) => state.overview.overviewData);
-  const topSellProduct = useSelector(
-    (state: any) => state.product.productsTopSell
-  );
+  const topSellProduct = useSelector((state: any) => state.product.productsTopSell);
 
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());
@@ -62,38 +63,35 @@ const OverviewPage: React.FC = () => {
     if (value === "thisyear") time = 365;
     dispatch(actions.OverviewAction.timeState(time));
   };
-  const handleClickModal = () => {
-    setIsOpenModal(true);
-  };
+
   let timeSelected;
   if (timeState === 1) timeSelected = "today";
   if (timeState === 7) timeSelected = "thisweek";
   if (timeState === 30) timeSelected = "thismonth";
   if (timeState === 365) timeSelected = "thisyear";
-  const handleClik = async () => {
-    const accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
-    const refreshRes = await axios.post(
-      "https://localhost:7066/api/Token/Refresh",
-      {
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      }
-    );
-    console.log(refreshRes.data.AccessToken);
+  const handleExportExcel = () => {
+    const today = moment();
+    const formatToday = today.format("DD/MM/YYYY");
+    const prevoiusDay = today.subtract(timeState, "days");
+    const formatPrevoiusDay = prevoiusDay.format("DD/MM/YYYY");
+    let data: any[] = [];
+    console.log(overviewData);
+    // const workbook = XLSX.utils.book_new();
+    // const headerTitle = `Tổng quan từ ${formatPrevoiusDay} đến ${formatToday} `;
+    // //sheet1
+    // const sheet = XLSX.utils.json_to_sheet([{}], {
+    //   header: [headerTitle],
+    // });
+    // const columnWidths = [{ wch: 20 }, { wch: 30 }, { wch: 20 }, { wch: 20 }];
+    // const ws = XLSX.utils.sheet_add_json(sheet, data, { origin: "A3" });
+    // ws["!cols"] = columnWidths;
+    // XLSX.utils.book_append_sheet(workbook, sheet);
+    // XLSX.writeFile(workbook, `BaocaoTongQuan-${formatToday}.xls`);
   };
   return (
     <div id="overview_page">
-      <Modal
-        title="Định nghĩa các trường báo cáo tổng quan"
-        open={isOpenModal}
-        footer={null}
-        onCancel={() => {
-          setIsOpenModal(false);
-        }}
-      ></Modal>
       <div className="title_overview distance">
-        <span onClick={handleClik}>TỔNG QUAN KINH DOANH</span>
+        <span>TỔNG QUAN KINH DOANH</span>
       </div>
 
       <div className="list_select_report distance ">
@@ -105,11 +103,11 @@ const OverviewPage: React.FC = () => {
             options={reports}
           />
         </Space>
-        <div className="support" onClick={handleClickModal}>
-          <span>Hướng dẫn</span>
-          <ExclamationCircleFilled
-            style={{ fontSize: "1rem", paddingLeft: "3px" }}
-          />
+        <div className="support">
+          <Button style={{ marginLeft: "20px", color: "green" }} onClick={handleExportExcel}>
+            <FontAwesomeIcon icon={faFileExcel} fontSize={20} style={{ paddingRight: "5px" }} />
+            Báo cáo
+          </Button>
         </div>
       </div>
 
@@ -163,9 +161,7 @@ const OverviewPage: React.FC = () => {
               count={`${
                 overviewData.OrderNumber === 0
                   ? "0"
-                  : (
-                      overviewData.ProductNumber / overviewData.OrderNumber
-                    ).toFixed(2)
+                  : (overviewData.ProductNumber / overviewData.OrderNumber).toFixed(2)
               }`}
               color="rgb(118, 64, 239)"
             />
@@ -176,7 +172,7 @@ const OverviewPage: React.FC = () => {
               count={`${
                 overviewData.OrderNumber === 0
                   ? "0"
-                  : (overviewData.Revenue / overviewData.OrderNumber).toFixed(2)
+                  : VND.format(overviewData.Revenue / overviewData.OrderNumber)
               }`}
               color="rgb(244, 98, 141)"
             />

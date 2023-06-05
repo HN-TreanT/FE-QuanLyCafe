@@ -10,6 +10,7 @@ import Table, { ColumnsType } from "antd/es/table";
 import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { billServices } from "../../../../../untils/networks/services/billService";
 import { notification } from "../../../../../components/notification";
+import { VND } from "../../../../../const/convertVND";
 interface DataTypeGraftOrder {
   IdOrder: string;
   CountProdut: Number;
@@ -78,17 +79,13 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
   const actions = useAction();
   const dispatch = useDispatch();
   // const [valueRaido, setValueRadio] = React.useState();
-  const selectedOrder = useSelector(
-    (state: any) => state.orderpage.selectedOrder
-  );
+  const selectedOrder = useSelector((state: any) => state.orderpage.selectedOrder);
   const orderSplit = useSelector((state: any) => state.orderpage.orderSplit);
 
   const [disabled, setDisabled] = useState(true);
 
   //new selectedTable graft or split
-  const selectedTable = useSelector(
-    (state: any) => state.orderpage.selectedTableOnSplitOrder
-  );
+  const selectedTable = useSelector((state: any) => state.orderpage.selectedTableOnSplitOrder);
   const [dataSplitOrder, setDataSplitOrder] = useState<any>([]);
   useEffect(() => {
     if (Array.isArray(selectedOrder?.OrderDetails)) {
@@ -111,21 +108,17 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
         key: selectedOrder?.IdOrder,
         IdOrder: selectedOrder?.IdOrder,
         CountProduct: selectedOrder?.OrderDetails?.length,
-        Price: selectedOrder?.Price ? selectedOrder?.Price : 0,
+        Price: selectedOrder?.Price ? VND.format(selectedOrder?.Price) : 0,
       },
     ];
   }
 
-  const radioSplitGraftOrder = useSelector(
-    (state: any) => state.orderpage.radioSplitGraftOrder
-  );
+  const radioSplitGraftOrder = useSelector((state: any) => state.orderpage.radioSplitGraftOrder);
   useEffect(() => {
     dispatch(actions.OrderPageActions.setRadioSelectSplitGraftOrder("graft"));
   }, [actions.OrderPageActions, dispatch]);
   const onChangeRadio = (e: any) => {
-    dispatch(
-      actions.OrderPageActions.setRadioSelectSplitGraftOrder(e.target.value)
-    );
+    dispatch(actions.OrderPageActions.setRadioSelectSplitGraftOrder(e.target.value));
     // setValueRadio(e.target.value);
   };
   const handleGraftOrder = async () => {
@@ -142,10 +135,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
     }
     if (radioSplitGraftOrder === "graft" || !radioSplitGraftOrder) {
       try {
-        let response = await billServices.graftOrder(
-          selectedOrder?.IdOrder,
-          selectedTable?.value
-        );
+        let response = await billServices.graftOrder(selectedOrder?.IdOrder, selectedTable?.value);
         if (response?.Status) {
           dispatch(actions.OrderPageActions.setSelectedTableOnSplitOrder({}));
           dispatch(
@@ -180,10 +170,8 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
     if (Array.isArray(dataSplitOrder)) {
       const updatedDataSplitOrder = dataSplitOrder.map((item: any) => {
         if (item.key === record.key) {
-          const newCountSplit =
-            item.CountSplit - 1 >= 0 ? item.CountSplit - 1 : 0;
-          const newCount =
-            item.CountSplit - 1 < 0 ? item.Count : item.Count + 1;
+          const newCountSplit = item.CountSplit - 1 >= 0 ? item.CountSplit - 1 : 0;
+          const newCount = item.CountSplit - 1 < 0 ? item.Count : item.Count + 1;
           return {
             ...item,
             CountSplit: newCountSplit,
@@ -228,10 +216,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
           key="submit"
           type="primary"
         >
-          <FontAwesomeIcon
-            style={{ paddingRight: "5px" }}
-            icon={faSquareCheck}
-          />
+          <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faSquareCheck} />
           <span> Thực hiện</span>
         </Button>,
         <Button
@@ -278,11 +263,7 @@ const ModalSplitOrder: React.FC<any> = ({ visible, setIsOpenModal }) => {
             </span>
             {radioSplitGraftOrder === "split" ? (
               <Select
-                value={
-                  orderSplit?.typeSplitOrder
-                    ? orderSplit?.typeSplitOrder
-                    : "createNewOrder"
-                }
+                value={orderSplit?.typeSplitOrder ? orderSplit?.typeSplitOrder : "createNewOrder"}
                 style={{ marginRight: "10px", width: "200px" }}
                 onChange={(e: any) => {
                   dispatch(

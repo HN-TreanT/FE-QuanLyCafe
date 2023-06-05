@@ -20,13 +20,12 @@ import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import SearchCustomer from "./SearchCustomer";
 import ModalTable from "./ModalTable/ModalTable";
 import ModalAcountCustomer from "./ModalAcountCustomer/ModalAcountCustomer";
+import { VND } from "../../../../const/convertVND";
 
 const ContentOrderDetail: React.FC = () => {
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedOrder = useSelector(
-    (state: any) => state.orderpage.selectedOrder
-  );
+  const selectedOrder = useSelector((state: any) => state.orderpage.selectedOrder);
   const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
   const [isOpenModalTable, setIsOpenModalTable] = useState(false);
   const [isOpenModalCountCustomer, setIsOpenModalCountModal] = useState(false);
@@ -76,10 +75,7 @@ const ContentOrderDetail: React.FC = () => {
         value={selectedOrder?.Amount}
       />
       {/* Modal split order */}
-      <ModalSplitOrder
-        visible={isOpenModalSplitOrder}
-        setIsOpenModal={setIsOpenModalSplitOrder}
-      />
+      <ModalSplitOrder visible={isOpenModalSplitOrder} setIsOpenModal={setIsOpenModalSplitOrder} />
       {/* Modal select table */}
       <ModalTable
         visible={isOpenModalTable}
@@ -94,10 +90,7 @@ const ContentOrderDetail: React.FC = () => {
         onCancel={() => setIsOpenCancleOrder(false)}
         footer={[
           <Button onClick={handleCancleOrder} danger key="submit">
-            <FontAwesomeIcon
-              style={{ paddingRight: "5px" }}
-              icon={faSquareCheck}
-            />
+            <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faSquareCheck} />
             <span> Đồng ý</span>
           </Button>,
           <Button
@@ -120,13 +113,8 @@ const ContentOrderDetail: React.FC = () => {
             <Col span={5}>
               {" "}
               <div onClick={handleClickSelectTable} className="select-table">
-                <FontAwesomeIcon
-                  style={{ paddingRight: "5px" }}
-                  icon={faTable}
-                />
-                {order?.IdTableNavigation
-                  ? `Bàn ${order?.IdTableNavigation?.Name} `
-                  : "Chọn bàn"}
+                <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faTable} />
+                {order?.IdTableNavigation ? `Bàn ${order?.IdTableNavigation?.Name} ` : "Chọn bàn"}
               </div>
             </Col>
             <Col span={19}>
@@ -135,8 +123,7 @@ const ContentOrderDetail: React.FC = () => {
           </Row>
         </div>
         <div className="middle-content-order-detail">
-          {Array.isArray(order?.OrderDetails) &&
-          order?.OrderDetails.length > 0 ? (
+          {Array.isArray(order?.OrderDetails) && order?.OrderDetails.length > 0 ? (
             order?.OrderDetails.map((item: any) => (
               <ItemOrderDetail data={item} key={item?.IdOrderDetail} />
             ))
@@ -153,9 +140,7 @@ const ContentOrderDetail: React.FC = () => {
                 style={{ fontSize: "3rem", color: " rgba(0, 0, 0, 0.414)" }}
                 icon={faUtensils}
               />
-              <div
-                style={{ fontWeight: "500", color: " rgba(0, 0, 0, 0.414)" }}
-              >
+              <div style={{ fontWeight: "500", color: " rgba(0, 0, 0, 0.414)" }}>
                 Chưa thêm món ăn nào
               </div>
             </div>
@@ -165,29 +150,20 @@ const ContentOrderDetail: React.FC = () => {
           <div className="info-order-detail">
             <div className="info-order-detail-left">
               <Tooltip placement="top" title="Số lượng khách hàng">
-                <div
-                  onClick={handleClickIconCustomerOrder}
-                  className="count-customer-order"
-                >
-                  <FontAwesomeIcon
-                    className="icon-customer-order"
-                    icon={faUsers}
-                  />
+                <div onClick={handleClickIconCustomerOrder} className="count-customer-order">
+                  <FontAwesomeIcon className="icon-customer-order" icon={faUsers} />
                   <span>{order?.Amount ? order?.Amount : 0}</span>
                 </div>
               </Tooltip>
               <div onClick={handlClickIconSplitOrder} className="control-table">
-                <FontAwesomeIcon
-                  className="icon-control-table"
-                  icon={faFileLines}
-                />
+                <FontAwesomeIcon className="icon-control-table" icon={faFileLines} />
                 <span className="title-controle-table">Tách ghép</span>
               </div>
             </div>
             <div className="total-price-order">
               <span className="title-total-price-order">Tổng tiền:</span>
               <span className="price-total">
-                {order?.Price ? `${order?.Price} đ` : `0 đ`}
+                {order?.Price ? `${VND.format(order.Price)} ` : `0 đ`}
               </span>
             </div>
           </div>
@@ -210,10 +186,7 @@ const ContentOrderDetail: React.FC = () => {
                     onClick={handleCLickOpenDrawerPayment}
                     disabled={selectedOrder.IdOrder ? false : true}
                   >
-                    <FontAwesomeIcon
-                      className="icon-button"
-                      icon={faMoneyBill1Wave}
-                    />
+                    <FontAwesomeIcon className="icon-button" icon={faMoneyBill1Wave} />
                     <span className="title-button">Thanh toán</span>
                   </Button>
                 </Col>

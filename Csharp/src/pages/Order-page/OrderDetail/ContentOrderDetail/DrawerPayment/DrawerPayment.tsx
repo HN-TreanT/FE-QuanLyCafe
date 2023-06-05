@@ -11,6 +11,7 @@ import useAction from "../../../../../redux/useActions";
 import { useReactToPrint } from "react-to-print";
 import { billServices } from "../../../../../untils/networks/services/billService";
 import { notification } from "../../../../../components/notification";
+import { VND } from "../../../../../const/convertVND";
 
 interface DataType {
   key: string;
@@ -38,7 +39,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
         key: item?.IdOrderDetail,
         NameProduct: item?.IdProductNavigation?.Title,
         Amount: item?.Amout ? item?.Amout : 0,
-        Price: item?.Price ? item?.Price : 0,
+        Price: item?.Price ? VND.format(item?.Price) : 0,
       };
     });
   }
@@ -222,7 +223,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   <div style={{ fontWeight: "500" }}>Tổng tiền hàng</div>
                   <span>
                     {selectedOrder?.Price < 1000000
-                      ? `${selectedOrder?.Price ? selectedOrder?.Price : 0} đ`
+                      ? `${selectedOrder?.Price ? VND.format(selectedOrder?.Price) : 0} `
                       : ` ${
                           selectedOrder?.Price ? Math.round(selectedOrder?.Price / 10000) / 100 : 0
                         } tr(VNĐ)`}
@@ -247,7 +248,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   >
                     {/* {selectedOrder?.Price} */}
                     {selectedOrder?.Price < 1000000
-                      ? `${selectedOrder?.Price ? selectedOrder?.Price : 0} đ`
+                      ? `${selectedOrder?.Price ? VND.format(selectedOrder.Price) : 0} `
                       : ` ${
                           selectedOrder?.Price ? Math.round(selectedOrder?.Price / 10000) / 100 : 0
                         } tr(VNĐ)`}
@@ -284,7 +285,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                   <div style={{ fontWeight: "500" }}>Tiền thừa trả khách</div>
                   <span style={{ fontWeight: "500" }}>
                     {value - selectedOrder?.Price < 1000000
-                      ? `${selectedOrder?.Price ? value - selectedOrder?.Price : 0} đ`
+                      ? `${selectedOrder?.Price ? VND.format(value - selectedOrder?.Price) : 0} `
                       : ` ${
                           value - selectedOrder?.Price
                             ? Math.round((value - selectedOrder?.Price) / 10000) / 100

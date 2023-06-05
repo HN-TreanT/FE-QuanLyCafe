@@ -1,11 +1,7 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBellConcierge,
-  faClock,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBellConcierge, faClock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { DollarCircleFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../redux/useActions";
@@ -13,12 +9,11 @@ import "./ItemOrder.scss";
 import { Col, Row } from "antd";
 import { billServices } from "../../../untils/networks/services/billService";
 import { orderDetailServices } from "../../../untils/networks/services/OrderDetailService";
+import { VND } from "../../../const/convertVND";
 const ItemOrder: React.FC<any> = ({ style, data }) => {
   const actions = useAction();
   const dispatch = useDispatch();
-  const handleClickItemOrder = async (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleClickItemOrder = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const allCards = document.querySelectorAll(".card-item-order");
     allCards.forEach((card) => {
       if (card !== event.currentTarget) {
@@ -31,8 +26,7 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
       const order = await billServices.getDetailOrder(data?.IdOrder);
       if (order?.Status) {
         dispatch(actions.StateAction.loadingState(true));
-        const ListOrderDetail =
-          await orderDetailServices.handleGetOrderByIdOrder(data?.IdOrder);
+        const ListOrderDetail = await orderDetailServices.handleGetOrderByIdOrder(data?.IdOrder);
         dispatch(
           actions.OrderPageActions.setSelectedOrder({
             ...order?.Data,
@@ -85,9 +79,7 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
             }}
             icon={faBellConcierge}
           />
-          <span style={{ paddingLeft: "50px", fontWeight: "600" }}>
-            MTA Coffee
-          </span>
+          <span style={{ paddingLeft: "50px", fontWeight: "600" }}>MTA Coffee</span>
         </div>
       </div>
       <div className="content-item-order">
@@ -97,19 +89,13 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
             <Row gutter={[10, 10]}>
               <Col span={16}>
                 <span style={{ paddingRight: "15px" }}>
-                  <FontAwesomeIcon
-                    className="icon-time-customer"
-                    icon={faClock}
-                  />
+                  <FontAwesomeIcon className="icon-time-customer" icon={faClock} />
                   {timeOrders}
                 </span>
               </Col>
               <Col span={8}>
                 <span>
-                  <FontAwesomeIcon
-                    className="icon-time-customer"
-                    icon={faUser}
-                  />
+                  <FontAwesomeIcon className="icon-time-customer" icon={faUser} />
                   {data?.Amount ? data?.Amount : 0}
                 </span>
               </Col>
@@ -126,12 +112,8 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
             <span style={{ fontWeight: "500" }}>
               {" "}
               {data?.payments < 1000000
-                ? `${data?.payments ? data.payments : 0} đ`
-                : ` ${
-                    data?.payments
-                      ? Math.round(data?.payments / 10000) / 100
-                      : 0
-                  } tr(VNĐ)`}
+                ? `${data?.payments ? VND.format(data.payments) : 0} `
+                : ` ${data?.payments ? Math.round(data?.payments / 10000) / 100 : 0} tr(VNĐ)`}
             </span>
           </div>
         </div>

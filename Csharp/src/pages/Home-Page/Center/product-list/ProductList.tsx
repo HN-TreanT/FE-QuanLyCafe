@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button, Menu, MenuProps, Form, Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import "./ProductList.scss";
-import Spin from "../../../../components/Spinning/Spinning";
 import useAction from "../../../../redux/useActions";
 import { RouterLinks, serverConfig } from "../../../../const";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +11,17 @@ import ContenProductList from "../../../../components/ContentProductList/Content
 import useDebounce from "../../../../hooks/useDebounce";
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
+import { productServices } from "../../../../untils/networks/services/productService";
+import { notification } from "../../../../components/notification";
+import { VND } from "../../../../const/convertVND";
+import moment from "moment";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả mặt hàng",
     key: "listProduct",
   },
 ];
+
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,7 +46,7 @@ const ProductList: React.FC = () => {
         Id: product?.IdProduct,
         productName: product?.Title,
         category: product.IdCategoryNavigation?.Name,
-        price: product?.Price,
+        price: product?.Price ? VND.format(product.Price) : "0 đ",
       };
     });
   }
@@ -68,15 +72,41 @@ const ProductList: React.FC = () => {
     dispatch(actions.ProductActions.setTypeSeacrch("category"));
     setSearchValue(e.target.value);
   };
-  const handleExport = () => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const ws = XLSX.utils.json_to_sheet(valueProducts);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, "mysheet" + fileExtension);
+  const handleExport = async () => {
+    let response = await productServices.GetTop5Product(360);
+    if (response.Status) {
+      if (response.Data && Array.isArray(response.Data)) {
+        const data = response.Data.map((product: any) => {
+          return {
+            "Mã mặt hàng": product?.IdProduct,
+            "Tên mặt hàng": product?.Title,
+            "Số lượng đã bán": product?.TotalAmount,
+            "Doanh thu": VND.format(product?.Price),
+          };
+        });
+        const workbook = XLSX.utils.book_new();
+        const headerTitle = "Top 5 sản phẩm bán chạy trong năm";
+        //sheet1
+        const sheet = XLSX.utils.json_to_sheet([{}], {
+          header: [headerTitle],
+        });
+        const columnWidths = [{ wch: 20 }, { wch: 30 }, { wch: 20 }, { wch: 20 }];
+        const ws = XLSX.utils.sheet_add_json(sheet, data, { origin: "A3" });
+        ws["!cols"] = columnWidths;
+        // XLSX.utils.sheet_add_json(sheet, data, { origin: "A10" });
+        XLSX.utils.book_append_sheet(workbook, sheet);
+        const today = moment();
+        const formatToday = today.format("DD/MM/YYYY");
+        XLSX.writeFile(workbook, `Baocao-${formatToday}.xls`);
+      }
+    } else {
+      notification({
+        message: "Xuất báo cáo lỗi",
+        title: "Thông báo",
+        position: "top-right",
+        type: "danger",
+      });
+    }
   };
   return (
     <div className="product-page">
@@ -84,17 +114,24 @@ const ProductList: React.FC = () => {
         <Col span={24}>
           <div className="title-button-product-page">
             <div className="title-product-page">Danh sách mặt hàng</div>
-            <Button
-              onClick={handleClickButtonAddProduct}
-              type="primary"
-              className="button-add-product"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-              <span> Thêm mặt hàng</span>
-            </Button>
-            <Button onClick={handleExport}>Export</Button>
+
+            <div>
+              <Button
+                onClick={handleClickButtonAddProduct}
+                type="primary"
+                className="button-add-product"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                <span> Thêm mặt hàng</span>
+              </Button>
+              <Button style={{ marginLeft: "20px", color: "green" }} onClick={handleExport}>
+                <FontAwesomeIcon icon={faFileExcel} fontSize={20} style={{ paddingRight: "5px" }} />
+                Báo cáo
+              </Button>
+            </div>
           </div>
         </Col>
+
         <Col span={24}>
           <div className="container-product-page">
             <div className="header-product-page">

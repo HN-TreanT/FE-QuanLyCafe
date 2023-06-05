@@ -23,9 +23,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
   const actions = useAction();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const categorySelected = useSelector(
-    (state: any) => state.category.categorySelected
-  );
+  const categorySelected = useSelector((state: any) => state.category.categorySelected);
   const categories = useSelector((state: any) => state.category.categories);
   const columns: ColumnsType<DataType> = [
     {
@@ -37,9 +35,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
       title: "Mặt hàng",
       dataIndex: "image",
       width: "10%",
-      render: (text) => (
-        <Image src={text} preview={false} width={80} height={60} />
-      ),
+      render: (text) => <Image src={text} preview={false} width={80} height={60} />,
     },
     {
       title: "",
@@ -51,25 +47,21 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
       title: "Giá thành",
       width: "40%",
       dataIndex: "price",
-      render: (text) => <div style={{ color: "#1677ff" }}>{`${text} đ`}</div>,
+      render: (text) => <div style={{ color: "#1677ff" }}>{`${text}`}</div>,
     },
     {
       title: "",
       dataIndex: "index",
       width: "10%",
       render: (text: any, record: DataType) => (
-        <Button onClick={(e: any) => handleOpenChangeCategory(e, record)}>
-          Chuyển danh mục
-        </Button>
+        <Button onClick={(e: any) => handleOpenChangeCategory(e, record)}>Chuyển danh mục</Button>
       ),
     },
   ];
   const [IdProductSelected, setIdProductSelected] = useState("");
   const [IdCategoryNew, setIdCategoryNew] = useState("");
-  const [isOpenModelDelteCategory, setIsOpenModelDelteCategory] =
-    useState(false);
-  const [isOpenModelChangeCategory, setIsOpenModelChangeCategory] =
-    useState(false);
+  const [isOpenModelDelteCategory, setIsOpenModelDelteCategory] = useState(false);
+  const [isOpenModelChangeCategory, setIsOpenModelChangeCategory] = useState(false);
   const [products, setProducts] = useState(value);
   const handleSearchValueChange = (e: any) => {
     let filterProducts: any[] = [];
@@ -100,9 +92,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
             })
         )
       );
-      dispatch(
-        actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct)
-      );
+      dispatch(actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct));
       dispatch(actions.ProductActions.setInfoProduct(dbProduct.Data));
       navigate(RouterLinks.UPDATE_PRODUCT_PAGE);
     } else {
@@ -120,9 +110,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
         console.log(value);
         setIsOpenModelDelteCategory(true);
       } else {
-        const response = await categoryService.deleteCategory(
-          categorySelected?.IdCategory
-        );
+        const response = await categoryService.deleteCategory(categorySelected?.IdCategory);
         if (response.Status) {
           dispatch(actions.CategoryActions.loadData());
           navigate(RouterLinks.CATEGORY_PAGE);
@@ -153,10 +141,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
     formData.append("IdCategory", IdCategoryNew);
     try {
       dispatch(actions.StateAction.loadingState(true));
-      let response = await productServices.updateProduct(
-        IdProductSelected,
-        formData
-      );
+      let response = await productServices.updateProduct(IdProductSelected, formData);
       if (response.Status) {
         dispatch(actions.CategoryActions.loadData());
         dispatch(actions.StateAction.loadingState(false));
@@ -198,9 +183,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
         onCancel={() => setIsOpenModelDelteCategory(false)}
         onOk={() => setIsOpenModelDelteCategory(false)}
       >
-        <p>
-          Hãy di chuyển các sản phẩm sang danh mục khác để có thể xóa danh mục
-        </p>
+        <p>Hãy di chuyển các sản phẩm sang danh mục khác để có thể xóa danh mục</p>
       </Modal>
       <Modal
         title="Lựa chọn danh mục muốn chuyển"
@@ -233,10 +216,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
                 </Col>
                 <Col span={3}>
                   <Button danger onClick={handleDeleteCategory}>
-                    <FontAwesomeIcon
-                      style={{ marginRight: "5px" }}
-                      icon={faTrash}
-                    />
+                    <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
                     Xóa danh mục
                   </Button>
                 </Col>
@@ -244,12 +224,7 @@ const ContentDetailCategory: React.FC<any> = ({ value }) => {
                   <Input
                     onChange={handleSearchValueChange}
                     placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                    prefix={
-                      <FontAwesomeIcon
-                        icon={faMagnifyingGlass}
-                        className="icon-search"
-                      />
-                    }
+                    prefix={<FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />}
                   />
                 </Col>
                 <Col span={24}>

@@ -3,6 +3,7 @@ import React from "react";
 import { Row, Col } from "antd";
 import { ImageEmptyData } from "../../ImageEmptyData/ImageEmptyData";
 import DataEmpty from "../../../assets/empty-data.jpg";
+import { VND } from "../../../const/convertVND";
 
 export const ReportOverviewSell: React.FC<any> = ({ data }) => {
   return (
@@ -30,15 +31,15 @@ export const ReportOverviewSell: React.FC<any> = ({ data }) => {
         {Array.isArray(data) && data.length > 0 ? (
           data.map((dt: any) => {
             return (
-              <React.Fragment key={dt.IdProduct}>
+              <React.Fragment key={dt?.IdProduct}>
                 <Col span={12}>
-                  <div className="title-item">{dt.Title}</div>
+                  <div className="title-item">{dt?.Title}</div>
                 </Col>
                 <Col span={6}>
-                  <div className="title-item">{dt.TotalAmount}</div>
+                  <div className="title-item">{dt?.TotalAmount}</div>
                 </Col>
                 <Col span={6}>
-                  <div className="title-item">{dt.Price}</div>
+                  <div className="title-item">{dt?.Price ? VND.format(dt.Price) : 0}</div>
                 </Col>
               </React.Fragment>
             );

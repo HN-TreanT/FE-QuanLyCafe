@@ -7,6 +7,7 @@ import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import useAction from "../../../../../redux/useActions";
 import "./ItemOrderDetail.scss";
 import { orderDetailServices } from "../../../../../untils/networks/services/OrderDetailService";
+import { VND } from "../../../../../const/convertVND";
 const ItemOrderDetail: React.FC<any> = ({ data }) => {
   const dispatch = useDispatch();
   const actions = useAction();
@@ -98,7 +99,9 @@ const ItemOrderDetail: React.FC<any> = ({ data }) => {
             </div>
           </Col>
           <Col span={4}>
-            <span style={{ fontWeight: "500" }}>{`${data?.Price ? data?.Price : 0}`}</span>
+            <span style={{ fontWeight: "500" }}>{`${
+              data?.Price ? VND.format(data.Price) : 0
+            }`}</span>
           </Col>
           <Col span={1}>
             <FontAwesomeIcon

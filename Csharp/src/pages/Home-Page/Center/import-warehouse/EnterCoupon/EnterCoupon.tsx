@@ -68,12 +68,7 @@ const EnterCoupon: React.FC = () => {
           onChange={(e) => handleAmountChange(e, record.key)}
           type="number"
           onKeyDown={(e) => {
-            if (
-              e.key === "-" ||
-              e.key === "e" ||
-              e.key === "+" ||
-              e.key === "E"
-            ) {
+            if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
               e.preventDefault();
             }
           }}
@@ -93,12 +88,7 @@ const EnterCoupon: React.FC = () => {
           onChange={(e) => handlePriceChange(e, record.key)}
           type="number"
           onKeyDown={(e) => {
-            if (
-              e.key === "-" ||
-              e.key === "e" ||
-              e.key === "+" ||
-              e.key === "E"
-            ) {
+            if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
               e.preventDefault();
             }
           }}
@@ -174,10 +164,7 @@ const EnterCoupon: React.FC = () => {
           return selectedMaterial.key === material.key;
         });
       });
-      setValueSelectedMaterials((prevValue: any) => [
-        ...prevValue,
-        ...filteredSelectedMaterials,
-      ]);
+      setValueSelectedMaterials((prevValue: any) => [...prevValue, ...filteredSelectedMaterials]);
     }
   };
   //mở phần thêm nguyên liệu
@@ -201,29 +188,18 @@ const EnterCoupon: React.FC = () => {
         path: RouterLinks.IMPORT_WAREHOUSE,
       })
     );
-    dispatch(
-      actions.ImportGoodsActions.setInfoProvider(formProvider.getFieldsValue())
-    );
-    dispatch(
-      actions.ImportGoodsActions.setMaterialSelectedImports(
-        valueSelectedMaterials
-      )
-    );
+    dispatch(actions.ImportGoodsActions.setInfoProvider(formProvider.getFieldsValue()));
+    dispatch(actions.ImportGoodsActions.setMaterialSelectedImports(valueSelectedMaterials));
     dispatch(actions.ImportGoodsActions.createImportGoods());
   };
 
   //remove material selected
-  const handleRemoveCoupon = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    record: any
-  ) => {
+  const handleRemoveCoupon = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, record: any) => {
     e.stopPropagation();
     const filterMaterials = valueSelectedMaterials.filter(
       (material: any) => material.IdMaterial !== record.IdMaterial
     );
-    const filterRowKey = selectedRowKeys.filter(
-      (row: any) => row !== record.key
-    );
+    const filterRowKey = selectedRowKeys.filter((row: any) => row !== record.key);
     setSelectedRowKeys(filterRowKey);
     setValueSelectedMaterials(filterMaterials);
   };
@@ -291,12 +267,8 @@ const EnterCoupon: React.FC = () => {
                   ? materials.Data.map((material: any) => {
                       return {
                         key: material?.IdMaterial ? material?.IdMaterial : "",
-                        IdMaterial: material?.IdMaterial
-                          ? material?.IdMaterial
-                          : "",
-                        NameMaterial: material?.NameMaterial
-                          ? material?.NameMaterial
-                          : "",
+                        IdMaterial: material?.IdMaterial ? material?.IdMaterial : "",
+                        NameMaterial: material?.NameMaterial ? material?.NameMaterial : "",
                         Amount: material?.Amount ? material?.Amount : 0,
                         Unit: material?.Unit ? material?.Unit : "",
                       };
@@ -340,25 +312,15 @@ const EnterCoupon: React.FC = () => {
         <Col span={18}>
           {/* <ListMaterailImport /> */}
           <div className="info-coupon-page">
-            <div
-              className="content-info-coupon-page"
-              style={{ padding: "15px" }}
-            >
+            <div className="content-info-coupon-page" style={{ padding: "15px" }}>
               <Row gutter={[15, 15]}>
                 <Col span={17}>
-                  <div className="title-info-coupon-page">
-                    Thông tin sản phẩm
-                  </div>
+                  <div className="title-info-coupon-page">Thông tin sản phẩm</div>
                 </Col>
                 <Col span={7}>
-                  <Button
-                    onClick={handleOpenModalSelectMaterial}
-                    type="primary"
-                  >
+                  <Button onClick={handleOpenModalSelectMaterial} type="primary">
                     <FontAwesomeIcon icon={faPlus} />
-                    <span style={{ paddingLeft: "5px" }}>
-                      Thêm hàng hóa vào danh sách
-                    </span>
+                    <span style={{ paddingLeft: "5px" }}>Thêm hàng hóa vào danh sách</span>
                   </Button>
                 </Col>
                 <Col span={24}>
@@ -427,9 +389,7 @@ const EnterCoupon: React.FC = () => {
                   <Col span={6}></Col>
                   <Col span={12}>
                     <div>
-                      <span style={{ fontSize: "18px", fontWeight: "500" }}>
-                        Nhà cung cấp
-                      </span>
+                      <span style={{ fontSize: "18px", fontWeight: "500" }}>Nhà cung cấp</span>
                     </div>
                   </Col>
                   <Col span={6}></Col>
@@ -442,9 +402,7 @@ const EnterCoupon: React.FC = () => {
                             opacity: "0.05",
                           }}
                         ></div>
-                        <span style={{ fontWeight: "500" }}>
-                          Thông tin nhà cung cấp
-                        </span>
+                        <span style={{ fontWeight: "500" }}>Thông tin nhà cung cấp</span>
                       </Col>
                       <Col span={24}>
                         <Form.Item label="Tên nhà cung cấp" name="NameProvider">

@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Modal,
-  Button,
-  Form,
-  Input,
-  Select,
-  Row,
-  Col,
-  Menu,
-  MenuProps,
-} from "antd";
+import { Table, Modal, Button, Form, Input, Select, Row, Col, Menu, MenuProps } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,9 +46,7 @@ const ListWarehouse: React.FC = () => {
   const handleCreate = async () => {
     try {
       dispatch(actions.StateAction.loadingState(true));
-      let response = await materialService.createMaterial(
-        formCreate.getFieldsValue()
-      );
+      let response = await materialService.createMaterial(formCreate.getFieldsValue());
       if (response.Status) {
         dispatch(actions.MaterialActions.loadData());
         dispatch(actions.StateAction.loadingState(false));
@@ -127,21 +114,12 @@ const ListWarehouse: React.FC = () => {
           >
             Hủy
           </Button>,
-          <Button
-            disabled={isDisabled}
-            key="submit"
-            type="primary"
-            onClick={handleCreate}
-          >
+          <Button disabled={isDisabled} key="submit" type="primary" onClick={handleCreate}>
             Thêm
           </Button>,
         ]}
       >
-        <Form
-          form={formCreate}
-          layout="vertical"
-          onValuesChange={handleValueCreateChange}
-        >
+        <Form form={formCreate} layout="vertical" onValuesChange={handleValueCreateChange}>
           <Row gutter={[15, 15]}>
             <Col span={24}>
               <Form.Item
@@ -192,12 +170,7 @@ const ListWarehouse: React.FC = () => {
                   addonAfter="ngày"
                   style={{ width: "100%" }}
                   onKeyDown={(e) => {
-                    if (
-                      e.key === "-" ||
-                      e.key === "e" ||
-                      e.key === "+" ||
-                      e.key === "E"
-                    ) {
+                    if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                       e.preventDefault();
                     }
                   }}
@@ -226,11 +199,7 @@ const ListWarehouse: React.FC = () => {
             <div className="header-listWarehouse-page">
               <Row>
                 <Col span={24}>
-                  <Menu
-                    selectedKeys={["material"]}
-                    mode="horizontal"
-                    items={items}
-                  />
+                  <Menu selectedKeys={["material"]} mode="horizontal" items={items} />
                 </Col>
                 <Col span={24}>
                   <div
@@ -247,18 +216,12 @@ const ListWarehouse: React.FC = () => {
                     //  onValuesChange={handleValueFormChange}
                     className="form-css"
                   >
-                    <Form.Item
-                      name="searchValue"
-                      className="input-search-listWarehouse"
-                    >
+                    <Form.Item name="searchValue" className="input-search-listWarehouse">
                       <Input
                         onChange={handleSearchValueChange}
                         placeholder="Nhập giá trị muốn tìm kiếm theo loại"
                         prefix={
-                          <FontAwesomeIcon
-                            icon={faMagnifyingGlass}
-                            className="icon-search"
-                          />
+                          <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                         }
                       />
                     </Form.Item>
@@ -278,13 +241,10 @@ const ListWarehouse: React.FC = () => {
                             key: material?.IdMaterial,
                             IdMaterial: material?.IdMaterial,
                             NameMaterial: material?.NameMaterial,
-                            amount: material?.Amount,
+                            amount: material?.Amount.toFixed(2),
                             unit: material?.Unit,
                             Description: material?.Description,
-                            expiry:
-                              diffInDays < material?.Expiry
-                                ? "Còn hạn"
-                                : "Hết hạn",
+                            expiry: diffInDays < material?.Expiry ? "Còn hạn" : "Hết hạn",
                           };
                         })
                       : []

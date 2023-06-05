@@ -9,13 +9,12 @@ import "./DetailCategoryPage.scss";
 import { serverConfig } from "../../../../../const";
 import { Col, Row } from "antd";
 import Spinn from "../../../../../components/Spinning/Spinning";
+import { VND } from "../../../../../const/convertVND";
 const DetailCategory: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
-  const categorySelected = useSelector(
-    (state: any) => state.category.categorySelected
-  );
+  const categorySelected = useSelector((state: any) => state.category.categorySelected);
   const loading = useSelector((state: any) => state.state.loadingState);
   // useEffect(() => {
   //   dispatch(actions.CategoryActions.loadCategoryDetail());
@@ -28,7 +27,7 @@ const DetailCategory: React.FC = () => {
       image: `${serverConfig.server}/${product?.Thumbnail}`,
       name: `${product?.Title}`,
       index: `${i}`,
-      price: `${product?.Price}`,
+      price: `${product?.Price ? VND.format(product.Price) : "0 đ"}`,
     };
   });
   console.log(products);
@@ -46,9 +45,7 @@ const DetailCategory: React.FC = () => {
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-detail-category-page">
-            <div className="title-detail-category-page">
-              {categorySelected?.Name}
-            </div>
+            <div className="title-detail-category-page">{categorySelected?.Name}</div>
           </div>
         </Col>
         <ContentDetailCategory value={products} />

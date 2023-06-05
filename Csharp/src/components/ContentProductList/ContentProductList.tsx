@@ -24,9 +24,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
     {
       title: "",
       dataIndex: "pathImage",
-      render: (text) => (
-        <Image src={text} preview={false} width={80} height={60} />
-      ),
+      render: (text) => <Image src={text} preview={false} width={80} height={60} />,
     },
     {
       title: "Tên mặt hàng",
@@ -44,7 +42,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
     {
       title: "Giá thành",
       dataIndex: "price",
-      render: (text) => <div>{`${text} đ`}</div>,
+      render: (text) => <div>{`${text} `}</div>,
     },
     {
       title: "",
@@ -95,9 +93,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
       if (Array.isArray(dbProduct?.Data.UseMaterials)) {
         const value = dbProduct.Data.UseMaterials.map((item: any) => {
           return {
-            key: item.IdMaterialNavigation?.IdMaterial
-              ? item.IdMaterialNavigation?.IdMaterial
-              : "",
+            key: item.IdMaterialNavigation?.IdMaterial ? item.IdMaterialNavigation?.IdMaterial : "",
             IdMaterial: item.IdMaterialNavigation?.IdMaterial
               ? item.IdMaterialNavigation?.IdMaterial
               : "",
@@ -105,9 +101,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
               ? item.IdMaterialNavigation?.NameMaterial
               : "",
             Amount: item?.Amount ? item?.Amount : 0,
-            Unit: item.IdMaterialNavigation?.Unit
-              ? item.IdMaterialNavigation?.Unit
-              : "",
+            Unit: item.IdMaterialNavigation?.Unit ? item.IdMaterialNavigation?.Unit : "",
           };
         });
         dispatch(
@@ -132,9 +126,7 @@ const ContenProductList: React.FC<any> = ({ total, value }) => {
         //   })
         // );
       }
-      dispatch(
-        actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct)
-      );
+      dispatch(actions.ProductActions.setSelectedProductId(dbProduct.Data?.IdProduct));
       dispatch(actions.ProductActions.setInfoProduct(dbProduct.Data));
       navigate(RouterLinks.UPDATE_PRODUCT_PAGE);
     } else {

@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  Table,
-  Form,
-  Menu,
-  MenuProps,
-  Input,
-  Modal,
-  Select,
-} from "antd";
+import { Row, Col, Button, Table, Form, Menu, MenuProps, Input, Modal, Select } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +10,7 @@ import useDebounce from "../../../../hooks/useDebounce";
 import { notification } from "../../../../components/notification";
 import { customerServices } from "../../../../untils/networks/services/customerServices";
 import ModalEditCustomer from "../../../../components/ModalEditCustomer/ModalEditCustomer";
+import { VND } from "../../../../const/convertVND";
 
 interface DataType {
   key: string;
@@ -65,7 +55,7 @@ const CustomerPage: React.FC = () => {
     {
       title: "Tổng chi tiêu",
       dataIndex: "TotalPay",
-      render: (text) => <div>{`${text} đ`}</div>,
+      render: (text) => <div>{`${text}`}</div>,
     },
     {
       title: "",
@@ -96,13 +86,7 @@ const CustomerPage: React.FC = () => {
   useEffect(() => {
     dispatch(actions.CustomerActions.setSearchValue(searchValueDebounce));
     dispatch(actions.CustomerActions.loadData());
-  }, [
-    actions.CustomerActions,
-    dispatch,
-    selectedPage,
-    searchValueDebounce,
-    customerDetail,
-  ]);
+  }, [actions.CustomerActions, dispatch, selectedPage, searchValueDebounce, customerDetail]);
   let customers = useSelector((state: any) => state.customer.customers);
   const valueCustomers = customers?.Data?.map((customer: any) => {
     return {
@@ -111,22 +95,16 @@ const CustomerPage: React.FC = () => {
       PhoneNumber: customer?.PhoneNumber,
       Gender: customer?.Gender === "nam" ? "Nam" : "Nữ",
       countOrders: customer?.Orders.length,
-      TotalPay: customer?.Orders?.reduce(function (
-        total: Number,
-        currentValue: any
-      ) {
-        return (
-          total +
-          currentValue?.OrderDetails.reduce(function (
-            total: Number,
-            currentValue: any
-          ) {
-            return total + currentValue.Price;
-          },
-          0)
-        );
-      },
-      0),
+      TotalPay: VND.format(
+        customer?.Orders?.reduce(function (total: Number, currentValue: any) {
+          return (
+            total +
+            currentValue?.OrderDetails.reduce(function (total: Number, currentValue: any) {
+              return total + currentValue.Price;
+            }, 0)
+          );
+        }, 0)
+      ),
     };
   });
 
@@ -187,9 +165,7 @@ const CustomerPage: React.FC = () => {
   const handleCreateCustomer = async () => {
     try {
       dispatch(actions.StateAction.loadingState(true));
-      let response = await customerServices.createCustomer(
-        formAddCustomer.getFieldsValue()
-      );
+      let response = await customerServices.createCustomer(formAddCustomer.getFieldsValue());
       if (response.Status) {
         dispatch(actions.CustomerActions.loadData());
         dispatch(actions.StateAction.loadingState(false));
@@ -253,21 +229,12 @@ const CustomerPage: React.FC = () => {
           >
             Hủy
           </Button>,
-          <Button
-            disabled={isDisabled}
-            key="submit"
-            type="primary"
-            onClick={handleCreateCustomer}
-          >
+          <Button disabled={isDisabled} key="submit" type="primary" onClick={handleCreateCustomer}>
             Thêm
           </Button>,
         ]}
       >
-        <Form
-          form={formAddCustomer}
-          layout="vertical"
-          onValuesChange={handleValueCreateChange}
-        >
+        <Form form={formAddCustomer} layout="vertical" onValuesChange={handleValueCreateChange}>
           <Form.Item
             rules={[
               {
@@ -289,10 +256,7 @@ const CustomerPage: React.FC = () => {
               {
                 validator: async (_, value) => {
                   if (value) {
-                    if (
-                      value.toString().length < 10 ||
-                      value.toString().length > 11
-                    ) {
+                    if (value.toString().length < 10 || value.toString().length > 11) {
                       setIsDisabled(true);
                       throw new Error("số điện thoại không  hợp lệ! ");
                     }
@@ -307,12 +271,7 @@ const CustomerPage: React.FC = () => {
               type="number"
               style={{ width: "100%" }}
               onKeyDown={(e) => {
-                if (
-                  e.key === "-" ||
-                  e.key === "e" ||
-                  e.key === "+" ||
-                  e.key === "E"
-                ) {
+                if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                   e.preventDefault();
                 }
               }}
@@ -363,11 +322,7 @@ const CustomerPage: React.FC = () => {
             <div className="header-customer-page">
               <Row>
                 <Col span={24}>
-                  <Menu
-                    selectedKeys={["customers"]}
-                    mode="horizontal"
-                    items={items}
-                  />
+                  <Menu selectedKeys={["customers"]} mode="horizontal" items={items} />
                 </Col>
                 <Col span={24}>
                   <div
@@ -384,18 +339,12 @@ const CustomerPage: React.FC = () => {
                     onValuesChange={handleValueFormChange}
                     className="form-css"
                   >
-                    <Form.Item
-                      name="searchValue"
-                      className="input-search-customer"
-                    >
+                    <Form.Item name="searchValue" className="input-search-customer">
                       <Input
                         onChange={handleSearchValueChange}
                         placeholder="Nhập giá trị muốn tìm kiếm theo loại"
                         prefix={
-                          <FontAwesomeIcon
-                            icon={faMagnifyingGlass}
-                            className="icon-search"
-                          />
+                          <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                         }
                       />
                     </Form.Item>

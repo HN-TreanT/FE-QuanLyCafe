@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Button,
-  Input,
-  Table,
-  MenuProps,
-  Menu,
-  DatePicker,
-} from "antd";
+import { Row, Col, Form, Button, Input, Table, MenuProps, Menu, DatePicker } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
@@ -21,6 +11,7 @@ import { RouterLinks } from "../../../../const";
 import { notification } from "../../../../components/notification";
 import { importGoodService } from "../../../../untils/networks/services/importGoodsService";
 import dayjs from "dayjs";
+import { VND } from "../../../../const/convertVND";
 interface DataType {
   key: string;
   CreatedAt: Date;
@@ -63,7 +54,7 @@ const ImportWarehouse: React.FC = () => {
     {
       title: "Giá trị nhập",
       dataIndex: "Price",
-      render: (text) => <div>{`${text} đ`}</div>,
+      render: (text) => <div>{`${text} `}</div>,
     },
     {
       title: "Nhà cung cấp",
@@ -93,12 +84,8 @@ const ImportWarehouse: React.FC = () => {
   const actions = useAction();
   const loading = useSelector((state: any) => state.state.loadingState);
   const selectedPage = useSelector((state: any) => state.importgoods.page);
-  const searchValue = useSelector(
-    (state: any) => state.importgoods.searchValue
-  );
-  const importGoods = useSelector(
-    (state: any) => state.importgoods.importGoods
-  );
+  const searchValue = useSelector((state: any) => state.importgoods.searchValue);
+  const importGoods = useSelector((state: any) => state.importgoods.importGoods);
   if (Array.isArray(importGoods?.Data)) {
     data = importGoods?.Data.map((ig: any) => {
       const date = new Date(ig?.CreatedAt);
@@ -113,7 +100,7 @@ const ImportWarehouse: React.FC = () => {
         NameProvider: ig.NameProvider ? ig.NameProvider : "",
         PhoneProvider: ig.PhoneProvider ? ig.PhoneProvider : "",
         Amount: ig.Amount ? ig.Amount : "",
-        Price: ig.Price ? ig.Price : "",
+        Price: ig.Price ? VND.format(ig.Price) : "",
       };
     });
   }
@@ -127,10 +114,7 @@ const ImportWarehouse: React.FC = () => {
     navigate(RouterLinks.ENTER_COUPON_PAGE);
   };
   // delete
-  const handleDelete = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    record: any
-  ) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>, record: any) => {
     console.log(record.key);
     try {
       dispatch(actions.StateAction.loadingState(true));
@@ -210,9 +194,7 @@ const ImportWarehouse: React.FC = () => {
       <Row gutter={[0, 15]}>
         <Col span={24}>
           <div className="title-button-import-warehouse-page">
-            <div className="title-import-warehouse-page">
-              Danh sách phiếu nhập
-            </div>
+            <div className="title-import-warehouse-page">Danh sách phiếu nhập</div>
             <Button
               onClick={handleClickButtonAddCoupon}
               type="primary"
@@ -228,11 +210,7 @@ const ImportWarehouse: React.FC = () => {
             <div className="header-import-warehouse-page">
               <Row gutter={[0, 10]}>
                 <Col span={24}>
-                  <Menu
-                    selectedKeys={["enterCoupon"]}
-                    mode="horizontal"
-                    items={items}
-                  />
+                  <Menu selectedKeys={["enterCoupon"]} mode="horizontal" items={items} />
                 </Col>
                 <Col span={24}>
                   <Form form={form} className="form-css">
@@ -272,10 +250,7 @@ const ImportWarehouse: React.FC = () => {
                             bordered={false}
                             placeholder="Nhập tên nguyên liệu"
                             prefix={
-                              <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                className="icon-search"
-                              />
+                              <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                             }
                           />
                         </Form.Item>
@@ -291,10 +266,7 @@ const ImportWarehouse: React.FC = () => {
                           <DatePicker.RangePicker
                             defaultValue={
                               searchValue?.timeStart && searchValue?.timeEnd
-                                ? [
-                                    dayjs(searchValue.timeStart),
-                                    dayjs(searchValue.timeEnd),
-                                  ]
+                                ? [dayjs(searchValue.timeStart), dayjs(searchValue.timeEnd)]
                                 : null
                             }
                             onChange={handleInputTime}
