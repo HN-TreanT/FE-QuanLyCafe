@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
+import { Row, Col, Button, Input, Form, Select, DatePicker, InputNumber } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -81,9 +81,7 @@ const AddStaffPage: React.FC = () => {
             ></div>
           </Col>
           <Col span={6}>
-            <div style={{ fontSize: "1rem", fontWeight: "500" }}>
-              Thông tin tài khoản
-            </div>
+            <div style={{ fontSize: "1rem", fontWeight: "500" }}>Thông tin tài khoản</div>
             <p>Nhập đầy đủ thông tin của nhân viên</p>
           </Col>
           <Col span={2}></Col>
@@ -150,18 +148,11 @@ const AddStaffPage: React.FC = () => {
                         {
                           validator: async (_, value) => {
                             if (value) {
-                              if (
-                                value.toString().length < 10 ||
-                                value.toString().length > 11
-                              ) {
+                              if (value.toString().length < 10 || value.toString().length > 11) {
                                 setIsDisabled(true);
-                                throw new Error(
-                                  "số điện thoại không  hợp lệ! "
-                                );
+                                throw new Error("số điện thoại không  hợp lệ! ");
                               } else {
-                                let res = await staffService.getStaffByPhone(
-                                  value
-                                );
+                                let res = await staffService.getStaffByPhone(value);
                                 if (res?.Status) {
                                   setIsDisabled(true);
                                   throw new Error("số điện thoại đã tồn tại ");
@@ -179,12 +170,7 @@ const AddStaffPage: React.FC = () => {
                         style={{ width: "100%" }}
                         placeholder="Nhập số điện thoại"
                         onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                             e.preventDefault();
                           }
                         }}
@@ -197,11 +183,7 @@ const AddStaffPage: React.FC = () => {
                     </Form.Item>
                   </Col>
                   <Col span={4}>
-                    <Form.Item
-                      name="Gender"
-                      label="Giới tính"
-                      initialValue={"Nam"}
-                    >
+                    <Form.Item name="Gender" label="Giới tính" initialValue={"Nam"}>
                       <Select
                         options={[
                           { value: "Name", label: "Nam" },
@@ -226,23 +208,26 @@ const AddStaffPage: React.FC = () => {
                       name="Salary"
                       label="Lương"
                     >
-                      <Input
-                        type="number"
+                      <InputNumber
+                        formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        parser={(value: any) => value!.replace(/\$\s?|(,*)/g, "")}
+                        //  type="number"
                         addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         min={0}
                         placeholder="Nhập lương"
-                        onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        //     e.preventDefault();
+                        //   }
+                        // }}
+                        onKeyPress={(e) => {
+                          const charCode = e.which ? e.which : e.keyCode;
+                          if (charCode < 48 || charCode > 57) {
                             e.preventDefault();
                           }
                         }}
-                      ></Input>
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

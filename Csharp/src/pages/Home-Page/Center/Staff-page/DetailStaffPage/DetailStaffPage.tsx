@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button, Input, Form, Select, DatePicker } from "antd";
+import { Row, Col, Button, Input, Form, Select, DatePicker, InputNumber } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,11 +115,7 @@ const DetailStaffPage: React.FC = () => {
             <div className="tittle-detail-staff-page">{`Thông tin nhân viên #${detailStaff?.IdStaff}`}</div>
           </Col>
           <Col span={3}>
-            <Button
-              onClick={handleDeleteStaff}
-              style={{ marginTop: "7px" }}
-              danger
-            >
+            <Button onClick={handleDeleteStaff} style={{ marginTop: "7px" }} danger>
               <FontAwesomeIcon style={{ marginRight: "5px" }} icon={faTrash} />
               Xóa nhân viên
             </Button>
@@ -134,9 +130,7 @@ const DetailStaffPage: React.FC = () => {
             ></div>
           </Col>
           <Col span={6}>
-            <div style={{ fontSize: "1rem", fontWeight: "500" }}>
-              Thông tin tài khoản
-            </div>
+            <div style={{ fontSize: "1rem", fontWeight: "500" }}>Thông tin tài khoản</div>
             <p>Nhập đầy đủ thông tin của nhân viên</p>
           </Col>
           <Col span={2}></Col>
@@ -164,9 +158,7 @@ const DetailStaffPage: React.FC = () => {
                       name="Email"
                       label="E-mail"
                       initialValue={detailStaff?.Email}
-                      shouldUpdate={(prevValues, curValues) =>
-                        curValues.Email === prevValues.Email
-                      }
+                      shouldUpdate={(prevValues, curValues) => curValues.Email === prevValues.Email}
                       rules={[
                         {
                           type: "email",
@@ -195,29 +187,15 @@ const DetailStaffPage: React.FC = () => {
                         {
                           validator: async (_, value) => {
                             if (value) {
-                              if (
-                                value.toString().length < 10 ||
-                                value.toString().length > 11
-                              ) {
+                              if (value.toString().length < 10 || value.toString().length > 11) {
                                 setIsDisabled(true);
-                                throw new Error(
-                                  "số điện thoại không  hợp lệ! "
-                                );
+                                throw new Error("số điện thoại không  hợp lệ! ");
                               } else {
-                                let res = await staffService.getStaffByPhone(
-                                  value
-                                );
+                                let res = await staffService.getStaffByPhone(value);
                                 if (res?.Status) {
-                                  if (
-                                    !(
-                                      detailStaff?.PhoneNumber ===
-                                      res?.Data?.PhoneNumber
-                                    )
-                                  ) {
+                                  if (!(detailStaff?.PhoneNumber === res?.Data?.PhoneNumber)) {
                                     setIsDisabled(true);
-                                    throw new Error(
-                                      "số điện thoại đã tồn tại "
-                                    );
+                                    throw new Error("số điện thoại đã tồn tại ");
                                   }
                                 }
                               }
@@ -232,12 +210,7 @@ const DetailStaffPage: React.FC = () => {
                         style={{ width: "100%" }}
                         placeholder="Nhập số điện thoại"
                         onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                             e.preventDefault();
                           }
                         }}
@@ -245,20 +218,12 @@ const DetailStaffPage: React.FC = () => {
                     </Form.Item>
                   </Col>
                   <Col span={10}>
-                    <Form.Item
-                      name="Address"
-                      label="Địa chỉ"
-                      initialValue={detailStaff?.Address}
-                    >
+                    <Form.Item name="Address" label="Địa chỉ" initialValue={detailStaff?.Address}>
                       <Input placeholder="Nhập địa chỉ"></Input>
                     </Form.Item>
                   </Col>
                   <Col span={4}>
-                    <Form.Item
-                      name="Gender"
-                      label="Giới tính"
-                      initialValue={detailStaff?.Gender}
-                    >
+                    <Form.Item name="Gender" label="Giới tính" initialValue={detailStaff?.Gender}>
                       <Select
                         options={[
                           { value: "Name", label: "Nam" },
@@ -288,31 +253,32 @@ const DetailStaffPage: React.FC = () => {
                       label="Lương"
                       initialValue={detailStaff?.Salary}
                     >
-                      <Input
-                        type="number"
+                      <InputNumber
+                        //  type="number"
+                        formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                         addonAfter="VNĐ"
                         style={{ width: "100%" }}
                         placeholder="Nhập lương"
-                        onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        //     e.preventDefault();
+                        //   }
+                        // }}
+                        onKeyPress={(e) => {
+                          const charCode = e.which ? e.which : e.keyCode;
+                          if (charCode < 48 || charCode > 57) {
                             e.preventDefault();
                           }
                         }}
-                      ></Input>
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
                     <Form.Item
-                      initialValue={detailStaff?.SelectedWorkShifts.map(
-                        (ws: any) => {
-                          return ws.IdWorkShift;
-                        }
-                      )}
+                      initialValue={detailStaff?.SelectedWorkShifts.map((ws: any) => {
+                        return ws.IdWorkShift;
+                      })}
                       rules={[
                         {
                           required: true,

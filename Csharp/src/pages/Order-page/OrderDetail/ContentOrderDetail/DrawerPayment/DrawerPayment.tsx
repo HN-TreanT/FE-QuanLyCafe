@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Drawer, Row, Col, Table, Form } from "antd";
+import { Button, Drawer, Row, Col, Table, Form, InputNumber } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,8 +71,8 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
     .utcOffset("+07:00")
     .format("HH:mm, DD-MM-YYYY");
   const handleChangeInput = (e: any) => {
-    setValue(e.target.value);
-    if (e.target.value && e.target.value - selectedOrder?.Price > 0) {
+    setValue(e);
+    if (e && e - selectedOrder?.Price > 0) {
       setDisabled(false);
     } else {
       setDisabled(true);
@@ -265,19 +265,27 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
                         },
                       ]}
                     >
-                      <input
-                        value={value}
-                        type="number"
+                      <InputNumber
+                        //type="number"
+                        formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                         onChange={handleChangeInput}
                         className="input-number"
-                        min="0"
-                        onKeyDown={(e) => {
-                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        min={0}
+                        value={value}
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        //     e.preventDefault();
+                        //   }
+                        // }}
+                        onKeyPress={(e) => {
+                          const charCode = e.which ? e.which : e.keyCode;
+                          if (charCode < 48 || charCode > 57) {
                             e.preventDefault();
                           }
                         }}
                         required
-                      ></input>
+                      ></InputNumber>
                     </Form.Item>
                   </Form>
                 </div>

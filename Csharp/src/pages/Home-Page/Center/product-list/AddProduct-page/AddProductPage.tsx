@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Row, Col, Input, Select, Upload, Modal, Button } from "antd";
+import { Form, Row, Col, Input, Select, Upload, Modal, Button, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -18,9 +18,7 @@ const AddProductPage: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
   let category: any[] = [];
-  const selectedMaterials = useSelector(
-    (state: any) => state.material.selectedMaterials
-  );
+  const selectedMaterials = useSelector((state: any) => state.material.selectedMaterials);
 
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
@@ -103,9 +101,9 @@ const AddProductPage: React.FC = () => {
       ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
             IdMaterial: selectedMaterial.IdMaterial,
-            Amount: form.getFieldsValue([
-              `amount${selectedMaterial.IdMaterial}`,
-            ])[`amount${selectedMaterial.IdMaterial}`],
+            Amount: form.getFieldsValue([`amount${selectedMaterial.IdMaterial}`])[
+              `amount${selectedMaterial.IdMaterial}`
+            ],
           };
         })
       : [];
@@ -138,10 +136,7 @@ const AddProductPage: React.FC = () => {
       </Modal>
 
       <Form form={form} onValuesChange={handleChange} layout="vertical">
-        <span
-          onClick={handleCancleProduct}
-          style={{ cursor: "pointer", color: "#666" }}
-        >
+        <span onClick={handleCancleProduct} style={{ cursor: "pointer", color: "#666" }}>
           <ArrowLeftOutlined style={{ padding: "3px" }} />
           <span>Quay lại danh sách mặt hàng</span>
         </span>
@@ -235,23 +230,26 @@ const AddProductPage: React.FC = () => {
                       ]}
                       label="Giá bán"
                     >
-                      <Input
-                        type="number"
+                      <InputNumber
+                        //type="number"
+                        formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        parser={(value: any) => value!.replace(/\$\s?|(,*)/g, "")}
                         addonAfter="VNĐ"
                         min={0}
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
-                        onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        //    e.preventDefault();
+                        //   }
+                        // }}
+                        onKeyPress={(e) => {
+                          const charCode = e.which ? e.which : e.keyCode;
+                          if (charCode < 48 || charCode > 57) {
                             e.preventDefault();
                           }
                         }}
-                      ></Input>
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -271,11 +269,7 @@ const AddProductPage: React.FC = () => {
                   <Col span={18}></Col>
 
                   <Col span={6}>
-                    <Button
-                      disabled={isDisabled}
-                      type="primary"
-                      onClick={handleAddProduct}
-                    >
+                    <Button disabled={isDisabled} type="primary" onClick={handleAddProduct}>
                       Thêm mặt hàng
                     </Button>
                   </Col>
@@ -298,89 +292,74 @@ const AddProductPage: React.FC = () => {
                     />
                   </Col>
                   {Array.isArray(selectedMaterials?.selectedRows) &&
-                    selectedMaterials.selectedRows.map(
-                      (selectedMaterial: any) => {
-                        return (
-                          <React.Fragment key={selectedMaterial?.IdMaterial}>
-                            <Col span={8}>
-                              <span>{selectedMaterial?.NameMaterial}</span>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                name={`amount${selectedMaterial?.IdMaterial}`}
-                                rules={[
-                                  {
-                                    validator: async (_, value) => {
-                                      if (!value) {
-                                        throw new Error(
-                                          "Không được bỏ trống! "
-                                        );
-                                      }
-                                    },
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  min={0}
-                                  type="number"
-                                  addonAfter={
-                                    selectedMaterial?.Unit
-                                      ? selectedMaterial?.Unit
-                                      : ""
-                                  }
-                                  onKeyDown={(e) => {
-                                    if (
-                                      e.key === "-" ||
-                                      e.key === "e" ||
-                                      e.key === "+" ||
-                                      e.key === "E"
-                                    ) {
-                                      e.preventDefault();
+                    selectedMaterials.selectedRows.map((selectedMaterial: any) => {
+                      return (
+                        <React.Fragment key={selectedMaterial?.IdMaterial}>
+                          <Col span={8}>
+                            <span>{selectedMaterial?.NameMaterial}</span>
+                          </Col>
+                          <Col span={12}>
+                            <Form.Item
+                              name={`amount${selectedMaterial?.IdMaterial}`}
+                              rules={[
+                                {
+                                  validator: async (_, value) => {
+                                    if (!value) {
+                                      throw new Error("Không được bỏ trống! ");
                                     }
-                                  }}
-                                />
-                              </Form.Item>
-                            </Col>
-                            {/* <Col span={2}>{selectedMaterial.Unit}</Col> */}
-                            <Col span={4}>
-                              <div
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  const updatedSelectedMaterials =
-                                    selectedMaterials.selectedRows.filter(
-                                      (item: any) =>
-                                        item.IdMaterial !==
-                                        selectedMaterial.IdMaterial
-                                    );
-
-                                  const updateSelectedKeys =
-                                    selectedMaterials.selectedRowKeys.filter(
-                                      (item: any) =>
-                                        item !== selectedMaterial.IdMaterial
-                                    );
-
-                                  dispatch(
-                                    actions.MaterialActions.selectedMaterial({
-                                      selectedRows: updatedSelectedMaterials,
-                                      selectedRowKeys: updateSelectedKeys,
-                                    })
-                                  );
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input
+                                min={0}
+                                type="number"
+                                addonAfter={selectedMaterial?.Unit ? selectedMaterial?.Unit : ""}
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "-" ||
+                                    e.key === "e" ||
+                                    e.key === "+" ||
+                                    e.key === "E"
+                                  ) {
+                                    e.preventDefault();
+                                  }
                                 }}
-                              >
-                                X
-                              </div>
-                            </Col>
-                          </React.Fragment>
-                        );
-                      }
-                    )}
+                              />
+                            </Form.Item>
+                          </Col>
+                          {/* <Col span={2}>{selectedMaterial.Unit}</Col> */}
+                          <Col span={4}>
+                            <div
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                const updatedSelectedMaterials =
+                                  selectedMaterials.selectedRows.filter(
+                                    (item: any) => item.IdMaterial !== selectedMaterial.IdMaterial
+                                  );
+
+                                const updateSelectedKeys = selectedMaterials.selectedRowKeys.filter(
+                                  (item: any) => item !== selectedMaterial.IdMaterial
+                                );
+
+                                dispatch(
+                                  actions.MaterialActions.selectedMaterial({
+                                    selectedRows: updatedSelectedMaterials,
+                                    selectedRowKeys: updateSelectedKeys,
+                                  })
+                                );
+                              }}
+                            >
+                              X
+                            </div>
+                          </Col>
+                        </React.Fragment>
+                      );
+                    })}
                   <Col span={24}>
                     <div style={{ color: "#1677ff", cursor: "pointer" }}>
                       <PlusOutlined />
-                      <span
-                        onClick={handleClickAddMaterial}
-                        style={{ marginLeft: "5px" }}
-                      >
+                      <span onClick={handleClickAddMaterial} style={{ marginLeft: "5px" }}>
                         Thêm mới nguyên liệu
                       </span>
                     </div>

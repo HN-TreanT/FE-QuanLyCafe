@@ -80,15 +80,23 @@ const EnterCoupon: React.FC = () => {
       dataIndex: "Price",
       render: (text, record) => (
         <InputNumber
+          formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
           min={0}
           addonAfter="VNĐ"
           className="input-number"
           required={true}
           value={text}
           onChange={(e) => handlePriceChange(e, record.key)}
-          type="number"
-          onKeyDown={(e) => {
-            if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+          // type="number"
+          // onKeyDown={(e) => {
+          //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+          //     e.preventDefault();
+          //   }
+          // }}
+          onKeyPress={(e) => {
+            const charCode = e.which ? e.which : e.keyCode;
+            if (charCode < 48 || charCode > 57) {
               e.preventDefault();
             }
           }}

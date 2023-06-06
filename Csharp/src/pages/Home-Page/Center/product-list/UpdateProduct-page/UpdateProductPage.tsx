@@ -1,7 +1,7 @@
 import "./UpdateProductPage.scss";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Row, Col, Input, Select, Upload, Modal, Button } from "antd";
+import { Form, Row, Col, Input, Select, Upload, Modal, Button, InputNumber } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
 import { PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -9,12 +9,19 @@ import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import { RouterLinks, serverConfig } from "../../../../../const";
 import Spinn from "../../../../../components/Spinning/Spinning";
 import ModalMaterials from "../../../../../components/ModalMaterials/ModalMaterials";
-
+import numeral from "numeral";
+const formatValue = (value: any) => {
+  if (!isNaN(value)) {
+    return numeral(value).format("0,0");
+  }
+  return "";
+};
 const UpdateProductPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
   const [form] = Form.useForm();
+
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const infoProduct = useSelector((state: any) => state.product.infoProduct);
@@ -181,7 +188,11 @@ const UpdateProductPage: React.FC = () => {
                       <Form.Item
                         name="Description"
                         label="Mô tả về mặt hàng"
-                        initialValue={infoProduct?.Description ? infoProduct?.Description : " "}
+                        initialValue={
+                          infoProduct?.Description && infoProduct.Description !== "undefined"
+                            ? infoProduct?.Description
+                            : " "
+                        }
                       >
                         <Input placeholder="Nhập mô tả"></Input>
                       </Form.Item>
@@ -215,17 +226,25 @@ const UpdateProductPage: React.FC = () => {
                       label="Giá bán"
                       initialValue={infoProduct?.Price}
                     >
-                      <Input
+                      <InputNumber
+                        formatter={(value) => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                         addonAfter={"VNĐ"}
-                        type="number"
+                        // type="number"
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
-                        onKeyDown={(e) => {
-                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        // onKeyDown={(e) => {
+                        //   if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
+                        //     e.preventDefault();
+                        //   }
+                        // }}
+                        onKeyPress={(e) => {
+                          const charCode = e.which ? e.which : e.keyCode;
+                          if (charCode < 48 || charCode > 57) {
                             e.preventDefault();
                           }
                         }}
-                      ></Input>
+                      ></InputNumber>
                     </Form.Item>
                   </Col>
                   <Col span={8}>

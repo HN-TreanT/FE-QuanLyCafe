@@ -31,6 +31,7 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "node-sass": "^7.0.3",
+    "numeral": "^2.0.6",
     "os": "^0.1.2",
     "os-browserify": "^0.3.0",
     "react": "^18.2.0",
@@ -81,6 +82,7 @@
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
     "@types/lodash": "^4.14.194",
+    "@types/numeral": "^2.0.2",
     "@types/react-router-redux": "^5.0.21",
     "react-app-rewired": "^2.2.1"
   }
