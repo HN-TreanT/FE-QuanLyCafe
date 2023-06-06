@@ -25,9 +25,7 @@ function* handleErr(err: any) {
 }
 function* saga_Redirect() {
   //action.type.
-  let _navigate: Promise<any> = yield select(
-    (state: any) => state.state.navigate
-  );
+  let _navigate: Promise<any> = yield select((state: any) => state.state.navigate);
   let navigate: any = _navigate;
   if (navigate.navigate && navigate.path) {
     navigate.navigate(navigate.path);
@@ -36,19 +34,12 @@ function* saga_Redirect() {
 
 function* saga_loadData() {
   try {
-    let _selectedPage: Promise<any> = yield select(
-      (state: any) => state.staff.selectedPage
-    );
+    let _selectedPage: Promise<any> = yield select((state: any) => state.staff.selectedPage);
     let selectedPage: any = _selectedPage;
-    let _searchValue: Promise<any> = yield select(
-      (state: any) => state.staff.searchValue
-    );
+    let _searchValue: Promise<any> = yield select((state: any) => state.staff.searchValue);
     let searchValue: any = _searchValue;
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield staffService.getAllStaff(
-      selectedPage,
-      searchValue
-    );
+    let _response: Promise<any> = yield staffService.getAllStaff(selectedPage, searchValue);
     let response: any = _response;
     if (response.Status) {
       yield put(actions.action.loadDataSuccess(response));
@@ -65,14 +56,11 @@ function* saga_loadData() {
 
 function* saga_createStaff() {
   try {
-    let _infoStaffCreate: Promise<any> = yield select(
-      (state: any) => state.staff.infoStaffCreate
-    );
+    let _infoStaffCreate: Promise<any> = yield select((state: any) => state.staff.infoStaffCreate);
     let infoStaffCreate: any = _infoStaffCreate;
+    console.log(infoStaffCreate);
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield staffService.createStaff(
-      infoStaffCreate
-    );
+    let _response: Promise<any> = yield staffService.createStaff(infoStaffCreate);
     let response: any = _response;
     if (response.Status) {
       yield put(actions.action.loadData());
@@ -101,13 +89,9 @@ function* saga_createStaff() {
 
 function* saga_updateStaff() {
   try {
-    let _detailStaff: Promise<any> = yield select(
-      (state: any) => state.staff.detailStaff
-    );
+    let _detailStaff: Promise<any> = yield select((state: any) => state.staff.detailStaff);
     let detailStaff: any = _detailStaff;
-    let _updateInfoStaff: Promise<any> = yield select(
-      (state: any) => state.staff.infoStaffCreate
-    );
+    let _updateInfoStaff: Promise<any> = yield select((state: any) => state.staff.infoStaffCreate);
     let updateInfoStaff: any = _updateInfoStaff;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield staffService.updateStaff(

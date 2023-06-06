@@ -19,9 +19,7 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
   const loading = useSelector((state: any) => state.state.loadingState);
   const [searchValue, setSearchValue] = useState("");
   const searchValueDebounce = useDebounce<string>(searchValue, 500);
-  const selectedMaterials = useSelector(
-    (state: any) => state.material.selectedMaterials
-  );
+  const selectedMaterials = useSelector((state: any) => state.material.selectedMaterials);
   const selectedPage = useSelector((state: any) => state.material.selectedPage);
   useEffect(() => {
     dispatch(actions.MaterialActions.setSearchValue(searchValueDebounce));
@@ -49,25 +47,18 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
   ];
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      if (
-        !selectedMaterials.selectedRows ||
-        !selectedMaterials.selectedRowKeys
-      ) {
+      if (!selectedMaterials.selectedRows || !selectedMaterials.selectedRowKeys) {
         selectedMaterials.selectedRows = [];
         selectedMaterials.selectedRowKeys = [];
       }
       const updateSelectedRowsKey = selectedMaterials.selectedRowKeys
         .concat(selectedRowKeys)
-        .filter(
-          (value: any, index: any, self: string | any[]) =>
-            self.indexOf(value) === index
-        );
+        .filter((value: any, index: any, self: string | any[]) => self.indexOf(value) === index);
       const updateSelectedRows = selectedMaterials.selectedRows
         .concat(selectedRows)
         .filter((value: any, index: any, self: any[]) => {
           const key = value.key;
-          const isDuplicate =
-            self.findIndex((item) => item.key === key) !== index;
+          const isDuplicate = self.findIndex((item) => item.key === key) !== index;
           return !isDuplicate;
         });
       dispatch(
@@ -113,20 +104,14 @@ const ModalMaterials: React.FC<{ visible: boolean }> = ({ visible }) => {
               ? materials.Data.map((material: any) => {
                   return {
                     key: material?.IdMaterial ? material?.IdMaterial : "",
-                    IdMaterial: material?.IdMaterial
-                      ? material?.IdMaterial
-                      : "",
-                    NameMaterial: material?.NameMaterial
-                      ? material?.NameMaterial
-                      : "",
-                    Amount: material?.Amount ? material?.Amount : 0,
+                    IdMaterial: material?.IdMaterial ? material?.IdMaterial : "",
+                    NameMaterial: material?.NameMaterial ? material?.NameMaterial : "",
+                    Amount: material?.Amount ? material?.Amount.toFixed(2) : 0,
                     Unit: material?.Unit ? material?.Unit : "",
                   };
                 }).sort((a: { key: any }, b: { key: any }) => {
-                  const aIsSelected =
-                    selectedMaterials.selectedRowKeys?.includes(a.key);
-                  const bIsSelected =
-                    selectedMaterials.selectedRowKeys?.includes(b.key);
+                  const aIsSelected = selectedMaterials.selectedRowKeys?.includes(a.key);
+                  const bIsSelected = selectedMaterials.selectedRowKeys?.includes(b.key);
 
                   if (aIsSelected && !bIsSelected) {
                     return -1;

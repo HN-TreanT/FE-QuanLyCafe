@@ -1,6 +1,6 @@
 import "./UpdateProductPage.scss";
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Row, Col, Input, Select, Upload, Modal, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../../redux/useActions";
@@ -23,9 +23,7 @@ const UpdateProductPage: React.FC = () => {
   useEffect(() => {
     dispatch(actions.CategoryActions.loadData());
   }, [dispatch, actions.CategoryActions]);
-  const selectedMaterials = useSelector(
-    (state: any) => state.material.selectedMaterials
-  );
+  const selectedMaterials = useSelector((state: any) => state.material.selectedMaterials);
   const categories = useSelector((state: any) => state.category.categories);
   category = categories.map((category: any) => {
     return {
@@ -35,9 +33,7 @@ const UpdateProductPage: React.FC = () => {
   });
 
   //xử lý file ///////////////
-  const [fileUrl, setFileUrl] = useState(
-    `${serverConfig.server}/public/${infoProduct?.Thumbnail}`
-  );
+  const [fileUrl, setFileUrl] = useState(`${serverConfig.server}/public/${infoProduct?.Thumbnail}`);
   const handleUpload = (uploadFile: any): boolean => {
     setFileUrl(URL.createObjectURL(uploadFile));
     return false;
@@ -91,9 +87,9 @@ const UpdateProductPage: React.FC = () => {
       ? selectedMaterials.selectedRows.map((selectedMaterial: any) => {
           return {
             IdMaterial: selectedMaterial.IdMaterial,
-            Amount: form.getFieldsValue([
-              `amount${selectedMaterial.IdMaterial}`,
-            ])[`amount${selectedMaterial.IdMaterial}`],
+            Amount: form.getFieldsValue([`amount${selectedMaterial.IdMaterial}`])[
+              `amount${selectedMaterial.IdMaterial}`
+            ],
           };
         })
       : [];
@@ -124,10 +120,7 @@ const UpdateProductPage: React.FC = () => {
         <ModalMaterials visible={isOpenModal} />
       </Modal>
       <Form form={form} onValuesChange={handleChange} layout="vertical">
-        <span
-          onClick={handleCancleProduct}
-          style={{ cursor: "pointer", color: "#666" }}
-        >
+        <span onClick={handleCancleProduct} style={{ cursor: "pointer", color: "#666" }}>
           <ArrowLeftOutlined style={{ padding: "3px" }} />
           <span>Quay lại danh sách mặt hàng</span>
         </span>
@@ -161,11 +154,7 @@ const UpdateProductPage: React.FC = () => {
                         onPreview={handlePreview}
                       >
                         {fileUrl ? (
-                          <img
-                            src={fileUrl}
-                            alt="avatar"
-                            style={{ width: "100%" }}
-                          />
+                          <img src={fileUrl} alt="avatar" style={{ width: "100%" }} />
                         ) : (
                           ""
                         )}
@@ -192,11 +181,7 @@ const UpdateProductPage: React.FC = () => {
                       <Form.Item
                         name="Description"
                         label="Mô tả về mặt hàng"
-                        initialValue={
-                          infoProduct?.Description
-                            ? infoProduct?.Description
-                            : " "
-                        }
+                        initialValue={infoProduct?.Description ? infoProduct?.Description : " "}
                       >
                         <Input placeholder="Nhập mô tả"></Input>
                       </Form.Item>
@@ -236,12 +221,7 @@ const UpdateProductPage: React.FC = () => {
                         style={{ width: "100%" }}
                         placeholder="Nhập giá bán"
                         onKeyDown={(e) => {
-                          if (
-                            e.key === "-" ||
-                            e.key === "e" ||
-                            e.key === "+" ||
-                            e.key === "E"
-                          ) {
+                          if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                             e.preventDefault();
                           }
                         }}
@@ -266,11 +246,7 @@ const UpdateProductPage: React.FC = () => {
                   <Col span={19}></Col>
 
                   <Col span={5}>
-                    <Button
-                      disabled={isDisabled}
-                      type="primary"
-                      onClick={handleUpdateProduct}
-                    >
+                    <Button disabled={isDisabled} type="primary" onClick={handleUpdateProduct}>
                       Cập nhật
                     </Button>
                   </Col>
@@ -293,91 +269,76 @@ const UpdateProductPage: React.FC = () => {
                     />
                   </Col>
                   {Array.isArray(selectedMaterials?.selectedRows) &&
-                    selectedMaterials.selectedRows.map(
-                      (selectedMaterial: any) => {
-                        return (
-                          <React.Fragment key={selectedMaterial?.IdMaterial}>
-                            <Col span={8}>
-                              <span>{selectedMaterial?.NameMaterial}</span>
-                            </Col>
-                            <Col span={12}>
-                              <Form.Item
-                                name={`amount${selectedMaterial?.IdMaterial}`}
-                                initialValue={selectedMaterial?.Amount}
-                                rules={[
-                                  {
-                                    validator: async (_, value) => {
-                                      if (!value) {
-                                        throw new Error(
-                                          " Không được bỏ trống! "
-                                        );
-                                      }
-                                    },
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  min={0}
-                                  type="number"
-                                  addonAfter={
-                                    selectedMaterial?.Unit
-                                      ? selectedMaterial?.Unit
-                                      : ""
-                                  }
-                                  onKeyDown={(e) => {
-                                    if (
-                                      e.key === "-" ||
-                                      e.key === "e" ||
-                                      e.key === "+" ||
-                                      e.key === "E"
-                                    ) {
-                                      e.preventDefault();
+                    selectedMaterials.selectedRows.map((selectedMaterial: any) => {
+                      return (
+                        <React.Fragment key={selectedMaterial?.IdMaterial}>
+                          <Col span={8}>
+                            <span>{selectedMaterial?.NameMaterial}</span>
+                          </Col>
+                          <Col span={12}>
+                            <Form.Item
+                              name={`amount${selectedMaterial?.IdMaterial}`}
+                              initialValue={selectedMaterial?.Amount}
+                              rules={[
+                                {
+                                  validator: async (_, value) => {
+                                    if (!value) {
+                                      throw new Error(" Không được bỏ trống! ");
                                     }
-                                  }}
-                                />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={4}>
-                              <div
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  setIsDisabled(false);
-                                  const updatedSelectedMaterials =
-                                    selectedMaterials.selectedRows.filter(
-                                      (item: any) =>
-                                        item.IdMaterial !==
-                                        selectedMaterial.IdMaterial
-                                    );
-
-                                  const updateSelectedKeys =
-                                    selectedMaterials.selectedRowKeys.filter(
-                                      (item: any) =>
-                                        item !== selectedMaterial.IdMaterial
-                                    );
-
-                                  dispatch(
-                                    actions.MaterialActions.selectedMaterial({
-                                      selectedRows: updatedSelectedMaterials,
-                                      selectedRowKeys: updateSelectedKeys,
-                                    })
-                                  );
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input
+                                min={0}
+                                type="number"
+                                addonAfter={selectedMaterial?.Unit ? selectedMaterial?.Unit : ""}
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "-" ||
+                                    e.key === "e" ||
+                                    e.key === "+" ||
+                                    e.key === "E"
+                                  ) {
+                                    e.preventDefault();
+                                  }
                                 }}
-                              >
-                                X
-                              </div>
-                            </Col>
-                          </React.Fragment>
-                        );
-                      }
-                    )}
+                              />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={4}>
+                            <div
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setIsDisabled(false);
+                                const updatedSelectedMaterials =
+                                  selectedMaterials.selectedRows.filter(
+                                    (item: any) => item.IdMaterial !== selectedMaterial.IdMaterial
+                                  );
+
+                                const updateSelectedKeys = selectedMaterials.selectedRowKeys.filter(
+                                  (item: any) => item !== selectedMaterial.IdMaterial
+                                );
+
+                                dispatch(
+                                  actions.MaterialActions.selectedMaterial({
+                                    selectedRows: updatedSelectedMaterials,
+                                    selectedRowKeys: updateSelectedKeys,
+                                  })
+                                );
+                              }}
+                            >
+                              X
+                            </div>
+                          </Col>
+                        </React.Fragment>
+                      );
+                    })}
                   <Col span={24}>
                     <div style={{ color: "#1677ff", cursor: "pointer" }}>
                       <PlusOutlined />
-                      <span
-                        onClick={handleClickAddMaterial}
-                        style={{ marginLeft: "5px" }}
-                      >
+                      <span onClick={handleClickAddMaterial} style={{ marginLeft: "5px" }}>
                         Thêm mới nguyên liệu
                       </span>
                     </div>

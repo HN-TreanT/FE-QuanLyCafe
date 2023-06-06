@@ -23,12 +23,7 @@ const LoginPage: React.FC = () => {
   };
   const checkValidateForm = (value: any) => {
     const { username, password } = value;
-    if (
-      username === " " ||
-      password === " " ||
-      username === undefined ||
-      password === undefined
-    ) {
+    if (username === " " || password === " " || username === undefined || password === undefined) {
       return false;
     }
     return true;
@@ -62,7 +57,7 @@ const LoginPage: React.FC = () => {
                   ]}
                   name="username"
                 >
-                  <Input placeholder="user name"></Input>
+                  <Input placeholder="Tên đăng nhập"></Input>
                 </Form.Item>
               </Col>
             </Row>
@@ -79,10 +74,8 @@ const LoginPage: React.FC = () => {
                   //  initialValue={infoLogin.password}
                 >
                   <Input.Password
-                    placeholder="password"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
+                    placeholder="Nhập mật khẩu"
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   />
                 </Form.Item>
               </Col>
@@ -95,7 +88,7 @@ const LoginPage: React.FC = () => {
                 style={{ marginRight: "10px" }}
               />{" "}
               Remember me
-              <span className="ForgetPassword">forget password?</span>
+              <span className="ForgetPassword">Quên mật khẩu?</span>
             </div>
             <div className="ButtonContainer">
               <Form.Item shouldUpdate>
@@ -107,14 +100,14 @@ const LoginPage: React.FC = () => {
                     disabled={!checkValidateForm(form.getFieldsValue())}
                     onClick={handleLogin}
                   >
-                    Sign in
+                    Đăng nhập
                   </Button>
                 )}
               </Form.Item>
             </div>
             <div className="linkSignUp">
-              <p>Not registered?</p>
-              <Link to={RouterLinks.SIGN_UP}>Create an accout</Link>
+              <p>Chưa đăng ký?</p>
+              <Link to={RouterLinks.SIGN_UP}>Đăng ký</Link>
             </div>
           </Form>
         </div>

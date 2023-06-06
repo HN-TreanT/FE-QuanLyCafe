@@ -17,66 +17,76 @@ const RegisterPage: React.FC = () => {
   const loading = useSelector((state: any) => state.state.loadingState);
   const regisInfo = useSelector((state: any) => state.auth.login_info);
   const checkValidateForm = (value: any) => {
-    const { username, password, displayName } = value;
+    const { username, password, displayName, email, confirmpassword } = value;
     if (
       username === " " ||
       password === " " ||
       username === undefined ||
       password === undefined ||
+      email === "" ||
+      email === undefined ||
       displayName === "" ||
-      displayName === undefined
+      displayName === undefined ||
+      confirmpassword === "" ||
+      confirmpassword === undefined
     ) {
       return false;
     } else {
+      if (password !== confirmpassword) {
+        return false;
+      }
       return true;
     }
   };
-  const handleValuesChange = () => {
-    const { username, password, displayName, confirmassword } =
-      form.getFieldsValue();
-    dispatch(
-      actions.AuthActions.updateLoginInfo({
-        username,
-        password,
-        displayName,
-        confirmassword,
-      })
-    );
-  };
-  const handleLogin = async () => {
-    if (regisInfo.password !== regisInfo.confirmassword) {
-      notification({
-        message: "password and confirm password not same",
-        title: "Thông báo",
-        position: "top-right",
-        type: "danger",
-      });
-    } else {
+  // const handleValuesChange = () => {
+  //   const { email, username, password, displayName, confirmassword } = form.getFieldsValue();
+  //   dispatch(
+  //     actions.AuthActions.updateLoginInfo({
+  //       username,
+  //       email,
+  //       password,
+  //       displayName,
+  //       confirmassword,
+  //     })
+  //   );
+  // };
+  const handleRegister = async () => {
+    try {
       const info = {
-        username: regisInfo.username,
-        password: regisInfo.password,
-        displayName: regisInfo.displayName,
+        Name: form.getFieldsValue().displayName,
+        Username: form.getFieldsValue().username,
+        Email: form.getFieldsValue().email,
+        Password: form.getFieldsValue().password,
       };
+      dispatch(actions.StateAction.loadingState(true));
       const message = await authService.handleRegister(info);
-      if (message.status) {
+      if ((message.StatusCode = 1)) {
         notification({
           message: "Đăng ký thành công",
           title: "Thông báo",
           position: "top-right",
           type: "success",
         });
-
         form.getFieldsValue();
+        dispatch(actions.StateAction.loadingState(false));
         return navigate(RouterLinks.LOGIN_PAGE);
-        // return navigate(RouterLinks.LOGIN_PAGE);
       } else {
+        dispatch(actions.StateAction.loadingState(false));
         notification({
-          message: message.message,
+          message: message.Message,
           title: "Thông báo",
           position: "top-right",
-          type: "warning",
+          type: "error",
         });
       }
+    } catch (err: any) {
+      dispatch(actions.StateAction.loadingState(false));
+      notification({
+        message: "Server không phản hồi",
+        title: "Thông báo",
+        position: "top-right",
+        type: "error",
+      });
     }
   };
   return (
@@ -85,15 +95,11 @@ const RegisterPage: React.FC = () => {
       <div className={`LoginPage ${loading ? "loading" : " "}`}>
         <div className="FormLogin">
           <div className="LoginTitle">Sign up</div>
-          <Form
-            layout="vertical"
-            form={form}
-            onValuesChange={handleValuesChange}
-          >
-            <Row>
+          <Form layout="vertical" form={form}>
+            <Row gutter={[10, 0]}>
               <Col span={24}>
                 <Form.Item
-                  label="Display Name"
+                  label="Tên hiển thị"
                   rules={[
                     {
                       required: true,
@@ -102,14 +108,13 @@ const RegisterPage: React.FC = () => {
                   ]}
                   name="displayName"
                 >
-                  <Input placeholder="display name" />
+                  <Input placeholder="Nhập tên hiển thị" />
                 </Form.Item>
               </Col>
-            </Row>
-            <Row>
+
               <Col span={24}>
                 <Form.Item
-                  label="User name"
+                  label="Tên đăng nhập"
                   rules={[
                     {
                       required: true,
@@ -118,14 +123,28 @@ const RegisterPage: React.FC = () => {
                   ]}
                   name="username"
                 >
-                  <Input placeholder="user name"></Input>
+                  <Input placeholder="Nhập tên đăng nhập"></Input>
                 </Form.Item>
               </Col>
-            </Row>
-            <Row>
+
               <Col span={24}>
                 <Form.Item
-                  label="Password"
+                  label="Email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Email không được bỏ trống",
+                    },
+                  ]}
+                  name="email"
+                >
+                  <Input placeholder="Nhập email" />
+                </Form.Item>
+              </Col>
+
+              <Col span={24}>
+                <Form.Item
+                  label="Mật khẩu"
                   rules={[
                     {
                       required: true,
@@ -135,31 +154,35 @@ const RegisterPage: React.FC = () => {
                   name="password"
                 >
                   <Input.Password
-                    placeholder="password"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
+                    placeholder="Nhập mật khẩu"
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   />
                 </Form.Item>
               </Col>
-            </Row>
-            <Row>
+
               <Col span={24}>
                 <Form.Item
-                  label="Confirm password"
+                  label="Xác nhận lại mật khẩu"
                   rules={[
                     {
                       required: true,
                       message: "Mật khẩu không được bỏ trống",
                     },
+                    {
+                      validator: async (_, value) => {
+                        if (value) {
+                          if (value !== form.getFieldsValue().password) {
+                            throw new Error("Không giống mật khẩu! ");
+                          }
+                        }
+                      },
+                    },
                   ]}
-                  name="confirmassword"
+                  name="confirmpassword"
                 >
                   <Input.Password
-                    placeholder="Confirm password"
-                    iconRender={(visible) =>
-                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
+                    placeholder=""
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   />
                 </Form.Item>
               </Col>
@@ -172,7 +195,7 @@ const RegisterPage: React.FC = () => {
                     type="primary"
                     htmlType="submit"
                     disabled={!checkValidateForm(form.getFieldsValue())}
-                    onClick={handleLogin}
+                    onClick={handleRegister}
                   >
                     {/* <Link to={RouterLinks.LOGIN_PAGE}> Sign up</Link> */}
                     Sign up

@@ -142,7 +142,9 @@ const BillPage: React.FC = () => {
     setIsOpenModal(true);
     const OrderDetails = await orderDetailServices.handleGetOrderByIdOrder(record.key);
     if (OrderDetails.Status) {
-      setOrderDts(OrderDetails.Data);
+      setOrderDts(OrderDetails.Data ? OrderDetails.Data : []);
+    } else {
+      setOrderDts([]);
     }
   };
   const handleSearchNameCustomer = (e: any) => {
@@ -205,7 +207,7 @@ const BillPage: React.FC = () => {
                           key={orderDetail?.IdOrderDetail}
                           NameProduct={orderDetail.IdProductNavigation?.Title}
                           Amount={`x${orderDetail?.Amout}`}
-                          Price={`${orderDetail?.Price}`}
+                          Price={`${orderDetail?.Price ? VND.format(orderDetail.Price) : 0}`}
                         />
                       );
                     })}
