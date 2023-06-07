@@ -41,11 +41,7 @@ const TopBar: React.FC = () => {
     {
       key: "order-page",
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={`http://localhost:3000/order-page`}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={`http://localhost:3000/order-page`}>
           Chuyển đến yêu cầu
         </a>
       ),

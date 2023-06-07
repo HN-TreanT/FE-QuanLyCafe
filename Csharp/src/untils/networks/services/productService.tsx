@@ -19,7 +19,8 @@ const GetAllProduct = (
     typeSearch = "";
   }
   return api.makeAuthRequest({
-    url: `https://localhost:7066/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}&pageSize=${pageSize}`,
+    // url: `https://localhost:7066/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}&pageSize=${pageSize}`,
+    url: `/api/Product/getAllProduct?page=${selectedPage}&typeSearch=${typeSearch}&searchValue=${searchValue}&pageSize=${pageSize}`,
     method: "GET",
   });
 };
@@ -33,7 +34,8 @@ const GetAllProductByCategory = (
     searchValue = "";
   }
   return api.makeAuthRequest({
-    url: `https://localhost:7066/api/Product/getAllProductByCategory?page=${page}&pageSize=${pageSize}&Id=${Id}&searchValue=${searchValue}`,
+    // url: `https://localhost:7066/api/Product/getAllProductByCategory?page=${page}&pageSize=${pageSize}&Id=${Id}&searchValue=${searchValue}`,
+    url: `/api/Product/getAllProductByCategory?page=${page}&pageSize=${pageSize}&Id=${Id}&searchValue=${searchValue}`,
     method: "GET",
   });
 };

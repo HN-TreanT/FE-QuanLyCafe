@@ -1,12 +1,4 @@
-import {
-  all,
-  call,
-  fork,
-  put,
-  select,
-  take,
-  takeEvery,
-} from "redux-saga/effects";
+import { all, call, fork, put, select, take, takeEvery } from "redux-saga/effects";
 import { notification } from "../../components/notification";
 import actions from "./actions";
 import stateActions from "../state/actions";
@@ -37,9 +29,7 @@ function* handleErr(err: any) {
 
 function* saga_Redirect() {
   //action.type.
-  let _navigate: Promise<any> = yield select(
-    (state: any) => state.state.navigate
-  );
+  let _navigate: Promise<any> = yield select((state: any) => state.state.navigate);
   let navigate: any = _navigate;
   if (navigate.navigate && navigate.path) {
     navigate.navigate(navigate.path);
@@ -55,9 +45,7 @@ function* loadProduct() {
       (state: any) => state.orderpage.selectedCategory
     );
     let selectedCategory: any = _selectedCategory;
-    let _searchValue: Promise<any> = yield select(
-      (state: any) => state.orderpage.searchValue
-    );
+    let _searchValue: Promise<any> = yield select((state: any) => state.orderpage.searchValue);
     let searchValue: any = _searchValue;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any>;
@@ -91,9 +79,7 @@ function* loadProduct() {
 function* loadOrders() {
   try {
     //type search
-    let _typeSearch: Promise<any> = yield select(
-      (state: any) => state.orderpage.typeSearchOrder
-    );
+    let _typeSearch: Promise<any> = yield select((state: any) => state.orderpage.typeSearchOrder);
     let typeSearch: any = _typeSearch;
     //search value
     let _seacrchValue: Promise<any> = yield select(
@@ -108,13 +94,9 @@ function* loadOrders() {
     yield put(stateActions.action.loadingState(true));
     //lấy time ngày hôm nay:
 
-    const timeEnd = moment()
-      .add(5, "minutes")
-      .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+    const timeEnd = moment().add(5, "minutes").format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
 
-    const timeStart = moment()
-      .subtract(1, "day")
-      .format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
+    const timeStart = moment().subtract(1, "day").format("ddd, DD MMM YYYY HH:mm:ss [GMT]");
     ///api
     let _response: Promise<any> = yield billServices.getAllOrder(
       typeSearch,
@@ -128,16 +110,11 @@ function* loadOrders() {
     if (response.Status) {
       const data: any[] = [];
       const promises: Promise<any>[] = response.Data.map(async (res: any) => {
-        let _orderDetails: Promise<any> =
-          orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
+        let _orderDetails: Promise<any> = orderDetailServices.handleGetOrderByIdOrder(res.IdOrder);
         let orderDetails: any = await _orderDetails;
-        let payments = orderDetails.Data?.reduce(function (
-          total: Number,
-          currentValue: any
-        ) {
+        let payments = orderDetails.Data?.reduce(function (total: Number, currentValue: any) {
           return total + currentValue.Price;
-        },
-        0);
+        }, 0);
         data.push({ ...res, payments: payments });
         response.Data = data;
       });
@@ -155,17 +132,13 @@ function* loadOrders() {
 }
 function* loadTable() {
   try {
-    let _stateTable: Promise<any> = yield select(
-      (state: any) => state.orderpage.stateTable
-    );
+    let _stateTable: Promise<any> = yield select((state: any) => state.orderpage.stateTable);
     let stateTable: any = _stateTable;
     let _selectedPage: Promise<any> = yield select(
       (state: any) => state.orderpage.selectedPageTable
     );
     let selectedPage: any = _selectedPage;
-    let _searchValue: Promise<any> = yield select(
-      (state: any) => state.orderpage.searchValueTable
-    );
+    let _searchValue: Promise<any> = yield select((state: any) => state.orderpage.searchValueTable);
     let searchValue: any = _searchValue;
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield tableFoodService.getAllTableFood(
@@ -202,10 +175,7 @@ function* saga_updateOrder() {
     );
     let infoUpdate: any = _infoUpdateOrder;
     yield put(stateActions.action.loadingState(true));
-    let _response: Promise<any> = yield billServices.updateOrder(
-      infoUpdate?.IdOrder,
-      infoUpdate
-    );
+    let _response: Promise<any> = yield billServices.updateOrder(infoUpdate?.IdOrder, infoUpdate);
     let response: any = _response;
     if (response?.Status) {
       yield put(actions.action.setSelectedPageOrders(1));
@@ -215,12 +185,12 @@ function* saga_updateOrder() {
       yield put(actions.action.loadSelectedOrder());
       yield put(actions.action.setInfoUpdateOrder({}));
       yield put(stateActions.action.loadingState(true));
-      notification({
-        message: "Cập nhật thành công",
-        title: "Thông báo",
-        position: "top-right",
-        type: "success",
-      });
+      // notification({
+      //   message: "Cập nhật thành công",
+      //   title: "Thông báo",
+      //   position: "top-right",
+      //   type: "success",
+      // });
     } else {
       yield handleFail(response.Message);
       yield put(actions.action.setInfoUpdateOrder({}));
@@ -231,14 +201,10 @@ function* saga_updateOrder() {
 }
 function* saga_deleteOrder() {
   try {
-    let _selectedOrder: Promise<any> = yield select(
-      (state: any) => state.orderpage.selectedOrder
-    );
+    let _selectedOrder: Promise<any> = yield select((state: any) => state.orderpage.selectedOrder);
     let selectedOrder: any = _selectedOrder;
     yield put(stateActions.action.loadingState(true));
-    let _res: Promise<any> = yield billServices.deleteOrder(
-      selectedOrder?.IdOrder
-    );
+    let _res: Promise<any> = yield billServices.deleteOrder(selectedOrder?.IdOrder);
     let res: any = _res;
     if (res?.Status) {
       yield put(actions.action.setSelectedOrder({}));
@@ -261,20 +227,15 @@ function* saga_deleteOrder() {
 }
 function* saga_loadSelectedOrder() {
   try {
-    let _selectedOrder: Promise<any> = yield select(
-      (state: any) => state.orderpage.selectedOrder
-    );
+    let _selectedOrder: Promise<any> = yield select((state: any) => state.orderpage.selectedOrder);
     let selectedOrder: any = _selectedOrder;
     // yield put(stateActions.action.loadingState(true));
-    let _order: Promise<any> = yield billServices.getDetailOrder(
-      selectedOrder?.IdOrder
-    );
+    let _order: Promise<any> = yield billServices.getDetailOrder(selectedOrder?.IdOrder);
     let order: any = _order;
     if (order?.Status) {
-      let _listOrderDetail: Promise<any> =
-        yield orderDetailServices.handleGetOrderByIdOrder(
-          selectedOrder?.IdOrder
-        );
+      let _listOrderDetail: Promise<any> = yield orderDetailServices.handleGetOrderByIdOrder(
+        selectedOrder?.IdOrder
+      );
       let ListOrderDetail: any = _listOrderDetail;
       yield put(
         actions.action.setSelectedOrder({
@@ -294,18 +255,11 @@ function* saga_loadSelectedOrder() {
 }
 function* saga_handleSplitOrder() {
   try {
-    let _orderSplit: Promise<any> = yield select(
-      (state: any) => state.orderpage.orderSplit
-    );
+    let _orderSplit: Promise<any> = yield select((state: any) => state.orderpage.orderSplit);
     let orderSplit: any = _orderSplit;
-    let _selectedOrder: Promise<any> = yield select(
-      (state: any) => state.orderpage.selectedOrder
-    );
+    let _selectedOrder: Promise<any> = yield select((state: any) => state.orderpage.selectedOrder);
     let selectedOrder: any = _selectedOrder;
-    if (
-      !orderSplit?.typeSplitOrder ||
-      orderSplit?.typeSplitOrder === "createNewOrder"
-    ) {
+    if (!orderSplit?.typeSplitOrder || orderSplit?.typeSplitOrder === "createNewOrder") {
       yield put(stateActions.action.loadingState(true));
       let _response: Promise<any> = yield billServices.createOrder({
         Amount: 0,
@@ -351,9 +305,7 @@ function* saga_handleSplitOrder() {
           yield handleFail(res.Message);
         }
       } else {
-        let message: Promise<any> = billServices.deleteOrder(
-          response?.Data.IdOrder
-        );
+        let message: Promise<any> = billServices.deleteOrder(response?.Data.IdOrder);
         yield handleFail(response.Message);
       }
     } else {

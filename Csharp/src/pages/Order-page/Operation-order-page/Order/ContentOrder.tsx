@@ -7,12 +7,8 @@ import emptyOrder from "../../../../assets/empty-bill.svg";
 const ContentOrder: React.FC<any> = ({ data }) => {
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedPageOrders = useSelector(
-    (state: any) => state.orderpage.selectedPageOrders
-  );
-  const selectedOrder = useSelector(
-    (state: any) => state.orderpage.selectedOrder
-  );
+  const selectedPageOrders = useSelector((state: any) => state.orderpage.selectedPageOrders);
+  const selectedOrder = useSelector((state: any) => state.orderpage.selectedOrder);
   const handleChangePag = (e: any) => {
     dispatch(actions.OrderPageActions.setSelectedPageOrders(e));
   };
@@ -25,11 +21,7 @@ const ContentOrder: React.FC<any> = ({ data }) => {
               return (
                 <Col key={item?.IdOrder} span={8}>
                   <ItemOrder
-                    style={
-                      item?.IdOrder === selectedOrder?.IdOrder
-                        ? "click-item-order"
-                        : ""
-                    }
+                    style={item?.IdOrder === selectedOrder?.IdOrder ? "click-item-order" : ""}
                     data={item}
                   />
                 </Col>
@@ -38,8 +30,8 @@ const ContentOrder: React.FC<any> = ({ data }) => {
           ) : (
             <div className="empty-order-in-order-page">
               <Image src={emptyOrder} preview={false} />
-              <div style={{ fontWeight: "600", paddingLeft: "20px" }}>
-                Không có hóa đơn nào
+              <div style={{ fontWeight: "600", paddingLeft: "6px" }}>
+                Hôm nay chưa có yêu cầu nào!
               </div>
             </div>
           )}
