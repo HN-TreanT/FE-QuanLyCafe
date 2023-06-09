@@ -9,6 +9,17 @@ import {
 } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  XAxis,
+  YAxis,
+  Tooltip,
+  LineChart,
+  Line,
+} from "recharts";
 import "./OverviewPage.scss";
 import {
   OverVReportItem,
@@ -44,13 +55,133 @@ const iconReport = {
   padding: "6px 6px",
   backgroundColor: "rgb(163, 168, 175)",
 };
+let data: any[] = [
+  {
+    name: "",
+    "Tổng tiền": 0,
+  },
+  {
+    name: "",
+    "Tổng tiền": 0,
+  },
+  {
+    name: "",
+    "Tổng tiền": 0,
+  },
+  {
+    name: "",
+    "Tổng tiền": 0,
+  },
+  {
+    name: "",
+    "Tổng tiền": 0,
+  },
+];
+const dataLineEmpty = [
+  {
+    name: "Tháng 1",
+    uv: 0,
+    pv: 0,
+    //amt: 2400,
+  },
+  {
+    name: "Tháng 2",
+    uv: 0,
+    pv: 0,
+    // amt: 2210,
+  },
+  {
+    name: "Tháng 3",
+    uv: 0,
+    pv: 0,
+    // amt: 2290,
+  },
+  {
+    name: "Tháng 4",
+    uv: 0,
+    pv: 0,
+    //amt: 2000,
+  },
+  {
+    name: "Tháng 5",
+    uv: 0,
+    pv: 0,
+    //amt: 2181,
+  },
+  {
+    name: "Tháng 6",
+    uv: 0,
+    pv: 0,
+    // amt: 2500,
+  },
+  {
+    name: "Tháng 7",
+    uv: 3490,
+    pv: 4300,
+    // amt: 2100,
+  },
+  {
+    name: "Tháng 8",
+    uv: 3490,
+    pv: 4300,
+    //amt: 2100,
+  },
+  {
+    name: "Tháng 9",
+    uv: 3490,
+    pv: 4300,
+    // amt: 2100,
+  },
+  {
+    name: "Tháng 10",
+    uv: 3490,
+    pv: 4300,
+    //amt: 2100,
+  },
+  {
+    name: "Tháng 11",
+    uv: 3490,
+    pv: 4300,
+    // amt: 2100,
+  },
+  {
+    name: "Tháng 12",
+    uv: 3490,
+    pv: 4300,
+    // amt: 2100,
+  },
+];
 const OverviewPage: React.FC = () => {
   const dispatch = useDispatch();
   const actions = useAction();
   const timeState = useSelector((state: any) => state.overview.timeState);
   const overviewData = useSelector((state: any) => state.overview.overviewData);
   const topSellProduct = useSelector((state: any) => state.product.productsTopSell);
-
+  const revenueOverview = useSelector((state: any) => state.overview.revenueOverview);
+  const currentYear = new Date();
+  let dataLine: any[] = [];
+  let dataChart: any[] = [];
+  if (Array.isArray(revenueOverview?.currentYear) && Array.isArray(revenueOverview?.preYear)) {
+    dataLine = revenueOverview.currentYear.map((item1: any, index: number) => {
+      // return revenueOverview.preYear.map((item2: any, index: number) => {
+      return {
+        name: `Tháng ${index + 1}`,
+        [`Năm ${currentYear.getFullYear()}`]: item1 ? item1 : 0,
+        [`Năm ${currentYear.getFullYear() - 1}`]: revenueOverview.preYear[index]
+          ? revenueOverview.preYear[index]
+          : 0,
+      };
+      // });
+    });
+  }
+  if (Array.isArray(topSellProduct)) {
+    dataChart = topSellProduct.map((item: any) => {
+      return {
+        name: item.Title ? item.Title : "",
+        "Tổng tiền": item.Price ? item.Price : 0,
+      };
+    });
+  }
   useEffect(() => {
     dispatch(actions.OverviewAction.loadData());
     dispatch(actions.ProductActions.GetTopSellProduct());
@@ -118,6 +249,7 @@ const OverviewPage: React.FC = () => {
     XLSX.utils.book_append_sheet(workbook, sheet);
     XLSX.writeFile(workbook, `BaocaoTongQuan-${formatToday}.xls`);
   };
+
   return (
     <div id="overview_page">
       <div className="title_overview distance">
@@ -216,14 +348,6 @@ const OverviewPage: React.FC = () => {
       <div>
         <Row gutter={[10, 10]}>
           <Col span={12}>
-            <div id="report-bill">
-              <div className="title_overview " style={{ marginBottom: "13px" }}>
-                <span>KHUYẾN MÃI CÒN HẠN</span>
-              </div>
-              <OverviewReportBill promotions={0} />
-            </div>
-          </Col>
-          <Col span={12}>
             <div id="report-item-sell">
               <div className="title_overview distance">
                 <div style={{ marginBottom: "14px" }}>
@@ -234,6 +358,81 @@ const OverviewPage: React.FC = () => {
                 <ReportOverviewSell data={topSellProduct} />
               </div>
             </div>
+          </Col>
+          {/* <Col span={12}>
+            <div id="report-bill">
+              <div className="title_overview " style={{ marginBottom: "13px" }}>
+                <span>KHUYẾN MÃI CÒN HẠN</span>
+              </div>
+              <OverviewReportBill promotions={0} />
+            </div>
+          </Col> */}
+          <Col span={12}>
+            <div id="report-bill">
+              <div className="title_overview " style={{ marginBottom: "13px" }}>
+                <span>THỐNG KÊ SẢN PHẨM BÁN CHẠY</span>
+              </div>
+              <BarChart
+                barSize={30}
+                width={600}
+                height={232}
+                data={dataChart.length > 0 ? dataChart : data}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis interval={0} angle={-45} textAnchor="end" dataKey="name" />
+                <YAxis
+                  tickFormatter={(value: any) =>
+                    value < 10000
+                      ? `${value ? VND.format(value) : 0}`
+                      : ` ${value ? Math.round(value / 10000) / 100 : 0} trĐ`
+                  }
+                />
+                <Tooltip formatter={(value: any) => VND.format(value)} />
+                <Legend />
+                <Bar dataKey={"Tổng tiền"} fill="#8884d8" />
+              </BarChart>
+            </div>
+          </Col>
+        </Row>
+      </div>
+      <div>
+        <Row gutter={[10, 10]}>
+          <Col span={24}>
+            <div id="report-item-sell">
+              <div className="title_overview distance">
+                <div style={{ marginBottom: "14px" }}>
+                  <Col span={24}>
+                    <span>THỐNG KÊ DOANH THU</span>
+                  </Col>
+                </div>
+              </div>
+            </div>
+          </Col>
+          <Col span={24}>
+            <LineChart
+              width={1200}
+              height={400}
+              data={dataLine}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis
+                tickFormatter={(value: any) =>
+                  value < 1000000
+                    ? `${value ? VND.format(value) : 0}`
+                    : ` ${value ? Math.round(value / 10000) / 100 : 0}tr(VND)`
+                }
+              />
+              <Tooltip formatter={(value: any) => VND.format(value)} />
+              <Legend />
+              <Line type="monotone" dataKey={`Năm ${currentYear.getFullYear()}`} stroke="#8884d8" />
+              <Line
+                type="monotone"
+                dataKey={`Năm ${currentYear.getFullYear() - 1}`}
+                stroke="#82ca9d"
+              />
+            </LineChart>
           </Col>
         </Row>
       </div>

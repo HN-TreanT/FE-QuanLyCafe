@@ -1,3 +1,4 @@
+import { VND } from "../../../const/convertVND";
 import "./OverVReportItem.scss";
 import { ReactNode } from "react";
 interface Props {
@@ -15,7 +16,7 @@ export const OverVReportItem: React.FC<Props> = ({ icon, title, price }) => {
         {/* <div className="price">{price} đ</div> */}
         <div className="price">
           {price < 1000000
-            ? `${price ? price : 0} đ`
+            ? `${price ? VND.format(price) : 0}`
             : ` ${price ? Math.round(price / 10000) / 100 : 0} tr(VNĐ)`}
         </div>
       </div>

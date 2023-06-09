@@ -28,32 +28,25 @@ function* handleErr(err: any) {
 
 function* saga_LoadData() {
   try {
-    let _time: Promise<any> = yield select(
-      (state: any) => state.overview.timeState
-    );
+    let _time: Promise<any> = yield select((state: any) => state.overview.timeState);
     let time: any = _time;
-    //refresh token
-
-    // const accessToken = localStorage.getItem("token");
-    // const refreshToken = localStorage.getItem("refreshToken");
-    // let refreshModel = {
-    //   accessToken: accessToken,
-    //   refreshToken: refreshToken,
-    // };
-    // let _refresh: Promise<any> = yield authService.handleRefreshToken(
-    //   refreshModel
-    // );
-    // let refresh: any = _refresh;
-    // localStorage.setItem("token", refresh.AccessToken);
-    // console.log(refresh.AccessToken);
-    // localStorage.setItem("refreshToken", refresh.RefreshToken);
-    ///////
     yield put(stateActions.action.loadingState(true));
     let _response: Promise<any> = yield overviewService.handleGetOverview(time);
     let response: any = _response;
-    console.log(response);
+    let _renevueOverview: Promise<any> = yield overviewService.getRevenueOverview();
+    let renevueOverview: any = _renevueOverview;
     if (response.Status) {
       yield put(actions.action.loadDataSuccess(response.Data));
+      yield put(
+        actions.action.revenueOverview(
+          renevueOverview.Data
+            ? renevueOverview.Data
+            : {
+                currentYear: [],
+                preYear: [],
+              }
+        )
+      );
       yield put(stateActions.action.loadingState(false));
     } else {
       yield handleFail("Load data fail");

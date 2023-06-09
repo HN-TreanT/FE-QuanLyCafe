@@ -108,12 +108,7 @@ const WorkShiftPage: React.FC = () => {
                 <Input
                   type="number"
                   onKeyDown={(e) => {
-                    if (
-                      e.key === "-" ||
-                      e.key === "e" ||
-                      e.key === "+" ||
-                      e.key === "E"
-                    ) {
+                    if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                       e.preventDefault();
                     }
                   }}
@@ -155,11 +150,7 @@ const WorkShiftPage: React.FC = () => {
         <Col span={24}>
           <div className="title-button-workshift-page">
             <div className="title-workshift-page">Ca làm</div>
-            <Button
-              onClick={handleClickAddButton}
-              type="primary"
-              className="button-add-workshift"
-            >
+            <Button onClick={handleClickAddButton} type="primary" className="button-add-workshift">
               <FontAwesomeIcon icon={faPlus} />
               <span> Thêm ca làm</span>
             </Button>

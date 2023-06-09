@@ -6,6 +6,13 @@ const handleGetOverview = (time: any) => {
     method: "GET",
   });
 };
+const getRevenueOverview = () => {
+  return api.makeAuthRequest({
+    url: "/api/OrderDetails/revenueOverview",
+    method: "GET",
+  });
+};
 export const overviewService = {
   handleGetOverview,
+  getRevenueOverview,
 };

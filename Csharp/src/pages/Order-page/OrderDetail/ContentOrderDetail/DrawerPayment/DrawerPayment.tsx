@@ -72,7 +72,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
     .format("HH:mm, DD-MM-YYYY");
   const handleChangeInput = (e: any) => {
     setValue(e);
-    if (e && e - selectedOrder?.Price > 0) {
+    if (e && e - selectedOrder?.Price >= 0) {
       setDisabled(false);
     } else {
       setDisabled(true);

@@ -9,6 +9,7 @@ const initState = {
     Sale: "0",
     MoneyMaterial: "0",
   },
+  revenueOverview: {},
   timeState: 1,
 };
 const OverviewReducer = (state: any = initState, action: any) => {
@@ -29,6 +30,13 @@ const OverviewReducer = (state: any = initState, action: any) => {
         ...state,
         ...{
           overviewData: action.payload.data,
+        },
+      };
+    case actions.types.REvENUE_OVERVIEW:
+      return {
+        ...state,
+        ...{
+          revenueOverview: action.payload.data,
         },
       };
     default:

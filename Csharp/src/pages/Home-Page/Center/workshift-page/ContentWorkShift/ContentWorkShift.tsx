@@ -125,11 +125,7 @@ const ContentWorkShift: React.FC<any> = ({ value }) => {
           <div className="header-workshift-page">
             <Row>
               <Col span={24}>
-                <Menu
-                  selectedKeys={["allWorkshift"]}
-                  mode="horizontal"
-                  items={items}
-                />
+                <Menu selectedKeys={["allWorkshift"]} mode="horizontal" items={items} />
               </Col>
               <Col span={24}>
                 <div
@@ -146,19 +142,11 @@ const ContentWorkShift: React.FC<any> = ({ value }) => {
                   onValuesChange={handleValueFormChange}
                   className="form-css"
                 >
-                  <Form.Item
-                    name="searchValue"
-                    className="input-search-workshift"
-                  >
+                  <Form.Item name="searchValue" className="input-search-workshift">
                     <Input
                       onChange={handleSearchValueChange}
                       placeholder="Nhập giá trị muốn tìm kiếm theo loại"
-                      prefix={
-                        <FontAwesomeIcon
-                          icon={faMagnifyingGlass}
-                          className="icon-search"
-                        />
-                      }
+                      prefix={<FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />}
                     />
                   </Form.Item>
                 </Form>

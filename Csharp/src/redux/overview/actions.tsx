@@ -2,6 +2,7 @@ const types = {
   TIME_STATE: "overview/time-state",
   LOAD_DATA: "overview/load_data",
   LOAD_DATA_SUCCESS: "overview/load_data_success",
+  REvENUE_OVERVIEW: "overview/revenue",
 };
 
 const action = {
@@ -19,6 +20,12 @@ const action = {
   loadDataSuccess: (data: any) => {
     return {
       type: types.LOAD_DATA_SUCCESS,
+      payload: { data },
+    };
+  },
+  revenueOverview: (data: any) => {
+    return {
+      type: types.REvENUE_OVERVIEW,
       payload: { data },
     };
   },
