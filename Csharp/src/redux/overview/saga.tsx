@@ -42,8 +42,8 @@ function* saga_LoadData() {
           renevueOverview.Data
             ? renevueOverview.Data
             : {
-                currentYear: [],
-                preYear: [],
+                currentYear: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                preYear: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               }
         )
       );

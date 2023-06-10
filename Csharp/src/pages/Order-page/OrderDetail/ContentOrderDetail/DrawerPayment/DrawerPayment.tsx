@@ -45,6 +45,7 @@ const DrawerPayment: React.FC<any> = ({ visible, setVisible }) => {
   }
   useEffect(() => {
     setValue(0);
+    setDisabled(true);
   }, [visible]);
   const columns: ColumnsType<DataType> = [
     {
