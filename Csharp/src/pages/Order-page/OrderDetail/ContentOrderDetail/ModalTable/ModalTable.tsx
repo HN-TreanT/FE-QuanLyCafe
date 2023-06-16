@@ -1,13 +1,10 @@
 import React from "react";
 import { Row, Col, Pagination, Menu, Image, Form, Input, Modal } from "antd";
 import tableImage0 from "../../../../../assets/dinning-table_0.png";
+import tableImage1 from "../../../../../assets/dinning-table-1.png";
 import "./ModalTable.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircle,
-  faMagnifyingGlass,
-  faTable,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faMagnifyingGlass, faTable } from "@fortawesome/free-solid-svg-icons";
 import useAction from "../../../../../redux/useActions";
 import { useDispatch, useSelector } from "react-redux";
 import useDebounce from "../../../../../hooks/useDebounce";
@@ -16,27 +13,17 @@ import { billServices } from "../../../../../untils/networks/services/billServic
 const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
   const actions = useAction();
   const dispatch = useDispatch();
-  const selectedPage = useSelector(
-    (state: any) => state.orderpage.selectedPageTable
-  );
-  const selectedOrder = useSelector(
-    (state: any) => state.orderpage.selectedOrder
-  );
+  const selectedPage = useSelector((state: any) => state.orderpage.selectedPageTable);
+  const selectedOrder = useSelector((state: any) => state.orderpage.selectedOrder);
   const stateTable = useSelector((state: any) => state.orderpage.stateTable);
   const tables = useSelector((state: any) => state.orderpage.tables);
   const [searchValue, setSearchValue] = React.useState("");
   const searchValueDebounce = useDebounce<string>(searchValue, 500);
   React.useEffect(() => {
-    dispatch(actions.OrderPageActions.setStateTable("emptyTable"));
+    dispatch(actions.OrderPageActions.setStateTable(""));
     dispatch(actions.OrderPageActions.setSearchValueTable(searchValueDebounce));
     dispatch(actions.OrderPageActions.loadTable());
-  }, [
-    actions.OrderPageActions,
-    dispatch,
-    selectedPage,
-    stateTable,
-    searchValueDebounce,
-  ]);
+  }, [actions.OrderPageActions, dispatch, selectedPage, stateTable, searchValueDebounce]);
 
   const handlSearchTableFood = (e: any) => {
     dispatch(actions.OrderPageActions.setSelectedPagetable(1));
@@ -76,12 +63,7 @@ const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
     }
   };
   return (
-    <Modal
-      open={visible}
-      onCancel={() => setVisible(false)}
-      width={1000}
-      footer={false}
-    >
+    <Modal open={visible} onCancel={() => setVisible(false)} width={1000} footer={false}>
       <div className="table-modal">
         <Row gutter={[15, 0]}>
           <Col span={24}>
@@ -102,10 +84,7 @@ const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
                         bordered={false}
                         placeholder="Nhập số bàn ăn"
                         prefix={
-                          <FontAwesomeIcon
-                            icon={faMagnifyingGlass}
-                            className="icon-search"
-                          />
+                          <FontAwesomeIcon icon={faMagnifyingGlass} className="icon-search" />
                         }
                       />
                     </Form.Item>
@@ -143,7 +122,7 @@ const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
             <div className="content-table-modal">
               <div className="list-table">
                 <Row gutter={[10, 30]}>
-                  {Array.isArray(tables?.Data) && tables?.Data.length ? (
+                  {/* {Array.isArray(tables?.Data) && tables?.Data.length ? (
                     tables?.Data?.map((item: any) => {
                       return (
                         <Col
@@ -175,9 +154,65 @@ const ModalTable: React.FC<any> = ({ visible, setVisible }) => {
                           color: "rgba(0, 0, 0, 0.407)",
                         }}
                       />
-                      <div style={{ color: "rgba(0, 0, 0, 0.600)" }}>
-                        không có bàn nào
-                      </div>
+                      <div style={{ color: "rgba(0, 0, 0, 0.600)" }}>không có bàn nào</div>
+                    </div>
+                  )} */}
+                  {Array.isArray(tables?.Data) && tables?.Data.length ? (
+                    tables?.Data?.map((item: any) => {
+                      if (item?.Status === 0) {
+                        return (
+                          <Col
+                            onClick={() => handleClickItemTable(item)}
+                            //key={tableFood?.IdTable}
+                            span={4}
+                            key={item?.IdTable}
+                          >
+                            <div className="item-table">
+                              <Image
+                                src={tableImage0}
+                                preview={false}
+                                style={{
+                                  width: "90px",
+                                  height: "70px",
+                                }}
+                              />
+                              <div>{`${item?.Name}`}</div>
+                            </div>
+                          </Col>
+                        );
+                      } else {
+                        return (
+                          <Col
+                            // onClick={() => handleClickItemTable(tableFood)}
+                            //key={tableFood?.IdTable}
+                            span={4}
+                            key={item?.IdTable}
+                          >
+                            <div className="item-table">
+                              <Image
+                                src={tableImage1}
+                                preview={false}
+                                style={{
+                                  width: "90px",
+                                  height: "70px",
+                                }}
+                              />
+                              <div>{`Bàn ${item?.Name}`}</div>
+                            </div>
+                          </Col>
+                        );
+                      }
+                    })
+                  ) : (
+                    <div className="empty-table">
+                      <FontAwesomeIcon
+                        icon={faTable}
+                        style={{
+                          fontSize: "5rem",
+                          color: "rgba(0, 0, 0, 0.407)",
+                        }}
+                      />
+                      <div style={{ color: "rgba(0, 0, 0, 0.600)" }}>không có bàn nào</div>
                     </div>
                   )}
                 </Row>

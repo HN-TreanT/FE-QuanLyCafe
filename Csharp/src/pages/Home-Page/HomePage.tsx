@@ -11,9 +11,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const actions = useAction();
-  const selectedPage = useSelector(
-    (state: any) => state.state.isSelectedMenuItem
-  );
+  const selectedPage = useSelector((state: any) => state.state.isSelectedMenuItem);
   var url: any;
   if (!selectedPage) {
     dispatch(actions.StateAction.selectedMenuItem("overview"));
@@ -58,18 +56,18 @@ const HomePage: React.FC = () => {
   return (
     <div className="container">
       <Row>
-        <Col xl={4} sm={0}>
+        <Col xl={4} sm={0} xs={0}>
           <SideBar />
         </Col>
-        <Col xl={20} sm={24}>
+        <Col xl={20} sm={24} xs={24} md={24} lg={24}>
           <div className="content">
             <Row>
-              <Col xl={24}>
+              <Col span={24}>
                 <TopBar />
               </Col>
             </Row>
             <Row>
-              <Col xl={24}>
+              <Col span={24}>
                 <div className="container_content_page">
                   <div className="content_page">
                     <Outlet />

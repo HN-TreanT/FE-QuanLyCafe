@@ -46,6 +46,7 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
             type: "success",
           });
         } else {
+          dispatch(actions.StateAction.loadingState(false));
           notification({
             message: response.Message,
             title: "Thông báo",
@@ -55,6 +56,7 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
         }
       }
     } catch (err: any) {
+      dispatch(actions.StateAction.loadingState(false));
       notification({
         message: "server không phản hồi",
         title: "Thông báo",
@@ -81,21 +83,12 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
         >
           Hủy
         </Button>,
-        <Button
-          disabled={isDisabled}
-          key="submit"
-          type="primary"
-          onClick={handleUpdateCustomer}
-        >
+        <Button disabled={isDisabled} key="submit" type="primary" onClick={handleUpdateCustomer}>
           Lưu thay đổi
         </Button>,
       ]}
     >
-      <Form
-        form={formEditCustomer}
-        layout="vertical"
-        onValuesChange={handleValueEditChange}
-      >
+      <Form form={formEditCustomer} layout="vertical" onValuesChange={handleValueEditChange}>
         <Form.Item
           rules={[
             {
@@ -115,6 +108,16 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
               required: true,
               message: "Số điện thoại khách hàng không được bỏ trống",
             },
+            {
+              validator: async (_, value) => {
+                if (value) {
+                  if (value.toString().length < 10 || value.toString().length > 11) {
+                    setIsDisabled(true);
+                    throw new Error("số điện thoại không  hợp lệ! ");
+                  }
+                }
+              },
+            },
           ]}
           name="PhoneNumber"
           label="Số điện thoại"
@@ -124,12 +127,7 @@ const ModalEditCustomer: React.FC<any> = ({ isOpen, data }) => {
             type="number"
             style={{ width: "100%" }}
             onKeyDown={(e) => {
-              if (
-                e.key === "-" ||
-                e.key === "e" ||
-                e.key === "+" ||
-                e.key === "E"
-              ) {
+              if (e.key === "-" || e.key === "e" || e.key === "+" || e.key === "E") {
                 e.preventDefault();
               }
             }}

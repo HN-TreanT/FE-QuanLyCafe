@@ -9,7 +9,6 @@ import { RouterLinks } from "../../../../../const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Table, { ColumnsType } from "antd/es/table";
-import removeAccents from "../../../../../const/RemoveAccent";
 import Spinn from "../../../../../components/Spinning/Spinning";
 import useDebounce from "../../../../../hooks/useDebounce";
 interface DataType {
@@ -279,7 +278,7 @@ const EnterCoupon: React.FC = () => {
                         key: material?.IdMaterial ? material?.IdMaterial : "",
                         IdMaterial: material?.IdMaterial ? material?.IdMaterial : "",
                         NameMaterial: material?.NameMaterial ? material?.NameMaterial : "",
-                        Amount: material?.Amount ? material?.Amount : 0,
+                        Amount: material?.Amount ? material?.Amount.toFixed(2) : 0,
                         Unit: material?.Unit ? material?.Unit : "",
                       };
                     }).sort((a: { key: any }, b: { key: any }) => {

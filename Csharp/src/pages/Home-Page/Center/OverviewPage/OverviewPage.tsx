@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import {
+  ResponsiveContainer,
   Bar,
   BarChart,
   CartesianGrid,
@@ -33,6 +34,7 @@ import useAction from "../../../../redux/useActions";
 import { VND } from "../../../../const/convertVND";
 import * as XLSX from "xlsx";
 import moment from "moment";
+import Spinn from "../../../../components/Spinning/Spinning";
 const reports = [
   {
     value: "today",
@@ -158,6 +160,7 @@ const OverviewPage: React.FC = () => {
   const overviewData = useSelector((state: any) => state.overview.overviewData);
   const topSellProduct = useSelector((state: any) => state.product.productsTopSell);
   const revenueOverview = useSelector((state: any) => state.overview.revenueOverview);
+  const loading = useSelector((state: any) => state.state.loadingState);
   const currentYear = new Date();
   let dataLine: any[] = [];
   let dataChart: any[] = [];
@@ -252,6 +255,7 @@ const OverviewPage: React.FC = () => {
 
   return (
     <div id="overview_page">
+      {loading ? <Spinn /> : ""}
       <div className="title_overview distance">
         <span>TỔNG QUAN KINH DOANH</span>
       </div>
@@ -260,7 +264,7 @@ const OverviewPage: React.FC = () => {
         <Space wrap>
           <Select
             defaultValue={timeSelected ? timeSelected : "thismonth"}
-            style={{ width: "250px" }}
+            style={{ width: "200px" }}
             onChange={handleValueChange}
             options={reports}
           />
@@ -306,21 +310,21 @@ const OverviewPage: React.FC = () => {
 
       <div className="overview-report-other distance">
         <Row gutter={[12, 10]}>
-          <Col xl={6} sm={12}>
+          <Col xl={6} sm={12} xs={24}>
             <OverviewReportOther
               title="Số khách hàng"
               count={overviewData.CustomerNumber}
               color="rgb(244, 148, 35)"
             />
           </Col>
-          <Col xl={6} sm={12}>
+          <Col xl={6} sm={12} xs={24}>
             <OverviewReportOther
               title="Số hóa đơn"
               count={overviewData.OrderNumber}
               color="rgb(41, 164, 182)"
             />
           </Col>
-          <Col xl={6} sm={12}>
+          <Col xl={6} sm={12} xs={24}>
             <OverviewReportOther
               title="TB mặt hàng/hóa đơn"
               count={`${
@@ -331,7 +335,7 @@ const OverviewPage: React.FC = () => {
               color="rgb(118, 64, 239)"
             />
           </Col>
-          <Col xl={6} sm={12}>
+          <Col xl={6} sm={12} xs={24}>
             <OverviewReportOther
               title="TB doanh thu/hóa đơn"
               count={`${
@@ -347,7 +351,7 @@ const OverviewPage: React.FC = () => {
 
       <div>
         <Row gutter={[10, 10]}>
-          <Col span={12}>
+          <Col span={12} lg={12} md={24} sm={24} xs={24}>
             <div id="report-item-sell">
               <div className="title_overview distance">
                 <div style={{ marginBottom: "14px" }}>
@@ -367,30 +371,32 @@ const OverviewPage: React.FC = () => {
               <OverviewReportBill promotions={0} />
             </div>
           </Col> */}
-          <Col span={12}>
+          <Col span={12} lg={12} md={24} sm={24} xs={24}>
             <div id="report-bill">
               <div className="title_overview " style={{ marginBottom: "13px" }}>
                 <span>THỐNG KÊ SẢN PHẨM BÁN CHẠY</span>
               </div>
-              <BarChart
-                barSize={30}
-                width={600}
-                height={232}
-                data={dataChart.length > 0 ? dataChart : data}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis interval={0} angle={-45} textAnchor="end" dataKey="name" />
-                <YAxis
-                  tickFormatter={(value: any) =>
-                    value < 10000
-                      ? `${value ? VND.format(value) : 0}`
-                      : ` ${value ? Math.round(value / 10000) / 100 : 0} trĐ`
-                  }
-                />
-                <Tooltip formatter={(value: any) => VND.format(value)} />
-                <Legend />
-                <Bar dataKey={"Tổng tiền"} fill="#8884d8" />
-              </BarChart>
+              <ResponsiveContainer height={232} width="100%">
+                <BarChart
+                  barSize={30}
+                  width={600}
+                  height={232}
+                  data={dataChart.length > 0 ? dataChart : data}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis interval={0} angle={-45} textAnchor="end" dataKey="name" />
+                  <YAxis
+                    tickFormatter={(value: any) =>
+                      value < 10000
+                        ? `${value ? VND.format(value) : 0}`
+                        : ` ${value ? Math.round(value / 10000) / 100 : 0} trĐ`
+                    }
+                  />
+                  <Tooltip formatter={(value: any) => VND.format(value)} />
+                  <Legend />
+                  <Bar dataKey={"Tổng tiền"} fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </Col>
         </Row>
@@ -409,30 +415,38 @@ const OverviewPage: React.FC = () => {
             </div>
           </Col>
           <Col span={24}>
-            <LineChart
-              width={1200}
-              height={400}
-              data={dataLine}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis
-                tickFormatter={(value: any) =>
-                  value < 1000000
-                    ? `${value ? VND.format(value) : 0}`
-                    : ` ${value ? Math.round(value / 10000) / 100 : 0}tr(VND)`
-                }
-              />
-              <Tooltip formatter={(value: any) => VND.format(value)} />
-              <Legend />
-              <Line type="monotone" dataKey={`Năm ${currentYear.getFullYear()}`} stroke="#8884d8" />
-              <Line
-                type="monotone"
-                dataKey={`Năm ${currentYear.getFullYear() - 1}`}
-                stroke="#82ca9d"
-              />
-            </LineChart>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                width={1200}
+                // width={"100%"}
+                // style={{ width: "100%" }}
+                height={400}
+                data={dataLine}
+                // margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis
+                  tickFormatter={(value: any) =>
+                    value < 1000000
+                      ? `${value ? VND.format(value) : 0}`
+                      : ` ${value ? Math.round(value / 10000) / 100 : 0}tr(VND)`
+                  }
+                />
+                <Tooltip formatter={(value: any) => VND.format(value)} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey={`Năm ${currentYear.getFullYear()}`}
+                  stroke="#8884d8"
+                />
+                <Line
+                  type="monotone"
+                  dataKey={`Năm ${currentYear.getFullYear() - 1}`}
+                  stroke="#82ca9d"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </Col>
         </Row>
       </div>

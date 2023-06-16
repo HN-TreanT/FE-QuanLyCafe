@@ -90,14 +90,14 @@ const TopBar: React.FC = () => {
           </Dropdown>
         </div>
 
-        <div className="notification">
+        {/* <div className="notification">
           <BellOutlined
             style={{
               fontSize: "1.2rem",
               padding: "10px 20px",
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
